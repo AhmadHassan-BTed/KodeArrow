@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Delete All Users</title>
+  <!-- Include Firebase SDK scripts -->
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+  <script>
+    // Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyAQkoqiC-C_QguqGkxzykJ8hRfx2eCtTWs",
+      authDomain: "kodearrow-website.firebaseapp.com",
+      databaseURL: "https://kodearrow-website-default-rtdb.firebaseio.com",
+      projectId: "kodearrow-website",
+      storageBucket: "kodearrow-website.appspot.com",
+      messagingSenderId: "1076838775827",
+      appId: "1:1076838775827:web:f7e249864699a6cea893e6",
+      measurementId: "G-CCDRFW24ZL"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // Get a reference to the Firebase database
+    const database = firebase.database();
+
+    // Function to delete all users
+    function deleteAllUsers() {
+      const usersRef = database.ref('eminemgmailcom|7-15-2024|4-23-23 PM');
+      
+      usersRef.remove()
+        .then(() => {
+          console.log('All users deleted successfully');
+        })
+        .catch((error) => {
+          console.error('Error deleting users:', error.message);
+        });
+    }
+
+    // Function to handle button click for deletion
+    function handleDeleteButtonClick() {
+      deleteAllUsers();
+    }
+  </script>
+</head>
+<body>
+  <h1>Delete All Users</h1>
+  <button onclick="handleDeleteButtonClick()">Delete All Users</button>
+</body>
+</html>
