@@ -228,14 +228,14 @@ def showMessage():
         " Thank you for using KodeArrow, a product of ByTed Technologies\n\n\n"
         "{:<26} {:<26} {:<26} {:<26} {:<0}\n"
         # "{:19} {:<24} {:<22} {:<24} {:<0}\n\n\n\n"
-        "{:20} {:<25} {:<23} {:<23} {:<8}\n\n\n\n"
+        "   {:20} {:<25} {:<24} {:<22} {:0}\n\n\n\n"
         "{:<26} {:<26} {:<26} {:<26} {:<0}\n"
         "{:<18} {:<18} {:<18} {:<18} {:<0}\n"
     ).format(
             "Alt + U", "Alt + I", "Alt + O", "Alt + P", "Alt + [",
-            "(Home)", "(Arrow Up)", "(End)", "(PageUp)", "(Delete)",
+            "(Home)", "(Arrow Up)", "(End)", "(Delete)", "(Page Up)",
             "Alt + J", "Alt + K", "Alt + L", "Alt + ;", "Alt + '",
-            "(Arrow Left)", "(Arrow Down)", "(Arrow Right)", "(PageDown)", "(Backspace)"
+            "(Arrow Left)", "(Arrow Down)", "(Arrow Right)", "(Backspace)", "(Page Down)"
     )
 
     frame1 = CTkFrame(master=app, bg_color="white", fg_color="white")
@@ -727,10 +727,10 @@ for combo in itertools.permutations(keys, 4):
 
 keyboard.add_hotkey('alt+u', home_key, suppress=True)
 keyboard.add_hotkey('alt+o', end_key, suppress=True)
-keyboard.add_hotkey('alt+p', page_up_key, suppress=True)
-keyboard.add_hotkey('alt+;', page_down_key, suppress=True)
-keyboard.add_hotkey('alt+[', delete_key, suppress=True)
-keyboard.add_hotkey("alt+'", backspace_key, suppress=True)
+keyboard.add_hotkey('alt+p', delete_key, suppress=True)
+keyboard.add_hotkey('alt+;', backspace_key, suppress=True)
+keyboard.add_hotkey('alt+[', page_up_key, suppress=True)
+keyboard.add_hotkey("alt+'", page_down_key, suppress=True)
 
 ############################################################################################
 
