@@ -1,14 +1,55 @@
-KodeArrow- Move less, Type fast, Code Seamlessly.
 
-Welcome to KodeArrow! 🚀
+                             (((                                                
+                             (((((((////                                        
+                             (((((((((////                                      
+                                   (((((///                                     
+                                    ((((((/                                     
+                                     (((((((                                    
+                                     (((((((                                    
+                                     (((((((                                    
+                                     (((((((                                    
+                                     (((((((                                    
+                                     ###((((                                    
+                                     #####((                                    
+                                     #######                                    
+                                      #######                                   
+                                      ########            ##((                  
+                                        ########          ####(((((((           
+      THANKS FOR BUYING KODEARROW         ##########      ####   ((((((((((     
+[]][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][      @@@@@@@@@@@ 
+                                         ]]#########      &&&&&&&&&&&@@@        
+                                        ]]]]]##           &&&&&&&&               
+                                      ]]]]]]]             &&&&                    
+                                     ]]]]]]%                                    
+                                     &]]]]]]                                    
+                                     &&&]]]]                                    
+                                     &&&&&]]                                    
+                                     &&&&&&&                                    
+                                     &&&&&&&                                    
+                                     &&&&&&&                                    
+                                    @@@&&&&                                     
+                             @@@@@@@@@@@@@&                                     
+                             @@@@@@@@@@@@                                       
+                             @@@@@@@@@@@      
 
-Note: Please buy Premium at (kodearrow.wuaze.com/) to unlock Up/Down Keyboard shortcut accessibility.
 
-##Description:
+
+KodeArrow - Move less, Type fast, Code Seamlessly.
+
+
+
+Welcome to KodeArrow! 🚀                                 
+                                 
+
+#######################
+### About KodeArrow ###
+#######################
 
 KodeArrow is a revolutionary keyboard software designed to revolutionize the coding experience for developers and programmers. Tired of constantly stretching your fingers to reach those elusive arrow keys? Look no further! KodeArrow is here to enhance your productivity and minimize hand movement, making coding an absolute breeze.
 
-##Features
+################
+### Features ###
+################
 
 - Effortless Navigation: Say goodbye to awkward hand movements. KodeArrow transforms simple key combinations into seamless arrow key actions, ensuring a fluid and efficient coding experience.
 
@@ -19,16 +60,20 @@ KodeArrow is a revolutionary keyboard software designed to revolutionize the cod
 - Intuitive and User-Friendly: Our sleek and intuitive interface makes it a breeze to set up and start using KodeArrow Pro. No complicated configurations, no steep learning curves – just pure coding efficiency.
 
 
-## Installation
+####################
+### Installation ###
+####################
 
 1. Download the KodeArrow.exe installer from (kodearrow.wuaze.com/).
-2. Extract the WinRar file and follow the simple on-screen instructions.
+2. Extract the WinRAR file and follow the simple on-screen instructions.
 3. Launch KodeArrow.exe and start experiencing a new level of coding comfort!
 
-## Usage
+#############
+### Usage ###
+#############
 
 1. Launch KodeArrow (Run as Administrator).
-2. The KeyGuide will be displaying the following pop-up:
+2. The Key Guide will be displaying the following pop-up:
 
 		_______________________________________________________________________________________
 		|										       |
@@ -50,7 +95,7 @@ KodeArrow is a revolutionary keyboard software designed to revolutionize the cod
 		|		                                                                       |
 		|                                   ______________				       |
 		|				   |              |				       |
-		|				   |      OK      |				       |
+		|				   |      OK      |			       -->     |
   		|				   |______________|                                    |
                 |										       |
                 |______________________________________________________________________________________|
@@ -62,28 +107,61 @@ KodeArrow is a revolutionary keyboard software designed to revolutionize the cod
 6. Experience the joy of coding with reduced hand movement and increased productivity.
 
 
+#################
+### Key Guide ###
+#################
+
+Alt +  J = Left Arrow Key
+
+Alt +  L = Left Arrow Key
+
+Alt +  I = Up Arrow Key
+
+Alt +  K = Down Arrow Key
+
+Alt +  U = Home (Start of Line | for Python and Indentation oriented languages)
+
+Alt +  O = Home (End of Line | for C++, C, Java, JavaScript and Statement Terminator oriented languages)
+
+Alt +  P = Delete
+
+Alt +  ; = Backspace
+
+Alt +  [ = Page Up
+
+Alt +  ' = Page Down
+
+
+
+
 Note. The key functionalities of KodeArrow will work throughout the whole Desktop/Windows experience.
 
-## Feedback and Support
+
+############################
+### Feedback and Support ###
+############################
 
 We value your feedback! If you have any questions, suggestions, or issues, feel free to reach out to our dedicated support team at https://bted.wuaze.com/contactMe.html. Your input helps us continually enhance the KodeArrow experience.
 
-## Stay Connected
+######################
+### Stay Connected ###
+######################
 
 Follow us on [LinkedIn](www.linkedin.com/in/ahmad-hassan-52ab4225b/) and [GitHub](github.com/byted-technologies) to stay up-to-date with the latest news, updates, and tips on optimizing your coding workflow.
 
-## Spread the Word
+#######################
+### Spread the Word ###
+#######################
 
 If KodeArrow has transformed the way you code, why not share the love? Tell your friends and colleagues about this game-changing software and let's revolutionize coding together!
 
-Happy coding,
+Happy coding :)
 
 Regards,
 The KodeArrow Creator, Ahmad Hassan (B-Ted)
 
 ---
-
-Note: KodeArrow is a product of ByTed-technologies Inc. For more information about our products and services, please visit [bted.wuaze.com/](kodearrow.wuaze.com/).
-
+KodeArrow: a product of ByTed Technologies Inc. 
+For more information about our products and services, please visit [bted.wuaze.com/](kodearrow.wuaze.com/).
 Copyright ©2023
 Project by Ahmad Hassan

@@ -62,6 +62,6 @@ def add_user(email, subscription_date_str):
 
 if __name__ == "__main__":
     # Example usage:
-    user_email = "enjoytrialversionwithme@kodearrow.com"
+    user_email = "formyclassfellows@trailversion.com"
     subscription_date_str = datetime.today().strftime("%Y-%m-%d")  # Use today's date in the correct format
     add_user(user_email, subscription_date_str)

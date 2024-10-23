@@ -1,0 +1,258 @@
+import tkinter as tk
+import time
+import pandas as pd
+from keyboard import on_press_key, unhook_all
+from tkinter import messagebox
+import math
+from keyboard import on_press_key, unhook_all, is_pressed
+
+# Initialize data collection variables
+data = {
+    'wpm': 0,
+    'accuracy': 0,
+    'completion_time': 0,
+    'error_rate': 0,
+    'finger_movement_distance': 0,
+    'home_row_retention': 0,
+    'correction_time': 0,
+    'total_typing_time': 0,
+    'navigational_key_usage': 0,
+    'backspace_usage': 0,
+    'pageup_pagedown_usage': 0,
+    'delete_usage': 0,
+    'cognitive_load': 0
+}
+
+# Assign distance values (arbitrary) for navigation and correction keys
+key_distances = {
+    'backspace': 5.0,  # Pinky needs to stretch significantly away from home row
+    'delete': 5.5,     # Similar to Backspace but requires a further stretch
+    'page up': 6.0,    # Far upper-right corner
+    'page down': 6.0,  # Far lower-right corner
+    'home': 5.5,       # Also quite far on the right side
+    'end': 5.5,        # Same as Home key in terms of distance
+    'left': 4.0,       # Moderate movement to the right of the home row
+    'right': 4.0,      # Same distance as the left arrow
+    'up': 4.5,         # Slightly higher up from home row and right
+    'down': 4.5,        # Slightly lower from home row and right
+
+    'alt+i': 0.0,  # Up key
+    'alt+k': 0.0,  # Down key
+    'alt+l': 0.0,  # Right key
+    'alt+j': 0.0,  # Left key
+    'alt+;': 0.0,  # Backspace key
+    'alt+p': 0.5,  # Delete key
+    'alt+u': 0.5,  # Home key
+    'alt+o': 0.5,  # Endline key
+    'alt+\'': 1.0,  # PageUp key
+    'alt+{': 1.0,  # PageDown key
+}
+
+# Track key usage statistics
+start_time = None
+end_time = None
+correction_time = 0
+finger_movement_distance = 0
+total_typing_time = 0
+backspace_usage = 0
+navigation_key_usage = 0
+pageup_pagedown_usage = 0
+delete_usage = 0
+home_key_usage = 0
+test_active = False
+expected_text = "The quick brown fox jumps over the lazy dog. While typing, you should focus on minimizing errors and staying efficient. Isn't it remarkable how every keystroke counts toward your overall performance? As you navigate, consider how often you use the spacebar, punctuation, and navigational keys such as arrows, delete, and backspace. Efficient typing relies on mastering both speed and accuracy. Try to maintain a smooth flow without overreaching from the home row. Remember, shortcuts can save time—if used wisely! Finally, don't forget to take breaks when necessary; they help prevent fatigue."  # Placeholder
+
+def track_custom_key_combinations(event):
+    global finger_movement_distance, backspace_usage, delete_usage, navigation_key_usage, pageup_pagedown_usage, home_key_usage
+    
+    if is_pressed('alt') and event.name in ['i', 'k', 'l', 'j', ';', 'p', 'u', 'o', "'", '[']:
+        custom_key = f"alt+{event.name}"
+        
+        if custom_key in key_distances:
+            finger_movement_distance += key_distances[custom_key]
+            
+            if custom_key == 'alt+;':  # Consider this backspace
+                backspace_usage += 1
+            elif custom_key == 'alt+p':  # Consider this delete
+                delete_usage += 1
+            elif custom_key in ['alt+i', 'alt+k', 'alt+l', 'alt+j']:  # Navigational keys
+                navigation_key_usage += 1
+            elif custom_key in ['alt+\'', 'alt+[']:  # PageUp/PageDown
+                pageup_pagedown_usage += 1
+            elif custom_key in ['alt+u', 'alt+o']:  # Home/Endline keys
+                home_key_usage += 1
+
+
+def start_test():
+    global start_time, test_active
+    start_time = time.time()
+    test_active = True
+
+    # Enable the text input field
+    text_field.config(state=tk.NORMAL)
+    text_field.focus_set()
+
+    # Hook key press events for both standard keys and custom Alt+key combinations
+    on_press_key('backspace', track_backspace)
+    on_press_key('left', track_navigation_key)
+    on_press_key('right', track_navigation_key)
+    on_press_key('up', track_navigation_key)
+    on_press_key('down', track_navigation_key)
+    on_press_key('page up', track_pageup)
+    on_press_key('page down', track_pagedown)
+    on_press_key('delete', track_delete)
+    on_press_key('home', track_home_key)
+    on_press_key('end', track_home_key)
+    
+    # Hook custom Alt+key combinations
+    for key in ['i', 'k', 'l', 'j', ';', 'p', 'u', 'o', "'", '[']:
+        on_press_key(key, track_custom_key_combinations)
+
+    start_button.pack_forget()
+
+def track_backspace(event):
+    global backspace_usage, finger_movement_distance
+    if test_active:
+        backspace_usage += 1
+        finger_movement_distance += key_distances['backspace']
+
+def track_delete(event):
+    global delete_usage, finger_movement_distance
+    if test_active:
+        delete_usage += 1
+        finger_movement_distance += key_distances['delete'] 
+
+def track_navigation_key(event):
+    global navigation_key_usage, finger_movement_distance
+    if test_active:
+        navigation_key_usage += 1
+        finger_movement_distance += key_distances[event.name]
+
+def track_pageup(event):
+    global pageup_pagedown_usage, finger_movement_distance
+    if test_active:
+        pageup_pagedown_usage += 1
+        finger_movement_distance += key_distances['page up']
+
+def track_pagedown(event):
+    global pageup_pagedown_usage, finger_movement_distance
+    if test_active:
+        pageup_pagedown_usage += 1
+        finger_movement_distance += key_distances['page down']
+
+def track_home_key(event):
+    global home_key_usage, finger_movement_distance
+    if test_active:
+        home_key_usage += 1
+        finger_movement_distance += key_distances[event.name]
+
+def end_test():
+    global end_time, test_active
+    if test_active is True:
+        end_time = time.time()
+    test_active = False  # Stop the test
+    
+    # Disable the text input field
+    text_field.config(state=tk.DISABLED)
+    
+    unhook_all()  # Unhook all key tracking when the test ends
+    calculate_results()
+    show_results()
+
+def calculate_results():
+    global total_typing_time
+    total_time = end_time - start_time
+    total_typing_time = total_time - correction_time
+
+    # Calculate WPM (Words per minute)
+    words_typed = len(text_field.get("1.0", tk.END).split())
+    wpm = (words_typed / total_typing_time) * 60 if total_typing_time > 0 else 0
+
+    # Accuracy calculation
+    typed_text = text_field.get("1.0", tk.END).strip()
+    correct_characters = sum(1 for a, b in zip(expected_text, typed_text) if a == b)
+    accuracy = (correct_characters / len(expected_text)) * 100 if len(expected_text) > 0 else 0
+
+    # Error rate
+    total_errors = len(expected_text) - correct_characters
+    error_rate = total_errors / len(expected_text) if len(expected_text) > 0 else 0
+
+    # Home row retention percentage (more usage of navigational keys leads to lower retention)
+    total_navigation_usage = navigation_key_usage + backspace_usage + delete_usage + pageup_pagedown_usage + home_key_usage
+    home_row_retention_percentage = 100 - (total_navigation_usage / (total_navigation_usage + words_typed)) * 100 if words_typed > 0 else 0
+
+    # Add results to the data dictionary
+    data.update({
+        'wpm': wpm,
+        'accuracy': accuracy,
+        'completion_time': total_time,
+        'error_rate': error_rate,
+        'finger_movement_distance': finger_movement_distance,
+        'home_row_retention': home_row_retention_percentage,
+        'correction_time': correction_time,
+        'total_typing_time': total_typing_time,
+        'navigational_key_usage': navigation_key_usage,
+        'backspace_usage': backspace_usage,
+        'pageup_pagedown_usage': pageup_pagedown_usage,
+        'delete_usage': delete_usage,
+        'cognitive_load': 0  # Placeholder for future NASA-TLX integration
+    })
+
+def show_results():
+    result_message = (
+        f"WPM: {data['wpm']:.2f}\n"
+        f"Accuracy: {data['accuracy']:.2f}%\n"
+        f"Completion Time: {data['completion_time']:.2f}s\n"
+        f"Error Rate: {data['error_rate']:.2f}\n"
+        f"Finger Movement Distance: {data['finger_movement_distance']:.2f}\n"
+        f"Home Row Retention: {data['home_row_retention']:.2f}%\n"
+        f"Correction Time: {data['correction_time']:.2f}s\n"
+        f"Navigational Key Usage: {data['navigational_key_usage']}\n"
+        f"Backspace Usage: {data['backspace_usage']}\n"
+        f"Delete Usage: {data['delete_usage']}\n"
+        f"PageUp/PageDown Usage: {data['pageup_pagedown_usage']}\n"
+        f"Home/End Key Usage: {home_key_usage}\n"  # Display Home Key usage
+    )
+    messagebox.showinfo("Test Results", result_message)
+    
+    # Optionally save to Excel or CSV
+    df = pd.DataFrame([data])
+    df.to_excel('typing_test_results.xlsx', index=False)
+
+def main():
+    global text_field, start_button
+    window = tk.Tk()
+    window.title("Typing Test")
+
+    # Set up frames for layout
+    main_frame = tk.Frame(window)
+    main_frame.pack(pady=10, padx=10)
+
+    right_frame = tk.Frame(main_frame)
+    right_frame.grid(row=0, column=0, padx=10)
+
+    left_frame = tk.Frame(main_frame)
+    left_frame.grid(row=0, column=1, padx=10)
+
+    # Text display (on the left side)
+    task_label = tk.Label(left_frame, text="Text to Type:", font=('Helvetica', 14, 'bold'))
+    task_label.pack()
+
+    expected_text_label = tk.Label(left_frame, text=expected_text, wraplength=420, justify="left", pady=26 , font=('Helvetica', 14))
+    expected_text_label.pack()
+
+    # Typing input field (on the right side)
+    text_field = tk.Text(right_frame, height=55, width=170)
+    text_field.config(state=tk.DISABLED)  # Disable typing field initially
+    text_field.pack()
+
+    start_button = tk.Button(right_frame, text="Start Test", command=start_test)
+    start_button.pack()
+
+    end_button = tk.Button(right_frame, text="End Test", command=end_test)
+    end_button.pack()
+
+    window.mainloop()
+
+if __name__ == "__main__":
+    main()

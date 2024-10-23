@@ -1,12 +1,49 @@
+
+                             (((                                                
+                             (((((((////                                        
+                             (((((((((////                                      
+                                   (((((///                                     
+                                    ((((((/                                     
+                                     (((((((                                    
+                                     (((((((                                    
+                                     (((((((                                    
+                                     (((((((                                    
+                                     (((((((                                    
+                                     ###((((                                    
+                                     #####((                                    
+                                     #######                                    
+                                      #######                                   
+                                      ########            ##((                  
+                                        ########          ####(((((((           
+      THANKS FOR BUYING KODEARROW         ##########      ####   ((((((((((     
+[]][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][      @@@@@@@@@@@ 
+                                         ]]#########      &&&&&&&&&&&@@@        
+                                        ]]]]]##           &&&&&&&&               
+                                      ]]]]]]]             &&&&                    
+                                     ]]]]]]%                                    
+                                     &]]]]]]                                    
+                                     &&&]]]]                                    
+                                     &&&&&]]                                    
+                                     &&&&&&&                                    
+                                     &&&&&&&                                    
+                                     &&&&&&&                                    
+                                    @@@&&&&                                     
+                             @@@@@@@@@@@@@&                                     
+                             @@@@@@@@@@@@                                       
+                             @@@@@@@@@@@      
+
+
+
 KodeArrow - Move less, Type fast, Code Seamlessly.
 
-Welcome to KodeArrow! 🚀
 
-Note: Please buy Premium at (kodearrow.wuaze.com/) to unlock Up/Down Keyboard shortcut accessibility.
 
-###################
-### Description ###
-###################
+Welcome to KodeArrow! 🚀                                 
+                                 
+
+#######################
+### About KodeArrow ###
+#######################
 
 KodeArrow is a revolutionary keyboard software designed to revolutionize the coding experience for developers and programmers. Tired of constantly stretching your fingers to reach those elusive arrow keys? Look no further! KodeArrow is here to enhance your productivity and minimize hand movement, making coding an absolute breeze.
 
@@ -28,7 +65,7 @@ KodeArrow is a revolutionary keyboard software designed to revolutionize the cod
 ####################
 
 1. Download the KodeArrow.exe installer from (kodearrow.wuaze.com/).
-2. Extract the WinRar file and follow the simple on-screen instructions.
+2. Extract the WinRAR file and follow the simple on-screen instructions.
 3. Launch KodeArrow.exe and start experiencing a new level of coding comfort!
 
 #############
@@ -36,7 +73,7 @@ KodeArrow is a revolutionary keyboard software designed to revolutionize the cod
 #############
 
 1. Launch KodeArrow (Run as Administrator).
-2. The KeyGuide will be displaying the following pop-up:
+2. The Key Guide will be displaying the following pop-up:
 
 		_______________________________________________________________________________________
 		|										       |
@@ -86,13 +123,13 @@ Alt +  U = Home (Start of Line | for Python and Indentation oriented languages)
 
 Alt +  O = Home (End of Line | for C++, C, Java, JavaScript and Statement Terminator oriented languages)
 
-Alt +  P = Page Up
+Alt +  P = Delete
 
-Alt +  ; = Page Down
+Alt +  ; = Backspace
 
-Alt +  [ = Delete
+Alt +  [ = Page Up
 
-Alt +  ' = Backspace
+Alt +  ' = Page Down
 
 
 
@@ -124,7 +161,7 @@ Regards,
 The KodeArrow Creator, Ahmad Hassan (B-Ted)
 
 ---
-KodeArrow: a product of ByTed-technologies Inc. 
+KodeArrow: a product of ByTed Technologies Inc. 
 For more information about our products and services, please visit [bted.wuaze.com/](kodearrow.wuaze.com/).
 Copyright ©2023
 Project by Ahmad Hassan
