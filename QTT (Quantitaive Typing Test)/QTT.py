@@ -194,8 +194,8 @@ def calculate_results():
         'navigational_key_usage': navigation_key_usage,
         'backspace_usage': backspace_usage,
         'pageup_pagedown_usage': pageup_pagedown_usage,
-        'delete_usage': delete_usage,
-        'cognitive_load': 0  # Placeholder for future NASA-TLX integration
+        'delete_usage': delete_usage
+        # ,'cognitive_load': 0  # Placeholder for future NASA-TLX integration
     })
 
 def show_results():

@@ -21,10 +21,16 @@ from dateutil.relativedelta import relativedelta
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 import threading
+import time
 
 pyautogui.PAUSE = 0.000001
 
 windows = []
+
+total_keyStrokes = 0
+total_shortcuts = 0
+total_runtime = 0
+previous_time = time.time() 
 
 def show_notification():
     notification.notify(
@@ -109,10 +115,27 @@ def encrypt_hardwareID(s):
                 encrypted_chars.append(chr(new_char_code))
     return ''.join(encrypted_chars)
 
-def decrypt_hardwareID(s):
-    # Shift each character's ASCII value back by 1
-    original = ''.join(chr(ord(char) - 1) for char in s)
-    return original
+# def decrypt_hardwareID(s):
+#     # Shift each character's ASCII value back by 1
+#     original = ''.join(chr(ord(char) - 1) for char in s)
+#     return original
+
+# def decrypt_hardwareID(s):
+#     decrypted_chars = []
+#     for char in s:
+#         if char.isalnum():  # Check if the character is alphanumeric
+#             if char.isalpha():  # Check if the character is a letter
+#                 if char.isupper():  # For uppercase letters
+#                     original_char_code = (ord(char) - ord('A') - 3) % 26 + ord('A')
+#                     decrypted_chars.append(chr(original_char_code))
+#                 else:  # For lowercase letters
+#                     original_char_code = (ord(char) - ord('a') - 3) % 26 + ord('a')
+#                     decrypted_chars.append(chr(original_char_code))
+#             else:  # If the character is a digit
+#                 original_char_code = (ord(char) - ord('0') - 3) % 10 + ord('0')
+#                 decrypted_chars.append(chr(original_char_code))
+#     return ''.join(decrypted_chars)
+
 
 encrypted_hardware_id = "B4" + encrypt_hardwareID(get_hardware_id()) + "3TzD" + encrypt_hardwareID(encrypt_hardwareID(get_hardware_id())) + "u"
 
@@ -124,6 +147,151 @@ premium_file_path = f"{encrypted_hardware_id}.txt"
 # Load the icon image and resize it to a suitable size for the tray (e.g., 16x16)
 icon_image = Image.open(icon_image_path)
 icon_image = icon_image.resize((16, 16))
+
+
+
+
+# Path for the file to store data
+usageData_file = "kodearrow_data.txt"
+
+# Function to remove the hidden attribute before writing
+def remove_hidden_attribute(file_path):
+    try:
+        # For Windows: Use subprocess to remove the hidden attribute
+        subprocess.check_call(["attrib", "-H", file_path])
+        print(f"Hidden attribute removed for '{file_path}'")
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to remove hidden attribute: {e}")
+
+# Function to reapply the hidden attribute after writing
+def add_hidden_attribute(file_path):
+    try:
+        # For Windows: Use subprocess to add the hidden attribute
+        subprocess.check_call(["attrib", "+H", file_path])
+        print(f"Hidden attribute added for '{file_path}'")
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to add hidden attribute: {e}")
+
+# Function to create a hidden file with initial values (if the file doesn't exist)
+def create_hidden_file(file_path, total_keyStrokes=0, total_shortcuts=0, total_runtime=0):
+    if not os.path.exists(file_path):
+        # Initialize content with default values
+        content = f"{total_keyStrokes}\n{total_shortcuts}\n{total_runtime}\n"
+        
+        try:
+            with open(file_path, "w") as file:
+                file.write(content)
+            
+            # Set the file as hidden based on the platform (Windows only)
+            if platform.system() == "Windows":
+                add_hidden_attribute(file_path)
+            elif platform.system() in ["Darwin", "Linux"]:
+                # For macOS and Linux: Prefix file name with a dot to hide it
+                os.rename(file_path, f".{file_path}")
+            else:
+                raise NotImplementedError(f"Unsupported platform: {platform.system()}")
+            
+            print(f"Hidden file '{file_path}' created successfully.")
+        
+        except Exception as e:
+            print(f"Failed to create hidden file '{file_path}': {e}")
+
+# Function to write variables to the file
+def write_to_file(file_path, total_keyStrokes, total_shortcuts, total_runtime):
+    try:
+        remove_hidden_attribute(file_path)
+        
+        temp_total_keyStrokes, temp_total_shortcuts, temp_total_runtime = read_from_file(usageData_file)
+
+        with open(file_path, "w") as file:
+            file.write(f"{total_keyStrokes+temp_total_keyStrokes}\n{total_shortcuts+temp_total_shortcuts}\n{total_runtime+temp_total_runtime}\n")
+            
+        add_hidden_attribute(file_path)
+        
+    except Exception as e:
+        print(f"Failed to write to file '{file_path}': {e}")
+
+# Function to read variables from the file
+def read_from_file(file_path):
+    try:
+        with open(file_path, "r") as file:
+            lines = file.readlines()
+            
+            # Check if the file has the expected number of lines
+            if len(lines) != 3:
+                raise ValueError("File has an unexpected number of lines.")
+            
+            # Read lines and ensure all lines contain valid integers
+            total_keyStrokes = int(lines[0].strip())  # Convert the first line to an integer
+            total_shortcuts = int(lines[1].strip())   # Convert the second line to an integer
+            total_runtime = float(lines[2].strip())   # Convert the third line to a float (in case it's a decimal)
+        
+        return total_keyStrokes, total_shortcuts, total_runtime
+    except FileNotFoundError:
+        print("File not found. Initializing values to 0.")
+        return 0, 0, 0
+    except ValueError as e:
+        print(f"Invalid data in file: {e}. Reinitializing values to 0.")
+        return 0, 0, 0
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}. Reinitializing values to 0.")
+        return 0, 0, 0
+
+def process_user_data():
+    create_hidden_file(usageData_file)
+
+def upload_data_to_server(file_path):
+    try:
+        # Remove the hidden attribute from the file
+        remove_hidden_attribute(file_path)
+        
+        # Read usage data from the file
+        temp_total_keyStrokes, temp_total_shortcuts, temp_total_runtime = read_from_file(file_path)
+
+        # Fetch the email from the file and get the corresponding Firestore document
+        doc_ref_user = db.collection('ControlGroup').document(find_email_in_file())
+        usage_ref = doc_ref_user.collection('usage').document('usage_data')
+
+        # Fetch the existing usage data from Firestore
+        usage_doc = usage_ref.get()
+
+        if usage_doc.exists:
+            # Extract the existing data
+            existing_data = usage_doc.to_dict()
+            
+            # Update the existing data with new values
+            existing_data['charactersTyped'] += temp_total_keyStrokes
+            existing_data['kodeArrowHotkeys'] += temp_total_shortcuts
+            existing_data['TotalUsageMinutes'] += temp_total_runtime
+            
+            # Save the updated data back to Firestore
+            usage_ref.set(existing_data)
+            print("Usage data updated successfully.")
+            
+            # Reset the file only after successful upload
+            with open(file_path, "w") as file:
+                file.write(f"{0}\n{0}\n{0}\n")
+        else:
+            print("Usage document does not exist. Initialize it first.")
+
+        # Reapply the hidden attribute to the file
+        add_hidden_attribute(file_path)
+        
+    except Exception as e:
+        print(f"Failed to write to file '{file_path}': {e}")
+
+
+#######################################################################################################
+
+
+
+############################################################################################
+
+
+process_user_data()
+
+#######################################################################################################
+
 
 def is_premium():
     return os.path.exists(premium_file_path)
@@ -428,14 +596,11 @@ For User:
         subscription_date_str = user_doc.get('subscription_date')
         subscription_date = datetime.strptime(subscription_date_str, '%Y-%m-%d')
 
-        # Calculate one year later
-        six_months_later = subscription_date + relativedelta(months=1)
-
         # Get today's date
         today = datetime.today()
 
         # Compare dates
-        if today >= six_months_later:
+        if today >= subscription_date:
             # print("Email exists but the subscription period has expired. Deleting premium file.")
             showMessage_subscriptionEnded("your Subscription Period has ended :(\nThank you for joining us 💙 and hope you enjoyed it!\n\nPlase renew your subsription, and enjoy premium services again")
             return False
@@ -613,16 +778,26 @@ threading.Thread(target=showMessage, daemon=True).start()
 def hehe():
     return True
 
+def updateData():
+        global total_shortcuts
+        global total_keyStrokes
+        total_keyStrokes -= 1
+        total_shortcuts += 1
+        print(f"Total Shortcuts: {total_shortcuts}")
+        
+
 # Define the hotkey event hooks and suppress the default behavior (suppress=True)
 def left_arrow():
     keyboard.add_hotkey('alt+left', hehe, suppress=True)
     pyautogui.press('left')       # Full functionality for the paid version
+    updateData()
     keyboard.remove_hotkey('alt+left')
 
 def down_arrow():
     if is_premium():
         keyboard.add_hotkey('alt+down', hehe, suppress=True)
         pyautogui.press('down')  # Full functionality for the paid version
+        updateData()
         keyboard.remove_hotkey('alt+down')
     
     else:
@@ -632,6 +807,7 @@ def up_arrow():
     if is_premium():
         keyboard.add_hotkey('alt+up', hehe, suppress=True)
         pyautogui.press('up')       # Full functionality for the paid version
+        updateData()
         keyboard.remove_hotkey('alt+up')
     else:
         return
@@ -639,12 +815,14 @@ def up_arrow():
 def right_arrow():
     keyboard.add_hotkey('alt+right', hehe, suppress=True)
     pyautogui.press('right')
+    updateData()
     keyboard.remove_hotkey('alt+right')
 
 def page_up_key():
     if is_premium():
         keyboard.add_hotkey('alt+pageup', hehe, suppress=True)
         pyautogui.press('pageup')
+        updateData()
         keyboard.remove_hotkey('alt+pageup')
     else:
         return
@@ -653,6 +831,7 @@ def page_down_key():
     if is_premium():
         keyboard.add_hotkey('alt+pagedown', hehe, suppress=True)
         pyautogui.press('pagedown')
+        updateData()
         keyboard.remove_hotkey('alt+pagedown')
     else:
         return
@@ -661,6 +840,7 @@ def end_key():
     if is_premium():
         keyboard.add_hotkey('alt+end', hehe, suppress=True)                                 
         pyautogui.press('end')
+        updateData()
         keyboard.remove_hotkey('alt+end')
     else:
         # print("Limited Functionality", "Down arrow (Free version)")   # Limited functionality for the free version
@@ -670,6 +850,7 @@ def home_key():
     if is_premium():
         keyboard.add_hotkey('alt+home', hehe, suppress=True)
         pyautogui.press('home')
+        updateData()
         keyboard.remove_hotkey('alt+home')
     else:
         #print("Limited Functionality", "Down arrow (Free version)")   # Limited functionality for the free version
@@ -679,16 +860,17 @@ def backspace_key():
     if is_premium():
         keyboard.add_hotkey('alt+backspace', hehe, suppress=True)
         pyautogui.press('backspace')
+        updateData()
         keyboard.remove_hotkey('alt+backspace')
     else:
         #print("Limited Functionality", "Down arrow (Free version)")   # Limited functionality for the free version
         return
     
-
 def delete_key():
     if is_premium():
         keyboard.add_hotkey('alt+delete', hehe, suppress=True)
         pyautogui.press('delete')
+        updateData()
         keyboard.remove_hotkey('alt+delete')
     else:
         #print("Limited Functionality", "Down arrow (Free version)")   # Limited functionality for the free version
@@ -732,7 +914,37 @@ keyboard.add_hotkey('alt+;', backspace_key, suppress=True)
 keyboard.add_hotkey('alt+[', page_up_key, suppress=True)
 keyboard.add_hotkey("alt+'", page_down_key, suppress=True)
 
+multiplier = 20;
+
+def calculate_user_data():
+        global total_keyStrokes
+        global total_shortcuts
+        global multiplier
+        global previous_time
+
+        total_keyStrokes += 1
+        if(total_keyStrokes > multiplier):
+            current_time = time.time() 
+            time_interval = current_time - previous_time 
+
+            write_to_file(usageData_file, total_keyStrokes, total_shortcuts, time_interval/60)
+            total_shortcuts = 0
+            total_keyStrokes = 0
+
+
+def increment_total_keyStrokes(event):
+        if event.event_type == 'down':
+             calculate_user_data()
+
+        print(f"Total keys pressed: {total_keyStrokes}")
+
+keyboard.hook(increment_total_keyStrokes)
 ############################################################################################
+
+
 
 icon.run()
 thread.join()
+
+
+## now implement that, when the person gets online, it uplaods the data

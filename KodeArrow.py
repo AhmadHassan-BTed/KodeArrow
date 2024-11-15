@@ -425,17 +425,17 @@ For User:
         # User exists, check devices
         devices_ref = user_ref.collection('devices')
         devices_query = devices_ref.get()
-        subscription_date_str = user_doc.get('subscription_date')
-        subscription_date = datetime.strptime(subscription_date_str, '%Y-%m-%d')
+        subscription_expiration_date_str = user_doc.get('subscription_expiration_date')
+        subscription_expiration_date = datetime.strptime(subscription_expiration_date_str, '%Y-%m-%d')
 
         # Calculate one year later
-        six_months_later = subscription_date + relativedelta(months=1)
+        # six_months_later = subscription_date + relativedelta(months=1)
 
         # Get today's date
         today = datetime.today()
 
         # Compare dates
-        if today >= six_months_later:
+        if today >= subscription_expiration_date:
             # print("Email exists but the subscription period has expired. Deleting premium file.")
             showMessage_subscriptionEnded("your Subscription Period has ended :(\nThank you for joining us 💙 and hope you enjoyed it!\n\nPlase renew your subsription, and enjoy premium services again")
             return False
