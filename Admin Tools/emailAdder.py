@@ -64,7 +64,7 @@ def add_user(email, subscription_date_str):
 
 if __name__ == "__main__":
     # Example usage:
-    user_email = "muhammadfaseeh3977@gmail.com"
+    user_email = "ahmadinsane200@gmail.com"
 
     # subscription_date = datetime.today()  # Today's date as a datetime object
     subscription_date_str = datetime.today().strftime("%Y-%m-%d")  # Use today's date as a string
