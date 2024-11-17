@@ -148,17 +148,14 @@ premium_file_path = f"{encrypted_hardware_id}.txt"
 icon_image = Image.open(icon_image_path)
 icon_image = icon_image.resize((16, 16))
 
-
-
-
 # Path for the file to store data
-usageData_file = "kodearrow_data.txt"
+usageData_file = "premium_Key_metadata.txt"
 
 # Function to remove the hidden attribute before writing
 def remove_hidden_attribute(file_path):
     try:
-        # For Windows: Use subprocess to remove the hidden attribute
-        subprocess.check_call(["attrib", "-H", file_path])
+        # For Windows: Use subprocess to remove the hidden attribute without showing CMD window
+        subprocess.check_call(["attrib", "-H", file_path], creationflags=0x08000000)
         print(f"Hidden attribute removed for '{file_path}'")
     except subprocess.CalledProcessError as e:
         print(f"Failed to remove hidden attribute: {e}")
@@ -166,8 +163,8 @@ def remove_hidden_attribute(file_path):
 # Function to reapply the hidden attribute after writing
 def add_hidden_attribute(file_path):
     try:
-        # For Windows: Use subprocess to add the hidden attribute
-        subprocess.check_call(["attrib", "+H", file_path])
+        # For Windows: Use subprocess to add the hidden attribute without showing CMD window
+        subprocess.check_call(["attrib", "+H", file_path], creationflags=0x08000000)
         print(f"Hidden attribute added for '{file_path}'")
     except subprocess.CalledProcessError as e:
         print(f"Failed to add hidden attribute: {e}")
@@ -243,7 +240,7 @@ def process_user_data():
 def upload_data_to_server(file_path):
     try:
         # Remove the hidden attribute from the file
-        remove_hidden_attribute(file_path)
+        # remove_hidden_attribute(file_path)
         
         # Read usage data from the file
         temp_total_keyStrokes, temp_total_shortcuts, temp_total_runtime = read_from_file(file_path)
@@ -865,7 +862,7 @@ def updateData():
         global total_keyStrokes
         total_keyStrokes -= 1
         total_shortcuts += 1
-        print(f"Total Shortcuts: {total_shortcuts}")
+        # print(f"Total Shortcuts: {total_shortcuts}")
         
 
 # Define the hotkey event hooks and suppress the default behavior (suppress=True)
@@ -1018,7 +1015,6 @@ def calculate_user_data():
             total_shortcuts = 0
             total_keyStrokes = 0
 
-#asdfasdfasdfadsfasdfasdfasdfasdfadsfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfadsfadsfadsfadfadsfadsfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfadsfasdfasdfasdfasdfasdf
 def increment_total_keyStrokes(event):
         if event.event_type == 'down':
              calculate_user_data()
@@ -1036,4 +1032,4 @@ icon.run()
 thread.join()
 ## now implement that, when the person gets online, it uplaods the data
 
-## do the testing !!!
+## scxvzxcvzxcvzxcvzxcvzxcvzxcvzxcvzxcvzxcvzcvzcvzcvxzxcvzxvczxcvzxcvzvzvczcvzcxvzcxvzcvzxcvzxcvzxcvzxcvzcvasdfasdfasdfasdfasdfasdfasdfasdfsadfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfadsfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfasdfasdfasdfasdfasdfasdfadsfasdfasdfasdfadsfadsfadfadfadfadf
