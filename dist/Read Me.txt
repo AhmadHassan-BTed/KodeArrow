@@ -132,10 +132,14 @@ Alt +  [ = Page Up
 Alt +  ' = Page Down
 
 
-
-
 Note. The key functionalities of KodeArrow will work throughout the whole Desktop/Windows experience.
 
+
+#######################
+### Tips and Tricks ###
+#######################
+
+In Word, press both alt keys with corresponding thumbs and then navigate through the paragraphs with each navigation.  
 
 ############################
 ### Feedback and Support ###
