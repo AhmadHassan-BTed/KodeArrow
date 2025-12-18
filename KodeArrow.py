@@ -11,7 +11,7 @@ from tkinter import messagebox
 # Define the tray icon image and tooltip
 icon_image_path = "icon.ico"
 tooltip_text = "KodeArrow by Ahmad Hassan"
-premium_file_path = "premiumUnlocked.txt"  # File to store premium status
+premium_file_path = "PremiumUnlockDataFile.txt"  # File to store premium status
 
 # Load the icon image and resize it to a suitable size for the tray (e.g., 16x16)
 icon_image = Image.open(icon_image_path)
@@ -28,7 +28,7 @@ icon_image = icon_image.resize((16, 16))
 
 # Function to show the initial instructions and key combinations
 def show_instructions():
-    message = "Thanks for Running KodeArrow: Developed by Ahmad Hassan \n\n\talt + i = Arrow Up(Premium)\n\talt + k = Arrow Down(Premium)\n\talt + j = Arrow Left(Free Version)\n\talt + l = Arrow Right(Free Version)\n\nPlease Buy The Paid Version to Unlock the Premium"
+    message = "Thank you for using KodeArrow, project by Ahmad Hassan\n\n\n\t\t'Alt + I' (Arrow Up)\n\n'Alt + J' (Arrow Left)\t\t'Alt + L' (Arrow Right)\n\n\t\t'Alt + K' (Arrow Down)\n\n\n       Note: Arrow Up/Down require Premium Unlocked\nPlease buy Premium version to unlock ease to access features."
     messagebox.showinfo("Instructions", message)
 
 # Show the initial instructions when the program starts
@@ -48,7 +48,52 @@ def open_url_buy(icon, item):
 # Function to create the premium file
 def create_premium_file():
     with open(premium_file_path, "w") as file:
-        file.write("DONT DELETE OR MOVE THIS FILE/ DO NOT CHANGE ANY DIRECTORIES\nKeep it in the same folder as .exe file \n\n Thanks for Buying Premium\n Support me on bted.000webhostapp.com \n\n Project KodeArrow, Developed By Ahmad Hassan")
+        file.write("""YOUR PREMIUM UNLOCK IS UNLOCKED
+                             
+                             (((                                                
+                             (((((((////                                        
+                             (((((((((////                                      
+                                   (((((///                                     
+                                    ((((((/                                     
+                                     (((((((                                    
+                                     (((((((                                    
+                                     (((((((                                    
+                                     (((((((                                    
+                                     (((((((                                    
+                                     ###((((                                    
+                                     #####((                                    
+                                     #######                                    
+                                      #######                                   
+                                      ########            ##((                  
+                                        ########          ####(((((((           
+      THANKS FOR BUYING KODEARROW         ##########      ####   ((((((((((     
+[]][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][      @@@@@@@@@@@ 
+                                         ]]#########      &&&&&&&&&&&@@@        
+                                        ]]]]]##           &&&&&&&               
+                                      ]]]]]]]             &                     
+                                     ]]]]]]%                                    
+                                     &]]]]]]                                    
+                                     &&&]]]]                                    
+                                     &&&&&]]                                    
+                                     &&&&&&&                                    
+                                     &&&&&&&                                    
+                                     &&&&&&&                                    
+                                    @@@&&&&                                     
+                             @@@@@@@@@@@@@&                                     
+                             @@@@@@@@@@@@                                       
+                             @@@@@@@@@@@                                       
+                                 
+CAUTION!
+DO NOT MOVE THIS FILE UNDER ANY CIRCUMSTANCES.
+DO NOT CHANGE THE DIRECTORY OF THIS FILE.
+KEEP THE FILE IN THE SAME FOLDER.
+DO NOT SHARE THIS FILE ACROSS ANY OTHER DEVICES.
+
+VIOLATION OF ANY OF THESE INSTRUCTIONS MAY LEAD TO THE USER BEING HELD LIABLE FOR LEGAL ACTION.
+
+Copyright© 2023. Ahmad Hassan(B-TED)
+Project KodeArrow
+    """)
 
 # Function to delete the premium file
 def delete_premium_file():
@@ -106,9 +151,9 @@ def create_menu():
     else:
         menu.append(pystray.MenuItem('Buy for $2', open_url_buy))
         menu.append(pystray.MenuItem('Enter Key', unlock_functionality))
-
+    
     menu.append(pystray.MenuItem('Exit', lambda icon, item: exit_program()))  # Add the Exit option to the menu
-
+    
     # Update the icon with the new menu
     icon.menu = pystray.Menu(*menu)
 
