@@ -5,7 +5,6 @@ import sys
 import pystray
 from PIL import Image
 import webbrowser
-import tkinter as tk
 from tkinter import messagebox
 import platform
 import subprocess
@@ -14,6 +13,8 @@ import itertools
 import firebase_admin
 from firebase_admin import credentials, firestore
 import requests  # Import requests library for network connectivity check
+from customtkinter import *
+import customtkinter as ctk
 
 pyautogui.PAUSE = 0.000
 
@@ -62,26 +63,76 @@ def is_premium():
     return os.path.exists(premium_file_path)
 
 
-# Function to show the initial instructions and key combinations
-def show_instructions():
-    message = "Thank you for using KodeArrow, project by Ahmad Hassan\n\n\n\t\t       Alt + I\n\t\t   (Arrow Up)\n\n     Alt + J \t\t\t       Alt + L \t(Arrow Left) \t\t\t(Arrow Right)\n\n\t\t      Alt + K \n\t\t(Arrow Down)\n\nPlease buy Premium version to unlock ease to access features"
-    messagebox.showinfo("Instructions", message)
+#Function to show the initial instructions and key combinations
+def showMessage():
+    app = CTk()
+    app.title("KodeArrow")
+    app.iconbitmap("icon.ico")
 
-def show_instructionsPremium():
-    message = "Thank you for using KodeArrow, project by Ahmad Hassan\n\n\n\t\t       Alt + I\n\t\t   (Arrow Up)\n\n     Alt + J \t\t\t       Alt + L \t(Arrow Left) \t\t\t(Arrow Right)\n\n\t\t      Alt + K \n\t\t(Arrow Down)\n\n\n\t          ! Premium Unlocked !"
-    messagebox.showinfo("Instructions", message)
+    ws = app.winfo_screenwidth()
+    hs = app.winfo_screenheight()
+
+    ctk.set_appearance_mode("Light")
+    app.resizable(False, False)
+
+    def closeWindow():
+        app.destroy()
+
+    message = (
+        "Thank you for using KodeArrow, a project of ByTed Technologies\n\n\n"
+        "Alt + I\n(Arrow Up)\n\n"
+        "Alt + J\t\t\t\tAlt + L\n(Arrow 🔒 Left)\t\t\t(Arrow 🔒 Right)\n\n"
+        "Alt + K\n(Arrow Down)\n\n\n"
+        "Note: Please buy Premium version to unlock locked keys"
+    )
+
+    messageUnlocked = (
+        "Thank you for using KodeArrow, a project of ByTed Technologies\n\n\n"
+        "Alt + I\n(Arrow Up)\n\n"
+        "Alt + J\t\t\t\tAlt + L\n(Arrow Left)\t\t\t(Arrow Right)\n\n"
+        "Alt + K\n(Arrow Down)\n\n\n"
+    )
+
+    frame1 = CTkFrame(master=app, bg_color="white", fg_color="white")
+    title = CTkLabel(master=frame1, text="Welcome to KodeArrow© 2023", bg_color="white", text_color="#00207f", font=("Bahnschrift", 20, "bold"))
+    subtitle = CTkLabel(master=frame1, text="a project by Ahmad Hassan", bg_color="white", text_color="#00207f", font=("Bahnschrift", 16, "bold"))
+    labelLocked = CTkLabel(master=frame1, text=message, bg_color="white", text_color="black", font=("Bahnschrift", 12))
+    labelUnlocked = CTkLabel(master=frame1, text=messageUnlocked, bg_color="white", text_color="black", font=("Bahnschrift", 12))
+    btn = CTkButton(master=frame1, text="Ok", width=90, height=35, corner_radius=7, fg_color="#00207f", hover_color="#00134c", bg_color="white", command=closeWindow)
+
+    frame1.pack(fill=BOTH, expand=True)
+    title.place(relx=0.5, rely=0.1, anchor="center")
+    subtitle.place(relx=0.5, rely=0.164, anchor="center")
+
+    if is_premium():
+        w = 450
+        h = 340
+        x = (ws/2) - (w/2)
+        y = (hs/2) - (h/2)
+        app.geometry('%dx%d+%d+%d' % (w, h, x, y))
+
+        labelUnlocked.place(relx=0.5, rely=0.55, anchor="center")
+        btn.place(relx=0.5, rely=0.85, anchor="center")
+    else:
+        w = 450
+        h = 360
+        x = (ws/2) - (w/2)
+        y = (hs/2) - (h/2)
+        app.geometry('%dx%d+%d+%d' % (w, h, x, y))
+
+        labelLocked.place(relx=0.5, rely=0.5, anchor="center")
+        btn.place(relx=0.5, rely=0.88, anchor="center")
+
+    app.mainloop()
 
 # Show the initial instructions when the program starts
-if not is_premium():
-    show_instructions()
-else:
-    show_instructionsPremium()
+showMessage()
 
 # Define the function to open the URL
-def open_url(icon, item):
+def open_url():
     webbrowser.open("https://bted.000webhostapp.com/")
 
-def open_url_buy(icon, item):
+def open_url_buy():
     webbrowser.open("https://kodearrow.000webhostapp.com/")
 
 def create_hidden_file(file_path, content):
@@ -153,7 +204,7 @@ DO NOT SHARE THIS FILE ACROSS ANY OTHER DEVICES.
 
 VIOLATION OF ANY OF THESE INSTRUCTIONS MAY LEAD TO THE USER BEING HELD LIABLE FOR LEGAL ACTION.
 
-CopyrightÂ© 2023. Ahmad Hassan(B-TED)
+Copyright© 2023. Ahmad Hassan(B-TED)
 Project KodeArrow
 """
 
@@ -161,146 +212,52 @@ Project KodeArrow
 def is_premium():
     return os.path.exists(premium_file_path)
 
-# Define the function to unlock full functionality with a license key
-# def unlock_functionality(icon, item):
-#     if is_premium():
-#         print("Unlock Full Functionality", "Already unlocked (Paid version)")
-#     else:
-#         # Create a pop-up window to get the license key from the user
-#         window = tk.Tk()
-#         window.title("Enter License Key")
-#         window.geometry("300x100")
-        
-#         label = tk.Label(window, text="Enter the license key:")
-#         label.pack()
-        
-#         # entry = tk.Entry(window, show="*")  # Hide entered characters
-#         entry = tk.Entry(window)  # Hide entered characters
-#         entry.pack()
-        
-#         def submit_key():
-#             entered_key = entry.get()
-#             if entered_key == "BTED-KAKS-P2SE-2023":
-#                 create_hidden_file(file_path, content)
-#                 messagebox.showinfo("Congratulations", "Premium Unlocked")
-#                 #print("Unlock Full Functionality", "Full functionality unlocked (Paid version)")
-#             else:
-#                 messagebox.showinfo("Invalid License KeY", "Invalid license key. Functionality remains limited (Free version)")
-#             window.destroy()
-#             # Recreate the menu and update the icon after the license key is changed
-#             create_menu()
-        
-#         submit_button = tk.Button(window, text="Submit", command=submit_key)
-#         submit_button.pack()
-        
-#         window.mainloop()
-###########################################################################################################3
-
-
-# def unlock_functionality(icon, item):
-#     if is_premium():
-#         print("Unlock Full Functionality", "Already unlocked (Paid version)")
-#     else:
-#         # Create a pop-up window to get the license key from the user
-#         window = tk.Tk()
-#         window.title("Email")
-#         window.geometry("400x200")
-        
-#         label = tk.Label(window, text="Enter you Email: \nNote: this process requires internet connectivity)\n")
-#         label.pack()
-        
-#         # entry = tk.Entry(window, show="*")  # Hide entered characters
-#         entry = tk.Entry(window)  # Hide entered characters
-#         entry.pack()
-        
-#         def submit_key():
-#             hardware_id = get_hardware_id()
-#             email = entry.get()
-
-#             if check_and_update(email, hardware_id):
-#                 messagebox.showinfo("Congratulations", "Premium Unlocked")
-#             else:
-#                 messagebox.showinfo("Registration not Found", "Registration not Found: Have you received you conformation email? if not then go and check it out ")
-#                 #messagebox.showinfo("Invalid License Key", "Invalid license key. Functionality remains limited (Free version)")
-#             window.destroy()
-#             # Recreate the menu and update the icon after the license key is changed
-#             create_menu()
-        
-#         submit_button = tk.Button(window, text="Submit", command=submit_key)
-#         submit_button.pack()
-        
-#         window.mainloop()
-
-
-# def check_and_update(email, hardware_id):
-#     # Check if the email exists in Firestore users collection
-#     user_ref = db.collection('users').document(email)
-#     user_doc = user_ref.get()
-
-#     if user_doc.exists:
-#         # User exists, check devices
-#         devices_ref = user_ref.collection('devices')
-#         devices_query = devices_ref.get()
-
-#         if len(devices_query) >= 4:
-#             messagebox.showinfo("Error", "Maximum devices reached")
-#         else:
-#             # Check if hardware ID already exists
-#             hardware_exists = False
-#             for device in devices_query:
-#                 if device.to_dict().get('id') == hardware_id:
-#                     hardware_exists = True
-#                     break
-            
-#             if hardware_exists:
-#                 print("Hardware ID already exists. Activating premium.")
-#                 #messagebox.showinfo("Congratulations", "Premium Unlocked")
-#                 create_hidden_file(file_path, content)
-#                 return True
-#             else:
-#                 # Add hardware ID to Firestore
-#                 device_data = {'id': hardware_id}
-#                 devices_ref.document(f'device{len(devices_query) + 1}').set(device_data)
-#                 print(f"Added hardware ID '{hardware_id}' to Firestore.")
-#                 print("Activating premium.")
-#                 #messagebox.showinfo("Congratulations", "Premium Unlocked")
-#                 create_hidden_file(file_path, content)
-#                 return True
-#     else:
-#         print("Email not registered.")
-#         #messagebox.showinfo("Registration not Found", "Registration not Found: Please check your email")
-#         return False
-
-
 def unlock_functionality(icon, item):
     if is_premium():
         print("Unlock Full Functionality", "Already unlocked (Paid version)")
     else:
-        # Create a pop-up window to get the email from the user
-        window = tk.Tk()
-        window.title("Email")
-        window.geometry("400x200")
-        
-        label = tk.Label(window, text="Enter your Email: \n(Note: this process requires internet connectivity)\n")
-        label.pack()
-        
-        entry = tk.Entry(window)
-        entry.pack()
-        
+        app = CTk()
+        app.title("KodeArrow")
+        app.iconbitmap("icon.ico")
+
+        ws = app.winfo_screenwidth()
+        hs = app.winfo_screenheight()
+
+        w = 450
+        h = 250
+        x = (ws/2) - (w/2)
+        y = (hs/2) - (h/2)
+        app.geometry('%dx%d+%d+%d' % (w, h, x, y))
+
+        ctk.set_appearance_mode("Light")
+        app.resizable(False, False)
+
+        frame1 = CTkFrame(master=app, bg_color="white", fg_color="white")
+        title = CTkLabel(master=frame1, text="Welcome to KodeArrow© 2023", bg_color="white", text_color="#00207f", font=("Bahnschrift", 20, "bold"))
+        subtitle = CTkLabel(master=frame1, text="a project by Ahmad Hassan", bg_color="white", text_color="#00207f", font=("Bahnschrift", 16, "bold"))
+        label = CTkLabel(master=frame1, text="Please enter your Email", bg_color="white", text_color="black", font=("Bahnschrift", 14))
+        field = CTkEntry(master=frame1, placeholder_text="Email", width=350, height=40)
+
+        frame1.pack(fill=BOTH, expand=True)
+        title.place(relx=0.5, rely=0.1, anchor="center")
+        subtitle.place(relx=0.5, rely=0.2, anchor="center")
+        label.place(relx=0.289, rely=0.4, anchor="center")
+        field.place(relx=0.5, rely=0.55, anchor="center")
+   
+
         def submit_key():
-            email = entry.get().strip()
+            email = field.get()
             hardware_id = get_hardware_id()
 
             if check_and_update(email, hardware_id):
                 messagebox.showinfo("Congratulations", "Premium Unlocked")
-            
-            window.destroy()
+                app.destroy()
+ 
             create_menu()
-        
-        submit_button = tk.Button(window, text="Submit", command=submit_key)
-        submit_button.pack()
-        
-        window.mainloop()
+    
+        btn = CTkButton(master=frame1, text="Submit", width=90, height=35, corner_radius=7, fg_color="#00207f", hover_color="#00134c", bg_color="white", command=submit_key)
+        btn.place(relx=0.5, rely=0.79, anchor="center")
+        app.mainloop()
 
 def check_and_update(email, hardware_id):
     # Check internet connectivity
