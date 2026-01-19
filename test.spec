@@ -1,14 +1,12 @@
 # -*- mode: python ; coding: utf-8 -*-
 
-
 block_cipher = None
-
 
 a = Analysis(
     ['test.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('kodearrow-server-firebase-adminsdk-9qxya-d2f88510eb.json', '.')],  # Include your Firebase certificate
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -19,15 +17,14 @@ a = Analysis(
     cipher=block_cipher,
     noarchive=False,
 )
+
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
 exe = EXE(
     pyz,
     a.scripts,
-    a.binaries,
-    a.zipfiles,
-    a.datas,
     [],
+    exclude_binaries=True,
     name='test',
     debug=False,
     bootloader_ignore_signals=False,
@@ -38,7 +35,4 @@ exe = EXE(
     console=True,
     disable_windowed_traceback=False,
     argv_emulation=False,
-    target_arch=None,
-    codesign_identity=None,
-    entitlements_file=None,
 )
