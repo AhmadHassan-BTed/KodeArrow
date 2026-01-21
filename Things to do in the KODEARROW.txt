@@ -1,0 +1,2 @@
+The functionaliuty of moving a line up and donw in code editiors has been added in KodeArrow, by pressing alt with both thumbs simuntaniusly nd press u,h,j,k as per needed.
+Add this in documnetationa and the startup popup of the codearrow
