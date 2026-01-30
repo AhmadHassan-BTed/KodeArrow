@@ -51,14 +51,24 @@ def add_user(email, subscription_date_str):
     subscription_date_str = subscription_date.strftime("%Y-%m-%d")
 
     # Add the email to Firestore users collection if it doesn't already exist
-    doc_ref_user = db.collection('users').document(email)
+    doc_ref_user = db.collection('ControlGroup').document(email)
     doc_user = doc_ref_user.get()
     if doc_user.exists:
         print(f"Email '{email}' already exists in Firestore users collection.")
     else:
         # Add the email and subscription date to Firestore users collection
         doc_ref_user.set({'email': email, 'subscription_date': subscription_date_str})
+        
+        # Initialize additional user usage variables
+        usage_data = {
+            'charactersTyped': 0,
+            'kodeArrowHotkeys': 0,
+            'TotalUsageMinutes': 0
+        }
+        doc_ref_user.collection('usage').document('usage_data').set(usage_data)
+        
         print(f"Added '{email}' to users collection with subscription date {subscription_date_str}.")
+        print("Initialized user usage variables: charactersTyped, kodeArrowHotkeys, TotalUsageMinutes.")
 
 if __name__ == "__main__":
     # Example usage:
