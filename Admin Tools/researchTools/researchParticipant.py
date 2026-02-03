@@ -1,6 +1,10 @@
 import firebase_admin
 from firebase_admin import credentials, firestore
 from datetime import datetime
+import firebase_admin
+from firebase_admin import credentials, firestore
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 # Initialize Firebase
 def initialize_firestore():
@@ -38,14 +42,9 @@ def initialize_firestore():
     
 db = initialize_firestore()
 
-
 def add_user(email, subscription_date_str):
-    # Parse the subscription date
-    try:
-        subscription_date = datetime.strptime(subscription_date_str, "%Y-%m-%d").date()
-    except ValueError:
-        print("Invalid date format. Please use YYYY-MM-DD.")
-        return
+
+    subscription_date = datetime.strptime(subscription_date_str, "%Y-%m-%d").date()
 
     # Convert subscription_date to string
     subscription_date_str = subscription_date.strftime("%Y-%m-%d")
@@ -71,7 +70,15 @@ def add_user(email, subscription_date_str):
         print("Initialized user usage variables: charactersTyped, kodeArrowHotkeys, TotalUsageMinutes.")
 
 if __name__ == "__main__":
-    # Example usage:
-    user_email = "formyclassfellows@trailversion.com"
-    subscription_date_str = datetime.today().strftime("%Y-%m-%d")  # Use today's date in the correct format
-    add_user(user_email, subscription_date_str)
+
+    user_email = "rp01@kodeArrow.com"
+    subscription_period = 3
+    
+    subscription_date = datetime.today()  # Today's date as a datetime object
+    subscription_date_str = datetime.today().strftime("%Y-%m-%d")  # Use today's date as a string
+
+    subscription_expiration_date = subscription_date + relativedelta(months=subscription_period)
+    subscription_expiration_date_str = subscription_expiration_date.strftime("%Y-%m-%d")
+    add_user(user_email, subscription_expiration_date_str)
+
+    

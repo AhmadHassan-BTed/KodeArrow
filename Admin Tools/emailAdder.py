@@ -1,6 +1,7 @@
 import firebase_admin
 from firebase_admin import credentials, firestore
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 # Initialize Firebase
 def initialize_firestore():
@@ -57,11 +58,18 @@ def add_user(email, subscription_date_str):
         print(f"Email '{email}' already exists in Firestore users collection.")
     else:
         # Add the email and subscription date to Firestore users collection
+        # doc_ref_user.set({'email': email, 'subscription_expiration_date': subscription_date_str})  // uncomment this for new version
         doc_ref_user.set({'email': email, 'subscription_date': subscription_date_str})
         print(f"Added '{email}' to users collection with subscription date {subscription_date_str}.")
 
 if __name__ == "__main__":
     # Example usage:
-    user_email = "formyclassfellows@trailversion.com"
-    subscription_date_str = datetime.today().strftime("%Y-%m-%d")  # Use today's date in the correct format
+    user_email = "muhammadfaseeh3977@gmail.com"
+
+    # subscription_date = datetime.today()  # Today's date as a datetime object
+    subscription_date_str = datetime.today().strftime("%Y-%m-%d")  # Use today's date as a string
+
+    # subscription_expiration_date = subscription_date + relativedelta(months=subscription_period)
+    # subscription_expiration_date_str = subscription_expiration_date.strftime("%Y-%m-%d")
+    # add_user(user_email, subscription_expiration_date_str)
     add_user(user_email, subscription_date_str)
