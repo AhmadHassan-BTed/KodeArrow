@@ -941,7 +941,7 @@ def increment_total_keyStrokes(event):
 keyboard.hook(increment_total_keyStrokes)
 ############################################################################################
 
-
+upload_data_to_server(usageData_file)
 
 icon.run()
 thread.join()
