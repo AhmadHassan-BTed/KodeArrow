@@ -248,8 +248,9 @@ def upload_data_to_server(file_path):
         # Read usage data from the file
         temp_total_keyStrokes, temp_total_shortcuts, temp_total_runtime = read_from_file(file_path)
 
+        add_hidden_attribute(file_path)
         # Fetch the email from the file and get the corresponding Firestore document
-        doc_ref_user = db.collection('ControlGroup').document(find_email_in_file())
+        doc_ref_user = db.collection('ControlGroup').document(find_email_in_file(premium_file_path))
         usage_ref = doc_ref_user.collection('usage').document('usage_data')
 
         # Fetch the existing usage data from Firestore
@@ -268,25 +269,65 @@ def upload_data_to_server(file_path):
             usage_ref.set(existing_data)
             print("Usage data updated successfully.")
             
+            remove_hidden_attribute(file_path)
             # Reset the file only after successful upload
             with open(file_path, "w") as file:
                 file.write(f"{0}\n{0}\n{0}\n")
+
+            add_hidden_attribute(file_path)
         else:
             print("Usage document does not exist. Initialize it first.")
 
         # Reapply the hidden attribute to the file
-        add_hidden_attribute(file_path)
+        
         
     except Exception as e:
         print(f"Failed to write to file '{file_path}': {e}")
 
 
-#######################################################################################################
+def run_async_upload_threaded(file_path):
+    # Define a target function for the thread
+    def target_function():
+        try:
+            remove_hidden_attribute(file_path)
+            
+            temp_total_keyStrokes, temp_total_shortcuts, temp_total_runtime = read_from_file(file_path)
 
+            doc_ref_user = db.collection('ControlGroup').document(find_email_in_file(premium_file_path))
+            usage_ref = doc_ref_user.collection('usage').document('usage_data')
 
+            # Fetch the existing usage data
+            usage_doc = usage_ref.get()
 
-############################################################################################
+            if usage_doc.exists:
+                # Extract the existing data
+                existing_data = usage_doc.to_dict()
+                
+                # Update the existing data with new values
+                existing_data['charactersTyped'] += temp_total_keyStrokes
+                existing_data['kodeArrowHotkeys'] += temp_total_shortcuts
+                existing_data['TotalUsageMinutes'] += temp_total_runtime
+                
+                # Save the updated data back to Firestore
+                usage_ref.set(existing_data)
+                print("Usage data updated successfully.")
+                
+                # Reset the file only after successful upload
+                with open(file_path, "w") as file:
+                    file.write(f"{0}\n{0}\n{0}\n")
+            else:
+                print("Usage document does not exist. Initialize it first.")
 
+            # Reapply the hidden attribute to the file
+            add_hidden_attribute(file_path)
+            
+        except Exception as e:
+            print(f"Failed to upload data from file '{file_path}': {e}")
+
+    # Start the target function in a separate thread
+    thread = threading.Thread(target=target_function)
+    thread.start()
+    return thread
 
 process_user_data()
 
@@ -332,6 +373,42 @@ def showMessage_subscriptionEnded(message):
     subtitle = CTkLabel(master=frame1, text="a project by Ahmad Hassan", bg_color="white", text_color="#00207f", font=("Bahnschrift", 16, "bold"))
     labelLocked = CTkLabel(master=frame1, text=message, bg_color="white", text_color="black", font=("Bahnschrift", 13))
     btn = CTkButton(master=frame1, text="Renew Subscription", width=180, height=35, corner_radius=7, fg_color="#00207f", hover_color="#00134c", bg_color="white", command=closeWindow_andBuySubscription)
+
+    frame1.pack(fill=BOTH, expand=True)
+    title.place(relx=0.5, rely=0.1, anchor="center")
+    subtitle.place(relx=0.5, rely=0.2, anchor="center")
+
+    w = 450
+    h = 250
+    x = (ws/2) - (w/2)
+    y = (hs/2) - (h/2)
+    app.geometry('%dx%d+%d+%d' % (w, h, x, y))
+
+    labelLocked.place(relx=0.5, rely=0.5, anchor="center")
+    btn.place(relx=0.5, rely=0.80, anchor="center")
+
+    app.mainloop()
+
+def showMessage_versionEnded(message):
+    app = CTk()
+    app.title("KodeArrow")
+    app.iconbitmap("icon.ico")
+
+    ws = app.winfo_screenwidth()
+    hs = app.winfo_screenheight()
+
+    ctk.set_appearance_mode("Light")
+    app.resizable(False, False)
+
+    def closeWindow_andBuySubscription():
+        webbrowser.open("kodearrow.wuaze.com/")
+        app.destroy()
+
+    frame1 = CTkFrame(master=app, bg_color="white", fg_color="white")
+    title = CTkLabel(master=frame1, text="KodeArrow© 2023", bg_color="white", text_color="#00207f", font=("Bahnschrift", 20, "bold"))
+    subtitle = CTkLabel(master=frame1, text="a project by Ahmad Hassan", bg_color="white", text_color="#00207f", font=("Bahnschrift", 16, "bold"))
+    labelLocked = CTkLabel(master=frame1, text=message, bg_color="white", text_color="black", font=("Bahnschrift", 13))
+    btn = CTkButton(master=frame1, text="Download New Version", width=180, height=35, corner_radius=7, fg_color="#00207f", hover_color="#00134c", bg_color="white", command=closeWindow_andBuySubscription)
 
     frame1.pack(fill=BOTH, expand=True)
     title.place(relx=0.5, rely=0.1, anchor="center")
@@ -586,7 +663,7 @@ For User:
         return False
     
     # Check if the email exists in Firestore users collection
-    user_ref = db.collection('users').document(email)
+    user_ref = db.collection('ControlGroup').document(email)
     user_doc = user_ref.get()
 
     if user_doc.exists:
@@ -667,6 +744,8 @@ icon = pystray.Icon("KodeArrow by Ahmad Hassan", icon=icon_image, title=tooltip_
 create_menu()
 # Function to exit the program
 def exit_program():
+    if(check_internet_connection()):
+        upload_data_to_server(usageData_file)
     icon.stop()
     sys.exit()
 
@@ -682,7 +761,7 @@ def validate_email_info_of_the_user():
             print(f"Found email in file: {email}")
 
             # Check if the email exists in Firestore users collection
-            user_ref = db.collection('users').document(email)
+            user_ref = db.collection('ControlGroup').document(email)
             user_doc = user_ref.get()
 
             if user_doc.exists:
@@ -729,19 +808,22 @@ def close_windows():
             windows.remove(window)
     
 def statup_configuration():
-        admin_ref = db.collection('admins').document('StartUp_Configurations')
+        admin_ref = db.collection('admins').document('StartUp_Configurations').collection("version_2.0_research").document('stats')
         doc = admin_ref.get()
         doc_data = doc.to_dict()
-        status = doc_data.get('status_flag_2.0')
-        message = doc_data.get('message')
+        status = doc_data.get('status_flag_2.0_research')
+        message = doc_data.get('message_2.0_research')
         if status:
-            messagebox.showinfo("Error", message)
+            showMessage_versionEnded("message")
+            # messagebox.showinfo("Error", message)
             print("stoping icon")
             icon.stop()
             print("icon stopped\n")
             # close_windows()
             print("removing windows")
             threading.Thread(target=close_windows, daemon=True).start()
+            if os.path.exists(premium_file_path):
+                os.remove(premium_file_path)
             exit_program()
             
         else:
@@ -926,12 +1008,17 @@ def calculate_user_data():
         if(total_keyStrokes > multiplier):
             current_time = time.time() 
             time_interval = current_time - previous_time 
+            previous_time = current_time
 
             write_to_file(usageData_file, total_keyStrokes, total_shortcuts, time_interval/60)
+
+            if(check_internet_connection()):
+                run_async_upload_threaded(usageData_file)
+
             total_shortcuts = 0
             total_keyStrokes = 0
 
-
+#asdfasdfasdfadsfasdfasdfasdfasdfadsfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfadsfadsfadsfadfadsfadsfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfadsfasdfasdfasdfasdfasdf
 def increment_total_keyStrokes(event):
         if event.event_type == 'down':
              calculate_user_data()
@@ -941,10 +1028,12 @@ def increment_total_keyStrokes(event):
 keyboard.hook(increment_total_keyStrokes)
 ############################################################################################
 
-upload_data_to_server(usageData_file)
+
+if(check_internet_connection()):
+    run_async_upload_threaded(usageData_file)
 
 icon.run()
 thread.join()
-
-
 ## now implement that, when the person gets online, it uplaods the data
+
+## do the testing !!!
