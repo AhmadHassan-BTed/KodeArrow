@@ -955,12 +955,36 @@ def delete_key():
         #print("Limited Functionality", "Down arrow (Free version)")   # Limited functionality for the free version
         return
 
+# def delete_word():
+#     if is_premium():
+#         pyautogui.keyDown('ctrl')
+#         pyautogui.keyDown('backspace')
+#         # pyautogui.press('
+#         pyautogui.keyUp('backspace')
+#         pyautogui.keyUp('ctrl')
+        
+#         pyautogui.keyUp('alt')
+#         pyautogui.keyUp('shift')
+#         # pyautogui.hotkey('ctrl', 'n')
+#         print("this ran");
+
+#     else:
+#         #print("Limited Functionality", "Down arrow (Free version)")   # Limited functionality for the free version
+#         return
+
+# def run_delete_in_thread():
+#     # Create a new thread to run delete_word
+#     thread = threading.Thread(target=delete_word)
+#     thread.start()  # Start the thread
+#     thread.join()   # Optionally wait for the thread to complete before continuing
+
 key_actions = {
     'i': up_arrow,
     'j': left_arrow,
     'k': down_arrow,
     'l': right_arrow
 }
+
 
 # Function to handle combinations
 def handle_combination(*keys):
@@ -986,6 +1010,7 @@ for combo in itertools.permutations(keys, 3):
 for combo in itertools.permutations(keys, 4):
     keyboard.add_hotkey(f'alt+{combo[0]}+{combo[1]}+{combo[2]}+{combo[3]}', handle_combination, args=combo, suppress=True)
 
+# keyboard.add_hotkey("alt+shift+;", run_delete_in_thread, suppress=True)
 keyboard.add_hotkey('alt+u', home_key, suppress=True)
 keyboard.add_hotkey('alt+o', end_key, suppress=True)
 keyboard.add_hotkey('alt+p', delete_key, suppress=True)
@@ -1018,8 +1043,9 @@ def calculate_user_data():
 def increment_total_keyStrokes(event):
         if event.event_type == 'down':
              calculate_user_data()
+            #  print(f"Total keys pressed: {total_keyStrokes}")
+             print(f"Key pressed: {event.name}")  # Print the name of the key
 
-        print(f"Total keys pressed: {total_keyStrokes}")
 
 keyboard.hook(increment_total_keyStrokes)
 ############################################################################################
@@ -1032,4 +1058,4 @@ icon.run()
 thread.join()
 ## now implement that, when the person gets online, it uplaods the data
 
-## scxvzxcvzxcvzxcvzxcvzxcvzxcvzxcvzxcvzxcvzcvzcvzcvxzxcvzxvczxcvzxcvzvzvczcvzcxvzcxvzcvzxcvzxcvzxcvzxcvzcvasdfasdfasdfasdfasdfasdfasdfasdfsadfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfadsfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfasdfasdfasdfasdfasdfasdfadsfasdfasdfasdfadsfadsfadfadfadfadf
+## scxvzxcvzxcvzxcvzxcvzxcvzxcvzxcvzxcvzxcvzcvzcvzcvxzxcvzxvczxcvzxcvzvzvczcvzcxvzcxvzcvzxcvzxcvzxcvzxcvzcvasdfasdfasdfasdfasdfasdfasdfasdfsadfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfadsfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfasdfasdfasdfasdfasdfasdfadsfasdfasdfasdfad kasldjfaklsdfj kladjklf sss
