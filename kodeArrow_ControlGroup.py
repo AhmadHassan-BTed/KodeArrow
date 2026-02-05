@@ -1057,5 +1057,3 @@ if(check_internet_connection()):
 icon.run()
 thread.join()
 ## now implement that, when the person gets online, it uplaods the data
-
-## scxvzxcvzxcvzxcvzxcvzxcvzxcvzxcvzxcvzxcvzcvzcvzcvxzxcvzxvczxcvzxcvzvzvczcvzcxvzcxvzcvzxcvzxcvzxcvzxcvzcvasdfasdfasdfasdfasdfasdfasdfasdfsadfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfadsfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfasdfasdfasdfasdfasdfasdfadsfasdfasdfasdfad kasldjfaklsdfj kladjklf sss
