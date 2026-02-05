@@ -24,9 +24,14 @@ data = {
 }
 
 # Assign distance values (arbitrary) for navigation and correction keys
+
+#there distances are found by research paper https://www.researchgate.net/publication/341620190_The_mathematical_model_of_computer_keyboard
+# this paper is actually just implementing the pythagoras theroem to find how much the key is away from the other key
+# i have set some keydistances, validdate them again, (i have only did the kodearrow one's, backspace and the delete button)
+
 key_distances = {
-    'backspace': 5.0,  # Pinky needs to stretch significantly away from home row
-    'delete': 5.5,     # Similar to Backspace but requires a further stretch
+    'backspace': 4.42,  # Pinky needs to stretch significantly away from home row
+    'delete': 5.0,     # Similar to Backspace but requires a further stretch
     'page up': 6.0,    # Far upper-right corner
     'page down': 6.0,  # Far lower-right corner
     'home': 5.5,       # Also quite far on the right side
@@ -36,16 +41,16 @@ key_distances = {
     'up': 4.5,         # Slightly higher up from home row and right
     'down': 4.5,        # Slightly lower from home row and right
 
-    'alt+i': 0.0,  # Up key
+    'alt+i': 1.0,  # Up key
     'alt+k': 0.0,  # Down key
     'alt+l': 0.0,  # Right key
     'alt+j': 0.0,  # Left key
     'alt+;': 0.0,  # Backspace key
-    'alt+p': 0.5,  # Delete key
-    'alt+u': 0.5,  # Home key
-    'alt+o': 0.5,  # Endline key
+    'alt+p': 1.2,  # Delete key
+    'alt+u': 1.2,  # Home key
+    'alt+o': 1.2,  # Endline key
     'alt+\'': 1.0,  # PageUp key
-    'alt+{': 1.0,  # PageDown key
+    'alt+{': 2.23,  # PageDown key
 }
 
 # Track key usage statistics
