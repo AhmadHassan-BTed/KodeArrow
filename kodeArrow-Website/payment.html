@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, width=device-width" />
+    <!-- <link rel="stylesheet" href="./global.css" /> -->
+    <link rel="stylesheet" href="./paymentStyling.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;700&display=swap"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;700&display=swap"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+
+  </head>
+  
+
+<body>
+    <div class="background"></div>
+    <!-- <img class="backgroundSVG" alt="" src="./public/background.svg" /> -->
+    <img class="backgroundSVGPhone" alt="" src="./public/backgroundPhone.svg" />
+    
+    <img class="dartStand" alt="" src="./public/dartStand.png" />
+    <img class="dart" alt="" src="./public/dart.png" />
+    
+    <svg class="back" xmlns="http://www.w3.org/2000/svg" width="21" height="35" viewBox="0 0 21 35" fill="none" onclick="history.go(-1)">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M0.00792521 17.6581L0.000637409 17.6654L17.3352 35L20.6446 31.6906L6.61152 17.6575L20.9596 3.30943L17.6501 3.05176e-05L0 17.6502L0.00792521 17.6581Z" fill="#D9D9D9"/>
+    </svg>
+
+    <div class="recipt">
+        
+      <div class="reciptsection1">
+          
+        <img class="reciptpaper1-icon" alt="" src="./public/reciptpaper1.svg" />
+         
+        <div class="reciptText">
+          
+          <b class="title1">Receipt</b>
+          
+          <div class="reciptData">
+            
+            <div class="account-sadapay">
+              <p class="infoText">Name: <span class="ahmadHassan"> Ahmad Hassan</span> <br>
+              Acc no: <span class="myNo"> +923225522383</span> <br>
+              Account: <span class="sadaPay"> <font color="#2AC6AE">Sada</font><font color="#FF6C5A">Pay</font></span></p>
+              <img class="sadaLogo" alt="" src="./public/sadalogo@2x.png" />  
+            </div>
+    
+            <form id="myForm" method="POST" name="paymentFormName">
+                
+                <input type="text" id="fullName" name="fullName" placeholder="Full Name" required class="full-name">
+                <input type="tel" id="phoneNo" name="phoneNo" placeholder="Phone no." required class="phone-no">
+            <br>
+                <input type="email" id="email" name="email" placeholder="Email" required class="email">
+             <br>
+                
+                <input type="text" id="bank" name="bank" placeholder="Bank" required class="bank">
+                <!-- <button class="uploadButton">Payment Screenshot</button> --> 
+                            
+                <input type="text" name="date" id="date" style="display: none;" >
+                <input type="text" name="time" id="time" style="display: none;" >  
+                
+                <label for="uploadScreenshot" class="custom-file-upload">
+                  <input type="file" id="uploadScreenshot" name="screenshot" class="uploadButton" onchange="updateLabel()">
+                  Choose File
+                </label>
+  
+                <input type="text" id="accountNumber" name="accountNumber" placeholder="Account Number" required class="account-number">
+              <br>
+            
+            <p class="note"><b>Note:</b> Key will be Sent to your Email & Phone no. within few minutes </p>
+              
+            <br>
+            
+            <div>
+              <label class="custom-checkbox">
+                <input type="checkbox" class="termsAndConditions" id="_checkbox" name="termsAndConditions" required>
+                <label for="_checkbox">
+                  <div id="tick_mark"></div>
+                </label>
+                <p class="agreement"> I Agree to <a class="terms-and-conditions1" href="https://bted.000webhostapp.com/terms.html">Terms and Conditions</a>
+                </p>
+            </div>
+              <div class="reciptsection2">
+                <img class="reciptpaper2-icon" alt="" src="./public/reciptpaper2.svg" />
+                <!-- <input type="submit" value="Submit" class="submit"> -->
+                <input type="submit" id="drawButton" class="submitButton" value="submit" >
+                <h3 class="payback">100% Payback</h3>
+              </div>
+      
+            </form>
+          </div>
+      
+        </div>
+      </div>
+    </div>
+    
+    <p class="footer"> Copyright <font color="#00ACEC">©</font> 2023. Project by Ahmad Hassan </p>
+  
+   
+    <script src="paymentJs.js"></script>
+    
+    <script>
+      const fileInput = document.getElementById('uploadScreenshot');
+      const label = fileInput.parentElement; // Get the label element
+      
+      fileInput.addEventListener('change', updateLabel);
+      
+      function updateLabel() {
+        const file = fileInput.files[0];
+        
+        if (file) {
+          label.innerText = 'Uploaded';
+        } else {
+          label.innerText = 'Choose File';
+        }
+      }
+          
+    </script>
+  
+  </body>
+</html>

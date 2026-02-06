@@ -1,0 +1,1000 @@
+.body{
+  font-family: Ubuntu;
+  margin: 0px;
+  padding: 0px;
+}
+
+img{
+  width: 0vw;
+}
+
+.background{
+  position: absolute;
+  z-index: -99999;
+  top: 0;
+  right: 0;
+  background-color: #00207F; /* Set the blue background color */
+  width: 100%;
+  height: 100vh;
+  clip-path: polygon(38% 0, 100% 0, 100% 100%, 21% 100%); /* Apply the clip-path */
+}
+
+.backgroundPhone{
+  display: none;
+}
+
+.dartStand{
+  width: 30vw;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.dart{
+  display: none;
+}
+
+h1,h2,h3,h4,p,b,button,form{
+  font-family: Ubuntu;
+}
+
+.back{
+  display: none;
+}
+
+.recipt{
+  margin-top: 3.3vw;
+  margin-left: 47.2vw;
+}
+
+.reciptsection1{
+
+}
+
+.reciptpaper1-icon{
+  width: 42.25vw;
+  display: inline;
+  position: absolute;
+  z-index: -10;
+}
+
+
+
+.reciptText{
+  margin-left: 7vw;
+}
+
+.title1{
+  margin-top: 1vw;
+  position:absolute;
+  margin-left: 12.5vw;
+  font-size: 2vw;
+  height: 12vw;
+  display: inline-block;
+  letter-spacing: 0.01vw;
+  text-transform: uppercase;
+}
+
+.reciptData{
+
+}
+  
+.account-sadapay{
+  border-color: black;
+  border-top: 0.2vw;
+  border-right: 0vw;
+  border-bottom: 0.2vw;
+  border-left: 0;
+  border-style: dashed;
+  display: inline-block;
+  font-weight: 900;
+  width: 26.4vw;
+  height: 6vw;
+  margin-left: 4vw;
+  margin-top: 4.5vw;
+}
+
+.infoText{
+  color: #43444A;
+  font-size: 1.12vw;
+  display: inline-block;
+  margin-top: 1vw;
+  /* width: 13vw; */
+  /* line-height: 3vw; */
+  /* letter-spacing: -0.04vw; */
+  margin-left: 0.8vw;
+}
+
+.ahmadHassan{
+  font-weight: 400;
+}
+.myNo{
+  font-weight: 400;
+}
+.sadaPay{
+  display: inline-block;
+}
+.sadaLogo{
+  width: 4vw;
+  margin-left: 8vw;
+  display: inline-block;
+  margin-top: 1vw;
+  position: absolute;
+}
+
+form{
+  margin-left: 4vw;
+  width: 27vw;
+}
+
+input {
+    border: none;
+    background-color: transparent;
+    outline: none;
+}
+
+label{
+  height: 10vw;
+}
+
+.full-name,.phone-no,.email,.bank,.account-number{
+  border: 0.2vw;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  border-style: dashed;
+  font-size: 0.85vw;
+  font-family: Ubuntu;
+  width: 11.1vw;
+  margin-top: 2.1vw; 
+}
+
+.full-name::placeholder,
+.phone-no::placeholder,
+.email::placeholder,
+.bank::placeholder,
+.account-number::placeholder {
+  
+  color: rgba(4, 6, 14, 0.30);
+  font-family: Ubuntu;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.029vw;
+  margin-left: 1.5vw;
+}
+
+.email,.account-number{
+  width: 97.05%;
+}
+
+.bank{
+  width: 17vw;
+}
+
+.phone-no{
+  margin-right: 0.5vw;
+  float: right;
+}
+
+button,.submit{
+  margin-top: 2vw;
+  position:absolute;
+  margin-left: 1.6vw;
+  border-radius: 0.3vw;
+  background-color: #00207F;
+  color: white;
+  border: none;
+  box-shadow: 0 12px 25px -10px rgba(66, 69, 74, 0.3);
+  width: 7.65vw;
+  height: 2.5vw;
+  -webkit-border-radius: 0.3vw;
+  -moz-border-radius: 0.3vw;
+  -ms-border-radius: 0.3vw;
+  -o-border-radius: 0.3vw;
+  font-size: 0.69444vw;
+  font-weight: 400;
+  letter-spacing: 0.01389vw;
+}
+
+.custom-file-upload {
+  margin-top: 2vw;
+  position: absolute;
+  margin-left: 1.6vw;
+  border-radius: 0.3vw;
+  background-color: #00207F;
+  color: white;
+  border: none;
+  box-shadow: 0 12px 25px -10px rgba(66, 69, 74, 0.3);
+  width: 7.65vw;
+  height: 2.5vw;
+  -webkit-border-radius: 0.3vw;
+  -moz-border-radius: 0.3vw;
+  -ms-border-radius: 0.3vw;
+  -o-border-radius: 0.3vw;
+  font-size: 0.69444vw;
+  font-weight: 400;
+  letter-spacing: 0.01389vw;
+  display: inline-block;
+  text-align: center;
+  line-height: 2.5vw;
+  cursor: pointer;
+}
+
+/* Hide the default file input appearance */
+.custom-file-upload input[type="file"] {
+  display: none;
+}
+
+
+.note{
+  margin-top: 2.1vw; 
+  color: #04060E;
+  font-family: Ubuntu;
+  font-size: 0.84vw;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0.01vw;
+  margin-bottom: 0;
+
+}
+
+
+.termsAndConditions{
+  /* margin-top: 2.2vw; */
+  font-size: 1vw;
+
+}
+
+.agreement{
+  margin-left: 1.6vw;
+  color: #04060E;
+  font-family: Ubuntu;
+  font-size: 0.83333vw;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  position: absolute;
+  letter-spacing: 0.00833vw;
+  top : 33.3vw;
+}
+
+.terms-and-conditions1{
+  color: #080063;
+  font-family: Ubuntu;
+  font-size: 0.83333vw;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.00833vw;
+  text-decoration-line: underline;
+  -moz-text-decoration-line: underline;
+}
+
+.custom-checkbox #_checkbox {
+  display: none;
+}
+
+.custom-checkbox label {
+  position: absolute;
+  top: 34vw;
+  margin-top: 0.55vw;
+  border: no;
+  display: inline-block;
+  margin-left: 0;
+  width: 1.3vw;
+  height: 1.3vw;
+  background-color: #00207F;
+  transform: translateY(-50%);
+  border-radius: 100%;
+  cursor: pointer;
+  transition: 0.2s ease transform, 0.2s ease background-color,    0.2s ease box-shadow;
+  overflow: hidden;
+  z-index: 1;
+  border: none;
+  align-items: center;
+  -webkit-transition: 0.2s ease transform, 0.2s ease background-color,    0.2s ease box-shadow;
+  -moz-transition: 0.2s ease transform, 0.2s ease background-color,    0.2s ease box-shadow;
+  -ms-transition: 0.2s ease transform, 0.2s ease background-color,    0.2s ease box-shadow;
+  -o-transition: 0.2s ease transform, 0.2s ease background-color,    0.2s ease box-shadow;
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  -ms-border-radius: 100%;
+  -o-border-radius: 100%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+}
+
+.custom-checkbox label:before {
+  content: "";
+  position: absolute;
+  top: 48%;
+  display: inline-block;
+  right: 0;
+  left: 0;
+  width: 0.65vw;
+  height: 0.7vw;
+  margin: 0 auto;
+  background-color: #fff;
+  transform: translateY(-50%);
+  border-radius: 100%;
+  /*box-shadow: inset 0 7px 10px #ffbeb8;
+  */transition: 0.2s ease width, 0.2s ease height;
+  -webkit-transition: 0.2s ease width, 0.2s ease height;
+  -moz-transition: 0.2s ease width, 0.2s ease height;
+  -ms-transition: 0.2s ease width, 0.2s ease height;
+  -o-transition: 0.2s ease width, 0.2s ease height;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  -ms-border-radius: 100%;
+  -o-border-radius: 100%;
+}
+
+.custom-checkbox label:hover:before {
+  width: 0.4vw;
+  height: 0.4vw;
+  /* box-shadow: inset 0 7px 10px #ff9d96; */
+}
+
+.custom-checkbox label:active {
+  transform: translateY(-50%) scale(0.9);
+  -webkit-transform: translateY(-50%) scale(0.9);
+  -moz-transform: translateY(-50%) scale(0.9);
+  -ms-transform: translateY(-50%) scale(0.9);
+  -o-transform: translateY(-50%) scale(0.9);
+}
+
+.custom-checkbox #tick_mark {
+  position: absolute;
+  top: 0px;
+  right: 0;
+  left: 0;
+  width: 1vw;
+  height: 0.75vw;
+  margin: 0 auto;
+  margin-left: 2px;
+  transform: rotateZ(-40deg);
+}
+
+.custom-checkbox #tick_mark:before,
+.custom-checkbox #tick_mark:after {
+  content: "";
+  position: absolute;
+  background-color: #fff;
+  border-radius: 2px;
+  opacity: 0;
+  transition: 0.2s ease transform, 0.2s ease opacity;
+  -webkit-transition: 0.2s ease transform, 0.2s ease opacity;
+  -moz-transition: 0.2s ease transform, 0.2s ease opacity;
+  -ms-transition: 0.2s ease transform, 0.2s ease opacity;
+  -o-transition: 0.2s ease transform, 0.2s ease opacity;
+}
+
+.custom-checkbox #tick_mark:before {
+  left: 0;
+  bottom: 0;
+  width: 18%;
+  height: 50%;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.23);
+  transform: translateY(-68px);
+  -webkit-transform: translateY(-68px);
+  -moz-transform: translateY(-68px);
+  -ms-transform: translateY(-68px);
+  -o-transform: translateY(-68px);
+}
+
+.custom-checkbox #tick_mark:after {
+  left: 0;
+  bottom: 0;
+  width: 80%;
+  height: 25%;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.23);
+  transform: translateX(78px);
+  -webkit-transform: translateX(78px);
+  -moz-transform: translateX(78px);
+  -ms-transform: translateX(78px);
+  -o-transform: translateX(78px);
+}
+
+.custom-checkbox #_checkbox:checked + label {
+  background-color: rgb(0, 32, 127);
+  /* box-shadow: 0 7px 10px #92ff97; */
+}
+
+.custom-checkbox #_checkbox:checked + label:before {
+  width: 0;
+  height: 0;
+}
+
+.custom-checkbox #_checkbox:checked + label #tick_mark:before,
+.custom-checkbox #_checkbox:checked + label #tick_mark:after {
+  transform: translate(0);
+  opacity: 1;
+}
+
+.reciptpaper2-icon{
+  top: 35.5vw;
+  z-index: -45;
+  width: 35.870vw;
+  position: absolute;
+  float: right;
+  margin-left: -4.605vw;
+  transition: margin-top 2s;
+  /*display: none;*/
+  -webkit-transition: margin-top 2s;
+  -moz-transition: margin-top 2s;
+  -ms-transition: margin-top 2s;
+  -o-transition: margin-top 2s;
+}
+
+.submitButton{
+  top: 38.5vw;
+  position:absolute;
+  transition: margin-top 2s;
+  margin-left: 0vw;
+  border-radius: 0.3vw;
+  background-color: #00207F;
+  color: white;
+  border: none;
+  box-shadow: 0 12px 25px -10px rgba(66, 69, 74, 0.3);
+  width: 9.2vw;
+  height: 3.3vw;
+  -webkit-border-radius: 0.3vw;
+  -moz-border-radius: 0.3vw;
+  -ms-border-radius: 0.3vw;
+  -o-border-radius: 0.3vw;
+  font-size: 0.8vw;
+  font-weight: 400;
+  letter-spacing: 0.08389vw;
+  -webkit-transition: margin-top 2s;
+  -moz-transition: margin-top 2s;
+  -ms-transition: margin-top 2s;
+  -o-transition: margin-top 2s;
+}
+
+.payback{
+  color: #080063;
+  font-family: Ubuntu;
+  font-size: 1.04167vw;
+  font-style: normal;
+  font-weight: 700;
+  transition: margin-top 2s;
+  position: absolute;
+  letter-spacing: 0.02083vw;
+  float: right;
+  top: 39.8vw;
+  right: 12vw;
+}
+
+
+.footer{
+  position: absolute;
+  bottom: 0;
+  left: 42vw;
+  color: white; 
+  font-size: 0.8vw;
+}
+
+@media screen and (max-width:600px){
+  .body{
+    font-family: Ubuntu;
+    margin: 0px;
+    padding: 0px;
+  }
+  
+  img{
+    width: 0vw;
+  }
+  
+  .background{
+    position: absolute;
+    z-index: -99999;
+    top: 0;
+    right: 0;
+    background-color: #00207F; /* Set the blue background color */
+    width: 100%;
+    height: 100vh;
+    /* clip-path: polygon(0 0, 100% 30%, 100% 100%, 0 84%); */   
+    clip-path: polygon(0 0, 100% 59vw, 100% 100%, 0 181vw);
+  }
+  
+  .dartStand{
+    width: 30vw;
+    position: absolute;
+    display: none;
+    bottom: 0;
+    left: 0;
+  }
+  
+  .dart{
+    display: inline-block;
+    width: 54vw;
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+  
+  h1,h2,h3,h4,p,b,button,form{
+    font-family: Ubuntu;
+  }
+  
+  .recipt{
+    /* margin-top: 49vw; */
+    margin-top: 23vh;
+    margin-left: -20vw;
+  }
+  
+  .reciptsection1{
+  
+  }
+  
+  .back{
+    display: inline-block;
+    top: 10vw;
+    left: 3vw;
+    position: absolute;
+  }
+  
+  .reciptpaper1-icon{
+    width: 112vw;
+    display: inline;
+    position: absolute;
+    z-index: -10;
+  }
+  
+  .reciptText{
+    margin-left: 22vw;
+  }
+  
+  .title1{
+    /* margin-top: 3vw; */
+    margin-top: 1vh;
+    position:absolute;
+    margin-left: 29vw;
+    font-size: 6vw;
+    height: 12vw;
+    display: inline-block;
+    letter-spacing: 0.01vw;
+    text-transform: uppercase;
+  }
+  
+  .reciptData{
+  
+  }
+    
+  .account-sadapay{
+    position: absolute;
+    /* top: 64vw; */
+    top: 26vh;
+    margin-top: 13vw;
+  
+    border-color: black;
+    border-top: 0.7vw;
+    border-bottom: 0.7vw;
+    border-right: 0vw;
+    border-left: 0;
+    border-style: dashed;
+    display: inline-block;
+    font-weight: 900;
+    width: 74vw;
+    height: 15vw;
+    margin-left: 5vw;
+    /* margin-top: 2.5vh; */
+  }
+  
+  .infoText{
+    color: #43444A;
+    font-size: 3.4vw;
+    display: inline-block;
+    /* margin-top: 1.5vw; */
+    margin-top: 0.7vh;
+    /* width: 13vw; */
+    /* line-height: 3vw; */
+    /* letter-spacing: -0.04vw; */
+    margin-left: 0.8vw;
+  }
+  
+  .ahmadHassan{
+    font-weight: 400;
+  }
+  .myNo{
+    font-weight: 400;
+  }
+  .sadaPay{
+    display: inline-block;
+  }
+  .sadaLogo{
+    width: 11vw;
+    margin-left: 20vw;
+    display: inline-block;
+    margin-top: 2vw;
+    /* margin-top: 1vh; */
+    position: absolute;
+  }
+  
+  form{
+    margin-left: 5vw;
+    width: 74vw;
+    position: absolute;
+    margin-top: 30vw;
+  }
+  
+  input {
+      border: none;
+      background-color: transparent;
+      outline: none;
+  }
+  
+  label{
+    height: 10vw;
+  }
+  
+  .full-name,.phone-no,.email,.bank,.account-number{
+    border: 0.7vw;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-style: dashed;
+    font-size: 2.5vw;
+    font-family: Ubuntu;
+    width: 25vw;
+    margin-top: 4.8vw; 
+  }
+  
+  .full-name::placeholder,
+  .phone-no::placeholder,
+  .email::placeholder,
+  .bank::placeholder,
+  .account-number::placeholder {
+    
+    color: rgba(4, 6, 14, 0.50);
+    font-family: Ubuntu;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 0.029vw;
+    margin-left: 1.5vw;
+  }
+  
+  .email,.account-number{
+    width: 97.05%;
+  }
+  
+  .bank{
+    width: 68%;
+  }
+  
+  .phone-no{
+    margin-right: 0.5vw;
+    float: right;
+  }
+  
+  button,.submit{
+    margin-top: 2vw;
+    position:absolute;
+    margin-left: 1.6vw;
+    border-radius: 0.3vw;
+    background-color: #00207F;
+    color: white;
+    border: none;
+    box-shadow: 0 12px 25px -10px rgba(66, 69, 74, 0.3);
+    width: 7.65vw;
+    height: 2.5vw;
+    -webkit-border-radius: 0.3vw;
+    -moz-border-radius: 0.3vw;
+    -ms-border-radius: 0.3vw;
+    -o-border-radius: 0.3vw;
+    font-size: 0.69444vw;
+    font-weight: 400;
+    letter-spacing: 0.01389vw;
+}
+  
+  .custom-file-upload {
+    margin-top: 5vw;
+    position: absolute;
+    margin-left: 2.6vw;
+    background-color: #00207F;
+    color: white;
+    border: none;
+    box-shadow: 0 12px 25px -10px rgba(66, 69, 74, 0.3);
+    width: 19vw;
+    height: 6.8vw;
+    border-radius: 0.9vw;
+    -webkit-border-radius: 0.9vw;
+    -moz-border-radius: 0.9vw;
+    -ms-border-radius: 0.9vw;
+    -o-border-radius: 0.9vw;
+    font-size: 2.25vw;
+    font-weight: 400;
+    letter-spacing: 0.01389vw;
+    display: inline-grid;
+    text-align: center;
+    cursor: pointer;
+    align-content: center;
+}
+  
+  /* Hide the default file input appearance */
+  .custom-file-upload input[type="file"] {
+    display: none;
+  }
+  
+  
+  .note{
+    margin-top: 4.1vw; 
+    color: #04060E;
+    font-family: Ubuntu;
+    font-size: 2.6vw;
+    /* text-align: right; */
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.1vw;
+    margin-bottom: 0;
+  }
+  
+  
+  .termsAndConditions{
+    /* margin-top: 2.2vw; */
+    font-size: 1vw;
+  
+  }
+  
+  .agreement{
+    margin-left: 6vw;
+    color: #04060E;
+    font-family: Ubuntu;
+    font-size: 2.8vw;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    position: absolute;
+    letter-spacing: 0.00833vw;
+    top : 44.4vw;
+  }
+  
+  .terms-and-conditions1{
+    color: #080063;
+    font-family: Ubuntu;
+    font-size: 2.6vw;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 0.00833vw;
+    text-decoration-line: underline;
+    -moz-text-decoration-line: underline;
+  }
+  
+  .custom-checkbox #_checkbox {
+    display: none;
+  }
+  
+  .custom-checkbox label {
+    position: absolute;
+    top: 48vw;
+    margin-top: 0.55vw;
+    border: no;
+    display: inline-block;
+    margin-left: 0;
+    width: 4vw;
+    height: 4vw;
+    background-color: #00207F;
+    transform: translateY(-50%);
+    border-radius: 100%;
+    cursor: pointer;
+    transition: 0.2s ease transform, 0.2s ease background-color,    0.2s ease box-shadow;
+    overflow: hidden;
+    z-index: 1;
+    border: none;
+    align-items: center;
+    -webkit-transition: 0.2s ease transform, 0.2s ease background-color,    0.2s ease box-shadow;
+    -moz-transition: 0.2s ease transform, 0.2s ease background-color,    0.2s ease box-shadow;
+    -ms-transition: 0.2s ease transform, 0.2s ease background-color,    0.2s ease box-shadow;
+    -o-transition: 0.2s ease transform, 0.2s ease background-color,    0.2s ease box-shadow;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    -ms-border-radius: 100%;
+    -o-border-radius: 100%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+}
+  
+  .custom-checkbox label:before {
+    content: "";
+    position: absolute;
+    top: 48%;
+    display: inline-block;
+    right: 0;
+    left: 0;
+    width: 2vw;
+    height: 2vw;
+    margin: 0 auto;
+    background-color: #fff;
+    transform: translateY(-50%);
+    border-radius: 100%;
+    /*box-shadow: inset 0 7px 10px #ffbeb8;
+    */transition: 0.2s ease width, 0.2s ease height;
+    -webkit-transition: 0.2s ease width, 0.2s ease height;
+    -moz-transition: 0.2s ease width, 0.2s ease height;
+    -ms-transition: 0.2s ease width, 0.2s ease height;
+    -o-transition: 0.2s ease width, 0.2s ease height;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    -ms-border-radius: 100%;
+    -o-border-radius: 100%;
+}
+  
+  .custom-checkbox label:hover:before {
+    width: 0.4vw;
+    height: 0.4vw;
+    /* box-shadow: inset 0 7px 10px #ff9d96; */
+  }
+  
+  .custom-checkbox label:active {
+    transform: translateY(-50%) scale(0.9);
+    -webkit-transform: translateY(-50%) scale(0.9);
+    -moz-transform: translateY(-50%) scale(0.9);
+    -ms-transform: translateY(-50%) scale(0.9);
+    -o-transform: translateY(-50%) scale(0.9);
+}
+  
+  .custom-checkbox #tick_mark {
+    position: absolute;
+    top: -0.3vw;
+    right: 0;
+    left: -0.1vw;
+    width: 3vw;
+    height: 2.75vw;
+    margin: 0 auto;
+    margin-left: 2px;
+    transform: rotateZ(-40deg);
+    -webkit-transform: rotateZ(-40deg);
+    -moz-transform: rotateZ(-40deg);
+    -ms-transform: rotateZ(-40deg);
+    -o-transform: rotateZ(-40deg);
+}
+  
+  .custom-checkbox #tick_mark:before,
+  .custom-checkbox #tick_mark:after {
+    content: "";
+    position: absolute;
+    background-color: #fff;
+    border-radius: 2px;
+    opacity: 0;
+    transition: 0.2s ease transform, 0.2s ease opacity;
+    -webkit-transition: 0.2s ease transform, 0.2s ease opacity;
+    -moz-transition: 0.2s ease transform, 0.2s ease opacity;
+    -ms-transition: 0.2s ease transform, 0.2s ease opacity;
+    -o-transition: 0.2s ease transform, 0.2s ease opacity;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -ms-border-radius: 2px;
+    -o-border-radius: 2px;
+}
+  
+  .custom-checkbox #tick_mark:before {
+    left: 0;
+    bottom: 0;
+    width: 18%;
+    height: 50%;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.23);
+    transform: translateY(-68px);
+    -webkit-transform: translateY(-68px);
+    -moz-transform: translateY(-68px);
+    -ms-transform: translateY(-68px);
+    -o-transform: translateY(-68px);
+  }
+  
+  .custom-checkbox #tick_mark:after {
+    left: 0;
+    bottom: 0;
+    width: 80%;
+    height: 25%;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.23);
+    transform: translateX(78px);
+    -webkit-transform: translateX(78px);
+    -moz-transform: translateX(78px);
+    -ms-transform: translateX(78px);
+    -o-transform: translateX(78px);
+  }
+  
+  .custom-checkbox #_checkbox:checked + label {
+    background-color: rgb(0, 32, 127);
+    /* box-shadow: 0 7px 10px #92ff97; */
+  }
+  
+  .custom-checkbox #_checkbox:checked + label:before {
+    width: 0;
+    height: 0;
+  }
+  
+  .custom-checkbox #_checkbox:checked + label #tick_mark:before,
+  .custom-checkbox #_checkbox:checked + label #tick_mark:after {
+    transform: translate(0);
+    opacity: 1;
+    -webkit-transform: translate(0);
+    -moz-transform: translate(0);
+    -ms-transform: translate(0);
+    -o-transform: translate(0);
+}
+  
+  .reciptpaper2-icon{
+    top: 51vw;
+    z-index: -45;
+    width: 95.5vw;
+    position: absolute;
+    float: right;
+    margin-left: -10.5vw;
+    transition: margin-top 2s;
+    /*display: none;
+    */-webkit-transition: margin-top 2s;
+    -moz-transition: margin-top 2s;
+    -ms-transition: margin-top 2s;
+    -o-transition: margin-top 2s;
+    -webkit-transition: margin-top 2s;
+}
+  
+  .submitButton{
+    top: 57vw;
+    position:absolute;
+    transition: margin-top 2s;
+    margin-left: 0vw;
+    border-radius: 1vw;
+    background-color: #00207F;
+    color: white;
+    border: none;
+    box-shadow: 0 12px 25px -10px rgba(66, 69, 74, 0.3);
+    width: 25vw;
+    height: 9.5vw;
+    -webkit-border-radius: 1vw;
+    -moz-border-radius: 1vw;
+    -ms-border-radius: 1vw;
+    -o-border-radius: 1vw;
+    font-size: 2.8vw;
+    font-weight: 400;
+    letter-spacing: 0.1389vw;
+    -webkit-transition: margin-top 2s;
+    -moz-transition: margin-top 2s;
+    -ms-transition: margin-top 2s;
+    -o-transition: margin-top 2s;
+}
+  
+  .payback{
+    color: #080063;
+    font-family: Ubuntu;
+    font-size: 3.5vw;
+    font-style: normal;
+    font-weight: 700;
+    transition: margin-top 2s;
+    position: absolute;
+    letter-spacing: 0.02083vw;
+    float: right;
+    top: 59.8vw;
+    right: -6vw;
+    -webkit-transition: margin-top 2s;
+    -moz-transition: margin-top 2s;
+    -ms-transition: margin-top 2s;
+    -o-transition: margin-top 2s;
+}
+  
+  .footer{
+    position: absolute;
+    bottom: 0;
+    left: 6vw;
+    font-weight: 500;
+    color:#080063; 
+    font-size: 3.2vw;
+  }
+}
