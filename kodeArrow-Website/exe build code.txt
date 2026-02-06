@@ -1,0 +1,1 @@
+P:\KodeArrow-Software>pyinstaller --onefile --windowed --icon=icon.ico KodeArrow.py
