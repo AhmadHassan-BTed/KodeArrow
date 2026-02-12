@@ -1,1 +1,0 @@
-yinstaller --onefile --windowed --strip --optimize=2 --name "QuantativeTypingTester" QTT_responsive.py

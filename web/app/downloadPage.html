@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;700&display=swap"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+ 
+    
+    <link rel="stylesheet" href="downloadPageStyle.css">
+
+
+    <script>
+        // Function to initiate the file download
+        function initiateDownload() {
+            // Create an anchor element
+            var anchor = document.createElement("a");
+            
+            // Set the href attribute to the file's URL
+            anchor.href = "your_file_url_here"; // Replace with the actual file URL
+
+            // Set the download attribute to specify the desired filename for the downloaded file
+            anchor.download = "filename.extension"; // Replace with the desired filename and extension
+
+            // Programmatically click the anchor element to initiate the download
+            anchor.click();
+        }
+
+        // Execute the initiateDownload function after 3 seconds when the page loads
+        window.onload = function () {
+            setTimeout(initiateDownload, 3000); // 3000 milliseconds = 3 seconds
+        };
+
+        // Attach initiateDownload function to the anchor's click event
+        document.addEventListener("DOMContentLoaded", function () {
+            var downloadAnchor = document.getElementById("download-anchor");
+            downloadAnchor.addEventListener("click", function(event) {
+                event.preventDefault(); // Prevent the default behavior of the anchor
+                initiateDownload();
+            });
+        });
+    </script>
+
+</head> 
+
+<body>
+    
+    
+    <div class="header">
+      
+        <h1 class="codearrowTitle1">KodeArrow</h1>
+        
+        <div class="middleTitleBar1">     
+            <button class="productsButton1" onclick="window.location.href='https://bted.000webhostapp.com/work.html'">PRODUCTS</button>      
+            <button class="creatorButton1" onclick="window.location.href='https://bted.000webhostapp.com/'">CREATOR</button>
+            <button class="contactButton1"onclick="window.location.href='https://bted.000webhostapp.com/contactMe.html'">CONTACT</button>
+          </div>
+        
+        <div class="rightTitleBar1">
+          <button class="homeButton1"onclick="window.location.href='home-page.html'">Home</button>
+          <button class="buyButton1" onclick="window.location.href='payment.html'">Buy</button>
+        </div>
+       
+    </div>
+      
+    <div class="rectangle">
+        <h1 class="title1">Thank You for Downloading....</h1>
+        <h1 class="title1Phone">Thank You<br>for<br>Downloading<br>....</h1>
+        <p class="downloading">Your download will be starting soon. if not started then <a href="#" id="download-anchor" class="clickHere" > click here</a></p>
+    </div>
+    
+    <div class="keyboard">
+    
+        <div class="row1">        
+            <div class="kr1 k11"></div>
+            <div class="kr1 k12"></div>
+            <div class="kr1 k13"></div>
+            <div class="kr1 k14"></div>
+            <div class="kr1 k15"></div>
+            <div class="kr1 k16"></div>
+            <div class="kr1 k17"></div>
+            <div class="kr1 k18"></div>
+            <div class="kr1 k19"></div>
+            <div class="kr1 k110"></div>
+        </div>
+        
+        <div class="row2">        
+            <div class="kr2 k21"></div>
+            <div class="kr2 k22"></div>
+            <div class="kr2 k23"></div>
+            <div class="kr2 k24"></div>
+            <div class="kr2 k25"></div>
+            <div class="kr2 k26"></div>
+            <div class="kr2 k27"></div>
+            <div class="kr2 k28"></div>
+        </div>
+        
+        <div class="row3">        
+            <div class="kr3 k31"></div>
+            <div class="kr3 k32"></div>
+            <div class="kr3 k34"></div>
+            <div class="kr3 k33"></div>
+            <div class="kr3 k36"></div>
+            <div class="kr3 k35"></div>
+            <div class="kr3 k37"></div>
+            <div class="kr3 k38"></div>
+            <div class="kr3 k39"></div>
+        </div>
+        
+        <div class="row4">        
+            <div class="kr4 k41"></div>
+            <div class="kr4 k42"></div>
+            <div class="kr4 k43"></div>
+            <div class="kr4 k44"></div>
+            <div class="kr4 k45"></div>
+            <div class="kr4 k46"></div>
+        </div>
+        
+    </div>
+    
+    <svg xmlns="http://www.w3.org/2000/svg" class="wirePhone" viewBox="0 0 177 292" fill="none">
+        <path d="M4.5 0.5C-5 251.5 102.43 127.913 158 178C206 230.5 125.898 259.559 136.5 291" stroke="black" stroke-width="6"/>
+    </svg>
+    
+    <svg xmlns="http://www.w3.org/2000/svg" class="wirePc" viewBox="0 0 279 224" fill="none">
+        <path d="M3.49995 31.5C77.2224 158.416 172 -50.4999 248 18C323.999 86.4999 217.5 180 232 223" stroke="black" stroke-width="6"/>
+      </svg>
+    
+    <svg xmlns="http://www.w3.org/2000/svg" class="mouse" viewBox="0 0 215 330" fill="none">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M79.9614 0.159872C34.3942 9.03615 0 49.167 0 97.3309V230.331C0 285.007 44.3238 329.331 99 329.331H116C170.676 329.331 215 285.007 215 230.331V97.3309C215 48.8714 180.182 8.54393 134.198 0L112 22.1985L112 120.132C124.338 122.473 133.667 133.312 133.667 146.331C133.667 161.059 121.728 172.998 107 172.998C92.2724 172.998 80.3333 161.059 80.3333 146.331C80.3333 133.312 89.6624 122.473 102 120.132L102 22.1985L79.9614 0.159872Z" fill="#0039E3"/>
+    </svg>
+    
+    <svg xmlns="http://www.w3.org/2000/svg" class="mousePhone" width="158" height="246" viewBox="0 0 158 246" fill="none">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M53.4729 7.0821C22.3856 17.5645 0 46.9591 0 81.5822V166.4C0 209.812 35.1918 245.003 78.6031 245.003C122.014 245.003 157.206 209.812 157.206 166.4V81.5822C157.206 46.7558 134.557 17.2195 103.185 6.89941L83.2375 26.8467V84.9968C95.5751 87.3372 104.904 98.1769 104.904 111.195C104.904 125.923 92.965 137.862 78.2375 137.862C63.5099 137.862 51.5708 125.923 51.5708 111.195C51.5708 98.1769 60.8998 87.3372 73.2375 84.9968V26.8467L53.4729 7.0821Z" fill="#002DB1"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M53.4729 0.50135C22.3856 10.9837 0 40.3783 0 75.0014V159.82C0 203.231 35.1918 238.423 78.6031 238.423C122.014 238.423 157.206 203.231 157.206 159.82V75.0015C157.206 40.1751 134.557 10.6387 103.185 0.318665L83.2375 20.266V78.4161C95.5751 80.7564 104.904 91.5961 104.904 104.615C104.904 119.342 92.965 131.281 78.2375 131.281C63.5099 131.281 51.5708 119.342 51.5708 104.615C51.5708 91.5961 60.8998 80.7564 73.2375 78.4161V20.266L53.4729 0.50135Z" fill="#0039E3"/>
+      </svg>
+    
+      
+    <p class="footer"> Copyright <font color="#00ACEC">©</font> 2023. Project by Ahmad Hassan </p>
+
+
+</body>
+</html>

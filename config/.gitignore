@@ -1,0 +1,19 @@
+# --- Build Artifacts ---
+dist/
+build/
+*.spec
+
+# --- Environment & Secrets ---
+config/.env
+data/keys/
+
+# --- Python Caches ---
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+
+# --- Local Data ---
+data/logs/
+data/metadata/usage_data.txt
+packages/tools/tester/data/*.xlsx

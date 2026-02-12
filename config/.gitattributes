@@ -1,0 +1,30 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Standard Python files
+*.py text eol=lf
+*.pyi text eol=lf
+
+# Documentation
+*.md text eol=lf
+LICENSE text eol=lf
+
+# Configuration
+.gitignore text eol=lf
+.env.example text eol=lf
+requirements.txt text eol=lf
+
+# Batch and Shell scripts
+*.bat text eol=crlf
+*.sh text eol=lf
+
+# Binary files
+*.ico binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.mp4 binary
+*.zip binary
+*.exe binary
+*.msi binary
+*.cdr binary
