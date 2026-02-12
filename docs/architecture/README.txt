@@ -1,0 +1,89 @@
+KodeArrow- Move less, Type fast, Code Seamlessly.
+
+Welcome to KodeArrow! 🚀
+
+Note: Please buy Premium at (kodearrow.wuaze.com/) to unlock Up/Down Keyboard shortcut accessibility.
+
+##Description:
+
+KodeArrow is a revolutionary keyboard software designed to revolutionize the coding experience for developers and programmers. Tired of constantly stretching your fingers to reach those elusive arrow keys? Look no further! KodeArrow is here to enhance your productivity and minimize hand movement, making coding an absolute breeze.
+
+##Features
+
+- Effortless Navigation: Say goodbye to awkward hand movements. KodeArrow transforms simple key combinations into seamless arrow key actions, ensuring a fluid and efficient coding experience.
+
+- Customizable Shortcuts: We understand that every coder has their own unique style. With KodeArrow, you can use personalized key combinations to suit your preferences, giving you ultimate control over your workflow.
+
+- Compatible with All Languages and Environments: Whether you're coding in Python, Java, or any other language, even Gaming, KodeArrow Pro seamlessly integrates with your favorite coding environments, ensuring consistent performance across the board.
+
+- Intuitive and User-Friendly: Our sleek and intuitive interface makes it a breeze to set up and start using KodeArrow Pro. No complicated configurations, no steep learning curves – just pure coding efficiency.
+
+
+## Installation
+
+1. Download the KodeArrow.exe installer from (kodearrow.wuaze.com/).
+2. Extract the WinRar file and follow the simple on-screen instructions.
+3. Launch KodeArrow.exe and start experiencing a new level of coding comfort!
+
+## Usage
+
+1. Launch KodeArrow (Run as Administrator).
+2. The KeyGuide will be displaying the following pop-up:
+
+		_______________________________________________________________________________________
+		|										       |
+		|						       				       |
+                |                             Welcome to KodeArrow© 2023			       |
+		|                             a project by Ahmad Hassan				       |
+                |										       |
+		|            Thank you for using KodeArrow, a product of ByTed Technologies            |
+		|                                                                                      |
+		|				      'Alt + I'                                        |
+		|				     (Arrow  Up)                                       |
+		|	     'Alt + J' 				                  'Alt + L'            |
+                |          (Arrow  Left)                                        (Arrow  Right)         |
+		|				      'Alt + K'                                        |
+		|                                   (Arrow  Down) 				       |
+                |										       |
+		|	        "Right click KodeArrow icon in System Tray to access menu"             |
+		|		  Note: Please buy Premium version to unlock locked keys               |
+		|		                                                                       |
+		|                                   ______________				       |
+		|				   |              |				       |
+		|				   |      OK      |				       |
+  		|				   |______________|                                    |
+                |										       |
+                |______________________________________________________________________________________|
+
+
+3. After closing the pop-up, the KodeArrow icon will be displayed in the icon menu on your Taskbar.
+4. Right-click on the KodeArrow icon to access various settings, including "Exit," "Buy Premium," and "Enter the Key."
+5. After that, open your favorite code editor or IDE.
+6. Experience the joy of coding with reduced hand movement and increased productivity.
+
+
+Note. The key functionalities of KodeArrow will work throughout the whole Desktop/Windows experience.
+
+## Feedback and Support
+
+We value your feedback! If you have any questions, suggestions, or issues, feel free to reach out to our dedicated support team at https://bted.wuaze.com/contactMe.html. Your input helps us continually enhance the KodeArrow experience.
+
+## Stay Connected
+
+Follow us on [LinkedIn](www.linkedin.com/in/ahmad-hassan-52ab4225b/) and [GitHub](github.com/byted-technologies) to stay up-to-date with the latest news, updates, and tips on optimizing your coding workflow.
+
+## Spread the Word
+
+If KodeArrow has transformed the way you code, why not share the love? Tell your friends and colleagues about this game-changing software and let's revolutionize coding together!
+
+Happy coding,
+
+Regards,
+The KodeArrow Creator, Ahmad Hassan (B-Ted)
+
+---
+
+Note: KodeArrow is a product of ByTed-technologies Inc. For more information about our products and services, please visit [bted.wuaze.com/](kodearrow.wuaze.com/).
+
+Copyright ©2023
+Project by Ahmad Hassan
