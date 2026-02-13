@@ -99,7 +99,7 @@ sequenceDiagram
     participant E as Execution Engine (PyAutoGUI)
     participant C as Cloud Telemetry
 
-    U->>H: Press Alt + [U, I, O, P, J, K, L, ;, [, ']
+    U->>H: Press Alt + Hotkey Suite
     H->>V: Capture Event & Suppress
     V->>V: Check Hardware ID & License
     alt Authorized
