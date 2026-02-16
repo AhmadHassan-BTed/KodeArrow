@@ -86,14 +86,47 @@ class REditionApp(BaseApp):
         def open_creator_links():
             webbrowser.open("https://bted.wuaze.com/")
             webbrowser.open("https://www.linkedin.com/in/ahmad-hassan-52ab4225b/")
+        
+        def handle_unlock():
+            def on_email_submit(email):
+                try:
+                    hardware_id = self.hardware_id
+                    is_success, message = self.subscription.validate_and_activate(
+                        email, hardware_id, self.premium_file, is_research=True
+                    )
+                    if is_success:
+                        import tkinter as tk
+                        root = tk.Tk()
+                        root.withdraw()
+                        from tkinter import messagebox as msg
+                        msg.showinfo("Success", "Premium access unlocked! Please restart the application to apply changes.")
+                    else:
+                        import tkinter as tk
+                        root = tk.Tk()
+                        root.withdraw()
+                        from tkinter import messagebox as msg
+                        msg.showerror("Unlock Failed", f"Error: {message}")
+                except Exception as e:
+                    import tkinter as tk
+                    root = tk.Tk()
+                    root.withdraw()
+                    from tkinter import messagebox as msg
+                    msg.showerror("Error", f"An error occurred: {str(e)}")
+            
+            self.ui.show_email_input_dialog(on_email_submit)
 
-        menu = pystray.Menu(
+        menu_items = [
             pystray.MenuItem('Created by Ahmad Hassan', open_creator_links),
             pystray.MenuItem('R-Edition Research Info', self.show_research_info),
             pystray.MenuItem('Visit Portal', self.open_portal, default=True),
-            pystray.MenuItem('Exit', self.stop)
-        )
+        ]
         
+        if not self.is_premium:
+            menu_items.append(pystray.MenuItem('Already bought? Unlock Here', handle_unlock))
+        
+        menu_items.append(pystray.MenuItem('Exit', self.stop))
+        
+        menu = pystray.Menu(*menu_items)
         self.icon = pystray.Icon("KodeArrowR", img, "KodeArrow R-Edition", menu)
 
     def show_research_info(self):
