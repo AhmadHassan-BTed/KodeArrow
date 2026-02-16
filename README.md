@@ -11,7 +11,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![Architecture: Tiered Mono-Repo](https://img.shields.io/badge/Architecture-Mono--Repo-green.svg)](#architecture-overview)
-[![Build: Automated](https://img.shields.io/badge/Build-Automated-orange.svg)](#build--deployment-flow)
+[![Build: Local Engine](https://img.shields.io/badge/Build-Local_Engine-blue.svg)](#build--deployment-flow)
 <br><br>
 [🌐 Official Website](https://kodearrow.wuaze.com/) • [📂 Key Features](#-key-features) • [🚀 Quick Start](#-quick-start)
 
@@ -196,7 +196,7 @@ New people are welcomed to participate in development.
 
 ## 🛠️ Build & Deployment Flow
 
-The automated pipeline ensures consistent, high-performance binaries for end-users.
+The project utilizes a high-performance local build engine to ensure consistent, secure binaries for end-users.
 
 ```mermaid
 %%{init: {'flowchart': {'curve': 'stepBefore'}}}%%
@@ -207,6 +207,8 @@ graph LR
     P --> EXE[dist/KodeArrow.exe]
     style EXE fill:#f9f,stroke:#333,stroke-width:4px
 ```
+
+**Deployment**: The official web presence is managed and deployed independently at [kodearrow.wuaze.com](https://kodearrow.wuaze.com/).
 
 ---
 
