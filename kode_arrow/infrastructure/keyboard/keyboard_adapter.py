@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Callable
 
-import keyboard as _keyboard
+import keyboard as _keyboard  # type: ignore[reportMissingImports]
 
 from kode_arrow.domain.ports.keyboard_port import KeyboardPort
 

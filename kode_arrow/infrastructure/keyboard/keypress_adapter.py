@@ -5,7 +5,7 @@ from kode_arrow.domain.ports.keypress_port import KeypressPort
 
 class KeypressAdapter(KeypressPort):
     def press(self, key: str) -> None:
-        import pyautogui
+        import pyautogui  # type: ignore[reportMissingImports]
 
         pyautogui.press(key)
 
