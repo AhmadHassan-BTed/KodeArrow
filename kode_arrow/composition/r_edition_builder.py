@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import time
 from dataclasses import dataclass
 from typing import Callable
 
@@ -8,9 +9,14 @@ from kode_arrow.application.use_cases.navigation_action_use_case import (
     NavigationAction,
     NavigationActionUseCase,
 )
-from kode_arrow.application.use_cases.unlock_premium_use_case import (
-    UnlockPremiumUseCase,
+from kode_arrow.application.use_cases.telemetry.research_batching_service import (
+    ResearchBatchingService,
 )
+from kode_arrow.application.use_cases.telemetry.upload_usage_use_case import (
+    UploadUsageUseCase,
+)
+from kode_arrow.application.use_cases.telemetry.usage_collector import UsageCollector
+from kode_arrow.application.use_cases.unlock_premium_use_case import UnlockPremiumUseCase
 from kode_arrow.infrastructure.gui.dialog_adapter import DialogAdapter
 from kode_arrow.infrastructure.gui.tray_adapter import TrayAdapter, TrayResources
 from kode_arrow.infrastructure.keyboard.keyboard_adapter import KeyboardAdapter
@@ -22,12 +28,14 @@ from kode_arrow.infrastructure.services.subscription_premium_adapter import (
 
 
 @dataclass(frozen=True)
-class StandardEditionDeps:
+class REditionDeps:
     keyboard: KeyboardAdapter
     keypress: KeypressAdapter
     dialog: DialogAdapter
     premium: SubscriptionPremiumAdapter
     telemetry: FirebaseTelemetryAdapter
+    collector: UsageCollector
+    batching: ResearchBatchingService
 
 
 def _icon_path() -> str:
@@ -39,7 +47,7 @@ def _icon_path() -> str:
     )
 
 
-def build_standard_app_deps(*, premium_file_provider: Callable[[], str]) -> StandardEditionDeps:
+def build_reedition_app_deps(*, premium_file_provider: Callable[[], str]) -> REditionDeps:
     keyboard = KeyboardAdapter()
     keypress = KeypressAdapter()
     dialog = DialogAdapter()
@@ -47,30 +55,47 @@ def build_standard_app_deps(*, premium_file_provider: Callable[[], str]) -> Stan
     premium = SubscriptionPremiumAdapter(premium_file_provider=premium_file_provider)
     telemetry = FirebaseTelemetryAdapter()
 
-    return StandardEditionDeps(
+    multiplier = 20
+    collector = UsageCollector(multiplier=multiplier)
+
+    uploader = UploadUsageUseCase(
+        telemetry_port=telemetry,
+        collection="ControlGroup",
+        email="research_user@example.com",
+    )
+
+    batching = ResearchBatchingService(collector=collector, uploader=uploader)
+
+    return REditionDeps(
         keyboard=keyboard,
         keypress=keypress,
         dialog=dialog,
         premium=premium,
         telemetry=telemetry,
+        collector=collector,
+        batching=batching,
     )
 
 
-def build_standard_tray(
+def build_reedition_navigation_use_case(*, is_premium: bool, keypress_port: KeypressAdapter) -> NavigationActionUseCase:
+    return NavigationActionUseCase(is_premium=is_premium, keypress_port=keypress_port)
+
+
+def build_reedition_tray(
     *,
     icon_path: str,
-    deps: StandardEditionDeps,
+    deps: REditionDeps,
     hardware_id: str,
     premium_file_path: str,
     is_premium: bool,
     open_portfolio: Callable[[], None],
     open_website: Callable[[], None],
+    open_portal: Callable[[], None],
+    show_research_info: Callable[[], None],
     stop_app: Callable[[], None],
 ) -> TrayAdapter:
-    resources = TrayResources(icon_path=icon_path)
-
     tray = TrayAdapter(
-        resources=resources,
+        resources=TrayResources(icon_path=icon_path),
         on_open_creator_links=open_portfolio,
     )
 
@@ -83,7 +108,7 @@ def build_standard_tray(
                 premium_port=deps.premium,
                 hardware_id=hardware_id,
                 premium_file_path=premium_file_path,
-                is_research=False,
+                is_research=True,
             )
             result = use_case.execute(email=email)
             if result.success:
@@ -102,26 +127,17 @@ def build_standard_tray(
         on_exit=on_exit,
         on_open_portfolio=open_portfolio,
         on_open_website=open_website,
-        on_show_research_info=None,
-        on_open_portal=open_website,
+        on_show_research_info=show_research_info,
+        on_open_portal=open_portal,
     )
 
     return tray
 
 
-def build_standard_navigation_use_case(*, is_premium: bool, keypress_port: KeypressAdapter) -> NavigationActionUseCase:
-    return NavigationActionUseCase(is_premium=is_premium, keypress_port=keypress_port)
-
-
-def build_standard_hotkey_actions(*, navigation_use_case: NavigationActionUseCase) -> dict[str, NavigationAction]:
-    return {
-        "i": NavigationAction(key_to_press="up", requires_premium=True),
-        "j": NavigationAction(key_to_press="left", requires_premium=False),
-        "k": NavigationAction(key_to_press="down", requires_premium=True),
-        "l": NavigationAction(key_to_press="right", requires_premium=False),
-    }
-
-
-def standard_icon_path() -> str:
+def reedition_icon_path() -> str:
     return _icon_path()
+
+
+def now_seconds() -> float:
+    return time.time()
 
