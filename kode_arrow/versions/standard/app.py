@@ -16,15 +16,15 @@ class StandardApp(BaseApp):
         self._composer = StandardComposer(
             deps=build_standard_app_deps(premium_file_provider=lambda: self.premium_file)
         )
+        self._tray = None
 
     def setup_hotkeys(self):
         controller = self._composer.build_hotkeys_controller(is_premium=self.is_premium)
         controller.register()
-        self.register_extended_hotkeys()
         self.logger.info("Hotkeys registered.")
 
     def setup_tray(self):
-        tray = self._composer.build_tray(
+        self._tray = self._composer.build_tray(
             is_premium=self.is_premium,
             hardware_id=self.hardware_id,
             premium_file_path=self.premium_file,
@@ -32,7 +32,15 @@ class StandardApp(BaseApp):
             open_website=self.open_website,
             stop_app=self.stop,
         )
-        self.icon = tray._icon  # keep compatibility with BaseApp.run_tray
+
+    def run_tray(self):
+        if self._tray is not None:
+            self._tray.run()
+
+    def stop(self):
+        if self._tray is not None:
+            self._tray.stop()
+        super().stop()
 
     def open_portfolio(self):
         webbrowser.open("https://bted.wuaze.com/")

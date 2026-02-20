@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from kode_arrow.common.gui.windows import UIWindowManager
+from kode_arrow.presentation.dialogs import UIWindowManager
 
 from .controllers import StandardHotkeyController
 from .standard_builder import (

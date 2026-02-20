@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Callable, Tuple
 
 from kode_arrow.domain.ports.premium_port import PremiumPort
-from kode_arrow.common.services.subscription_service import SubscriptionService
+from .subscription import SubscriptionService
 
 
 class SubscriptionPremiumAdapter(PremiumPort):

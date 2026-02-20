@@ -51,6 +51,21 @@ class StandardHotkeyController:
                     suppress=True,
                 )
 
+        extended_keys = {
+            'u': NavigationAction(key_to_press='home', requires_premium=True),
+            'o': NavigationAction(key_to_press='end', requires_premium=True),
+            'p': NavigationAction(key_to_press='delete', requires_premium=True),
+            ';': NavigationAction(key_to_press='backspace', requires_premium=True),
+            '[': NavigationAction(key_to_press='pageup', requires_premium=True),
+            "'": NavigationAction(key_to_press='pagedown', requires_premium=True),
+        }
+        for key, action in extended_keys.items():
+            self._keyboard_port.add_hotkey(
+                f'alt+{key}',
+                lambda a=action: self._navigation_use_case.execute(a),
+                suppress=True,
+            )
+
 
 class REditionHotkeyController:
     def __init__(
