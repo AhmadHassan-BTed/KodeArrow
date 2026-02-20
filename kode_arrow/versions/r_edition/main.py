@@ -1,5 +1,5 @@
 from .app import REditionApp
-from ...common.utils.logging_config import setup_logging
+from ...infrastructure.config.logging_config import setup_logging
 
 def main():
     setup_logging()

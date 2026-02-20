@@ -49,10 +49,7 @@ class REditionApp(BaseApp):
         self._hotkeys_controller.register()
 
     def setup_tray(self):
-        # pystray needs a constructed icon; adapter already has it.
-        # Keep same BaseApp compatibility pattern as standard/app.py.
-        self._tray_icon = self._tray._icon  # type: ignore[attr-defined]
-        self.icon = self._tray_icon
+        pass
 
     def show_research_info(self):
         import tkinter as tk
@@ -77,6 +74,10 @@ class REditionApp(BaseApp):
     def open_portal(self):
         webbrowser.open("https://kodearrow.wuaze.com/research")
 
+    def run_tray(self):
+        if self._tray is not None:
+            self._tray.run()
+
     def stop(self):
         # upload research batch before exiting
         final = dict(self._collector.stats)
@@ -85,5 +86,7 @@ class REditionApp(BaseApp):
         # (batching.reset_batch updates TotalUsageMinutes; this is final snapshot.)
         self.logger.info("Uploading research data before shutdown...")
         self._deps.batching._uploader.execute(data=final)  # type: ignore[attr-defined]
+        if self._tray is not None:
+            self._tray.stop()
         super().stop()
 

@@ -5,22 +5,47 @@ for licensing and device fingerprinting purposes.
 """
 
 import logging
-from ...common.utils.helpers import get_hardware_id, encrypt_hardwareID
+import platform
+import subprocess
+import wmi
+from .encryption import encrypt_hardware_id
 
 logger = logging.getLogger(__name__)
 
 
+def get_hardware_id() -> str:
+    """Get the hardware ID of the current system.
+
+    Returns:
+        The hardware ID string
+    """
+    system = platform.system()
+    if system == "Windows":
+        c = wmi.WMI()
+        bios = c.Win32_BIOS()[0]
+        return bios.SerialNumber
+    elif system == "Darwin":
+        command = "ioreg -l | grep IOPlatformSerialNumber"
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        serial_number = result.stdout.split('=')[-1].strip().strip('"')
+        return serial_number
+    elif system == "Linux":
+        command = "cat /sys/class/dmi/id/product_uuid"
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        return result.stdout.strip()
+    return "UNKNOWN"
+
+
 class HardwareIdentifier:
     """Manages hardware identification and encryption.
-    
+
     Provides methods to retrieve the current system's hardware ID and encrypt it
-    for secure transmission and storage. Wraps the hardware ID utilities from
-    the common helpers module.
+    for secure transmission and storage.
     """
 
     def __init__(self):
         """Initialize HardwareIdentifier.
-        
+
         Raises:
             RuntimeError: If hardware ID cannot be obtained on the current system.
         """
@@ -35,10 +60,10 @@ class HardwareIdentifier:
 
     def _get_system_hardware_id(self) -> str:
         """Retrieve the system's hardware ID.
-        
+
         Returns:
             str: The hardware ID of the current system.
-            
+
         Raises:
             Exception: If hardware ID retrieval fails.
         """
@@ -46,7 +71,7 @@ class HardwareIdentifier:
 
     def get_hardware_id(self) -> str:
         """Get the unencrypted hardware ID.
-        
+
         Returns:
             str: The raw hardware ID of the system.
         """
@@ -54,26 +79,26 @@ class HardwareIdentifier:
 
     def get_encrypted_hardware_id(self) -> str:
         """Get the encrypted hardware ID.
-        
+
         The hardware ID is encrypted using a Caesar cipher with shift of 3.
         This is useful for transmission and basic obfuscation.
-        
+
         Returns:
             str: The encrypted hardware ID. Cached after first call.
         """
         if self._encrypted_id is None:
-            self._encrypted_id = encrypt_hardwareID(self._hardware_id)
+            self._encrypted_id = encrypt_hardware_id(self._hardware_id)
             logger.debug("Hardware ID encrypted successfully")
         return self._encrypted_id
 
     def validate_hardware_id(self, expected_id: str) -> bool:
         """Validate if a given hardware ID matches the current system's ID.
-        
+
         Useful for verifying licensing information bound to specific hardware.
-        
+
         Args:
             expected_id (str): The hardware ID to validate against.
-            
+
         Returns:
             bool: True if the provided ID matches the current system's ID, False otherwise.
         """
@@ -86,10 +111,10 @@ class HardwareIdentifier:
 
     def validate_encrypted_hardware_id(self, expected_encrypted_id: str) -> bool:
         """Validate if an encrypted hardware ID matches the current system's encrypted ID.
-        
+
         Args:
             expected_encrypted_id (str): The encrypted hardware ID to validate against.
-            
+
         Returns:
             bool: True if the encrypted IDs match, False otherwise.
         """

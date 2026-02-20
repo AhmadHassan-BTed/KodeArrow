@@ -5,8 +5,8 @@ import argparse
 # Path discovery for enterprise mono-repo
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".")))
 
-from kode_arrow.common.utils.logging_config import setup_logging
-from kode_arrow.common.config.settings import Config
+from kode_arrow.infrastructure.config.logging_config import setup_logging
+from kode_arrow.infrastructure.config.settings import Config
 
 def run():
     parser = argparse.ArgumentParser(description="KodeArrow - Professional Productivity Tool")

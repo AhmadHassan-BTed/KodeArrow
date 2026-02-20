@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from kode_arrow.domain.ports.telemetry_port import TelemetryPort
-from kode_arrow.common.services.firebase_service import FirebaseService
+from .firebase import FirebaseService
 
 
 class FirebaseTelemetryAdapter(TelemetryPort):
