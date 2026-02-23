@@ -118,4 +118,4 @@ class KodeArrowApp:
         if self.tray:
             self.tray.stop()
         self.logger.info("KodeArrow stopped.")
-        sys.exit(0)
+        os._exit(0)
