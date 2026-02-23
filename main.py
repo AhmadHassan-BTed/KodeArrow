@@ -5,8 +5,9 @@ import argparse
 # Path discovery for enterprise mono-repo
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".")))
 
-from kode_arrow.infrastructure.config.logging_config import setup_logging
-from kode_arrow.infrastructure.config.settings import Config
+from kode_arrow.config.logging import setup_logging
+from kode_arrow.config.settings import Config
+from kode_arrow.core.app import KodeArrowApp
 
 def run():
     parser = argparse.ArgumentParser(description="KodeArrow - Professional Productivity Tool")
@@ -17,12 +18,8 @@ def run():
     setup_logging()
     Config.validate()
 
-    if args.version == 'standard':
-        from kode_arrow.versions.standard.app import StandardApp
-        app = StandardApp()
-    else:
-        from kode_arrow.versions.r_edition.app import REditionApp
-        app = REditionApp()
+    is_research = (args.version == 'r_edition')
+    app = KodeArrowApp(is_research=is_research)
 
     try:
         app.start()
