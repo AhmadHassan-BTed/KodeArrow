@@ -1,6 +1,6 @@
 import webbrowser
 from tkinter import BOTH, messagebox
-from customtkinter import CTk, CTkButton, CTkFrame, CTkLabel
+from customtkinter import CTk, CTkButton, CTkFrame, CTkLabel, CTkEntry
 import customtkinter as ctk
 import os
 from kode_arrow.security.encryption import encrypt_hardware_id
