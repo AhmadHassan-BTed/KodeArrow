@@ -171,3 +171,11 @@ kodearrow.log
 !requirements.txt
 !README.txt
 *.key
+
+# AI and Agent Directories
+.gemini/
+.sixth/
+
+# Sensitive Data & Keys
+data/keys/
+data/metadata/
