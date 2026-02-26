@@ -98,7 +98,8 @@ class KodeArrowApp:
         self.engine.start()
 
         def on_unlock():
-            UIWindowManager.unlock_functionality(self.submit_key)
+            threading.Thread(target=UIWindowManager.unlock_functionality, args=(self.submit_key,), daemon=True).start()
+
 
         self.tray.build_menu(
             is_premium=self.is_premium(),
