@@ -190,7 +190,7 @@ class UIWindowManager:
         field.place(relx=0.5, rely=0.55, anchor="center")
    
         def submit_key():
-            email = field.get()
+            email = field.get().strip().lower()
             if on_submit(email):
                 messagebox.showinfo("Congratulations", "Premium Unlocked")
                 app.destroy()
