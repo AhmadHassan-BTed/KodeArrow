@@ -71,10 +71,10 @@ For User:
             devices_ref = user_ref.collection('devices')
             devices_query = devices_ref.get()
             
-            sub_date_str = user_doc.get('subscription_date')
-            if sub_date_str:
-                subscription_date = datetime.strptime(sub_date_str, '%Y-%m-%d')
-                if datetime.today() >= subscription_date:
+            exp_date_str = user_doc.get('expiration_date')
+            if exp_date_str:
+                expiration_date = datetime.strptime(exp_date_str, '%Y-%m-%d')
+                if datetime.today() >= expiration_date:
                     UIWindowManager.showMessage_subscriptionEnded("your Subscription Period has ended :(\nThank you for joining us 💙 and hope you enjoyed it!\n\nPlase renew your subsription, and enjoy premium services again")
                     return False
 
@@ -111,12 +111,10 @@ For User:
                 user_doc = user_ref.get()
                 
                 if user_doc.exists:
-                    sub_date_str = user_doc.get('subscription_date')
-                    if sub_date_str:
-                        subscription_date = datetime.strptime(sub_date_str, '%Y-%m-%d')
-                        # The original code adds 1 month, but printed six months. Mirroring the exact original code here:
-                        six_months_later = subscription_date + relativedelta(months=1)
-                        if datetime.today() < six_months_later:
+                    exp_date_str = user_doc.get('expiration_date')
+                    if exp_date_str:
+                        expiration_date = datetime.strptime(exp_date_str, '%Y-%m-%d')
+                        if datetime.today() < expiration_date:
                             return True
                         else:
                             os.remove(premium_file_path)
