@@ -102,8 +102,8 @@ class KodeArrowApp:
 
 
         self.tray.build_menu(
-            is_premium=self.is_premium(),
-            on_unlock=None if self.is_premium() else on_unlock,
+            is_premium_fn=self.is_premium,
+            on_unlock=on_unlock,
             on_exit=self.stop,
             on_open_portfolio=self.open_url,
             on_open_website=self.open_url_buy,
