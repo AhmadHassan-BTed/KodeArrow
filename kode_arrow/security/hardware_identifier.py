@@ -4,7 +4,14 @@ import subprocess
 def get_hardware_id():
     system = platform.system()
     if system == "Windows":
-        import wmi
+        try:
+            import wmi
+        except ImportError as exc:
+            raise ImportError(
+                "The 'wmi' package is required on Windows to read hardware IDs. "
+                "Install it with 'pip install wmi' or use the project's requirements.txt."
+            ) from exc
+
         c = wmi.WMI()
         bios = c.Win32_BIOS()[0]
         return bios.SerialNumber
