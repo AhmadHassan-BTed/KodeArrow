@@ -41,7 +41,8 @@ class KodeArrowApp:
             usage_file=self.usage_file
         )
         
-        icon_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'assets', 'branding', 'icon.ico'))
+        from kode_arrow.utils.resource import get_resource_path
+        icon_path = get_resource_path(os.path.join("assets", "branding", "icon.ico"))
         self.tray = SystemTray(icon_path=icon_path, on_open_creator_links=self.open_url)
 
     def is_premium(self):
