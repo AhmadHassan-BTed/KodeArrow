@@ -16,6 +16,7 @@ class SystemTray:
         self,
         *,
         is_premium_fn: Callable[[], bool],
+        on_open_dashboard: Callable[[], None],
         on_unlock: Callable[[], None],
         on_exit: Callable[Any, None],
         on_open_portfolio: Callable[[], None],
@@ -25,13 +26,15 @@ class SystemTray:
 
         def create_menu_items():
             menu_items = [
+                pystray.MenuItem('Open Dashboard', on_open_dashboard, default=True),
+                pystray.Menu.SEPARATOR,
                 pystray.MenuItem('Created by Ahmad Hassan', on_open_portfolio),
             ]
 
             if is_premium_fn():
-                menu_items.append(pystray.MenuItem('Visit KodeArrow', on_open_website, default=True))
+                menu_items.append(pystray.MenuItem('Visit KodeArrow', on_open_website))
             else:
-                menu_items.append(pystray.MenuItem('Buy here for $2', on_open_website, default=True))
+                menu_items.append(pystray.MenuItem('Buy here for $2', on_open_website))
                 if on_unlock is not None:
                     def wrap_unlock(icon, item):
                         on_unlock()
