@@ -59,7 +59,7 @@ class KodeArrowApp:
     def open_dashboard(self):
         threading.Thread(
             target=DashboardWindow.open,
-            args=(self.is_premium, self.open_url_buy, self.stop),
+            args=(self.is_premium, self.open_url_buy, self.stop, self.engine.reload_hotkeys),
             daemon=True
         ).start()
 

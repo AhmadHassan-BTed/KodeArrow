@@ -4,6 +4,7 @@ import pyautogui
 import time
 from kode_arrow.utils.file import write_to_file
 from kode_arrow.utils.network import check_internet_connection
+from kode_arrow.config.user_prefs import UserPrefs
 
 class HotkeyEngine:
     def __init__(self, is_premium_fn, telemetry_service, usage_file="premium_Key_metadata.txt"):
@@ -15,14 +16,31 @@ class HotkeyEngine:
         self.total_shortcuts = 0
         self.multiplier = 20
         self.previous_time = time.time()
+        self._is_hooked = False
         
         pyautogui.PAUSE = 0.000001
         
+        self.load_prefs()
+
+    def load_prefs(self):
+        prefs = UserPrefs.load()["hotkeys"]
+        self.hk_up = prefs.get("up", "i")
+        self.hk_down = prefs.get("down", "k")
+        self.hk_left = prefs.get("left", "j")
+        self.hk_right = prefs.get("right", "l")
+        
+        self.hk_home = prefs.get("home", "u")
+        self.hk_end = prefs.get("end", "o")
+        self.hk_delete = prefs.get("delete", "p")
+        self.hk_backspace = prefs.get("backspace", ";")
+        self.hk_pageup = prefs.get("pageup", "[")
+        self.hk_pagedown = prefs.get("pagedown", "'")
+
         self.key_actions = {
-            'i': self.up_arrow,
-            'j': self.left_arrow,
-            'k': self.down_arrow,
-            'l': self.right_arrow
+            self.hk_up: self.up_arrow,
+            self.hk_left: self.left_arrow,
+            self.hk_down: self.down_arrow,
+            self.hk_right: self.right_arrow
         }
 
     def _hehe(self):
@@ -125,21 +143,28 @@ class HotkeyEngine:
              print(f"Key pressed: {event.name}")
 
     def start(self):
-        keys = ['i', 'j', 'k', 'l']
+        keys = [self.hk_up, self.hk_left, self.hk_down, self.hk_right]
         for key in keys:
-            keyboard.add_hotkey(f'alt+{key}', self.handle_combination, args=(key,), suppress=True)
+            if key: keyboard.add_hotkey(f'alt+{key}', self.handle_combination, args=(key,), suppress=True)
         for combo in itertools.permutations(keys, 2):
-            keyboard.add_hotkey(f'alt+{combo[0]}+{combo[1]}', self.handle_combination, args=combo, suppress=True)
+            if all(combo): keyboard.add_hotkey(f'alt+{combo[0]}+{combo[1]}', self.handle_combination, args=combo, suppress=True)
         for combo in itertools.permutations(keys, 3):
-            keyboard.add_hotkey(f'alt+{combo[0]}+{combo[1]}+{combo[2]}', self.handle_combination, args=combo, suppress=True)
+            if all(combo): keyboard.add_hotkey(f'alt+{combo[0]}+{combo[1]}+{combo[2]}', self.handle_combination, args=combo, suppress=True)
         for combo in itertools.permutations(keys, 4):
-            keyboard.add_hotkey(f'alt+{combo[0]}+{combo[1]}+{combo[2]}+{combo[3]}', self.handle_combination, args=combo, suppress=True)
+            if all(combo): keyboard.add_hotkey(f'alt+{combo[0]}+{combo[1]}+{combo[2]}+{combo[3]}', self.handle_combination, args=combo, suppress=True)
 
-        keyboard.add_hotkey('alt+u', self.home_key, suppress=True)
-        keyboard.add_hotkey('alt+o', self.end_key, suppress=True)
-        keyboard.add_hotkey('alt+p', self.delete_key, suppress=True)
-        keyboard.add_hotkey('alt+;', self.backspace_key, suppress=True)
-        keyboard.add_hotkey('alt+[', self.page_up_key, suppress=True)
-        keyboard.add_hotkey("alt+'", self.page_down_key, suppress=True)
+        if self.hk_home: keyboard.add_hotkey(f'alt+{self.hk_home}', self.home_key, suppress=True)
+        if self.hk_end: keyboard.add_hotkey(f'alt+{self.hk_end}', self.end_key, suppress=True)
+        if self.hk_delete: keyboard.add_hotkey(f'alt+{self.hk_delete}', self.delete_key, suppress=True)
+        if self.hk_backspace: keyboard.add_hotkey(f'alt+{self.hk_backspace}', self.backspace_key, suppress=True)
+        if self.hk_pageup: keyboard.add_hotkey(f'alt+{self.hk_pageup}', self.page_up_key, suppress=True)
+        if self.hk_pagedown: keyboard.add_hotkey(f'alt+{self.hk_pagedown}', self.page_down_key, suppress=True)
 
-        keyboard.hook(self.increment_total_keyStrokes)
+        if not self._is_hooked:
+            keyboard.hook(self.increment_total_keyStrokes)
+            self._is_hooked = True
+
+    def reload_hotkeys(self):
+        keyboard.unhook_all_hotkeys()
+        self.load_prefs()
+        self.start()
