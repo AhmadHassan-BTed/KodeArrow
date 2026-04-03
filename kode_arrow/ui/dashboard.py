@@ -9,159 +9,106 @@ class DashboardWindow:
     @staticmethod
     def open(is_premium_fn, on_open_website, on_exit, on_reload_engine):
         app = CTk()
-        app.title("KodeArrow")
+        app.title("KodeArrow Dashboard")
         app.iconbitmap(get_resource_path(os.path.join('assets', 'branding', 'icon.ico')))
+        
+        # Make it a flyout window (no windows borders)
+        app.overrideredirect(True)
+        app.attributes("-topmost", True)
         
         ws = app.winfo_screenwidth()
         hs = app.winfo_screenheight()
         set_appearance_mode("Light")
-        app.resizable(False, False)
 
-        w, h = 900, 600
-        app.geometry('%dx%d+%d+%d' % (w, h, (ws/2)-(w/2), (hs/2)-(h/2)))
+        # Compact size like Lenovo Vantage
+        w, h = 380, 680
+        # Position at bottom right (above taskbar)
+        x = ws - w - 15
+        y = hs - h - 50 
+        app.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
-        # SaaS-inspired Minimalist Color Palette
-        BG_APP = "#f4f5f7"          # Soft warm-gray app background (Arc/macOS style)
-        BG_SURFACE = "#ffffff"      # Pure white floating cards
-        PRIMARY_BLUE = "#0A5CFF"    # Rich, modern tech blue
-        HOVER_BLUE = "#0047E0"      
-        TEXT_TITLE = "#1A1B20"      # Off-black headings
-        TEXT_MUTED = "#6B6D76"      # Soft elegant gray for subtext
-        TEXT_INPUT = "#3F4045"
-        BORDER_SOFT = "#E9EAEE"     # Barely visible card borders
+        # Colors based on existing theme + light mode Lenovo vibe
+        HEADER_BG = "#4C7CFF" # Vibrant Blue header
+        BG_COLOR = "#FAFAFA"
+        TEXT_MAIN = "#1A1A1A"
+        TEXT_SUB = "#666666"
+        BORDER_COLOR = "#E0E0E0"
+        FONT_FAMILY = "Bahnschrift" # Original font
 
-        FONT_FAMILY = "Segoe UI"
+        # Outer border frame to give the borderless window an edge
+        main_border = CTkFrame(master=app, fg_color=BG_COLOR, border_width=1, border_color="#B0B0B0", corner_radius=0)
+        main_border.pack(fill=BOTH, expand=True)
+
+        # ------------------------------------------------
+        # HEADER
+        # ------------------------------------------------
+        header = CTkFrame(master=main_border, fg_color=HEADER_BG, corner_radius=0, height=45)
+        header.pack(fill=X)
+        header.pack_propagate(False)
+
+        title = CTkLabel(master=header, text="KodeArrow Settings", font=(FONT_FAMILY, 15), text_color="white")
+        title.pack(side=LEFT, padx=15)
+
+        btn_close = CTkButton(master=header, text="✕", width=35, height=35, fg_color="transparent", 
+                              hover_color="#3A63CC", text_color="white", font=("Arial", 16), command=app.destroy)
+        btn_close.pack(side=RIGHT, padx=5)
+
+        # ------------------------------------------------
+        # LICENSE STATUS SECTION
+        # ------------------------------------------------
+        # Title row with sub-link
+        lic_header_frame = CTkFrame(master=main_border, fg_color="transparent")
+        lic_header_frame.pack(fill=X, padx=20, pady=(20, 5))
         
-        container = CTkFrame(master=app, fg_color=BG_APP)
-        container.pack(fill=BOTH, expand=True)
-
-        # ------------------------------------------------
-        # SIDEBAR (Floating panel appearance)
-        # ------------------------------------------------
-        # To simulate a floating sidebar, we give it a margin (padx, pady) 
-        # and rounded corners over the main background
-        sidebar_margin = CTkFrame(master=container, width=220, fg_color="transparent")
-        sidebar_margin.pack(side=LEFT, fill=Y, pady=25, padx=(25, 10))
-
-        sidebar = CTkFrame(master=sidebar_margin, width=220, fg_color=BG_SURFACE, corner_radius=16, border_width=1, border_color=BORDER_SOFT)
-        sidebar.pack(fill=BOTH, expand=True)
-        sidebar.pack_propagate(False) # Keep width fixed
-
-        # ------------------------------------------------
-        # MAIN CONTENT (Airy and spacious)
-        # ------------------------------------------------
-        main_content = CTkFrame(master=container, fg_color="transparent")
-        main_content.pack(side=LEFT, fill=BOTH, expand=True, padx=40, pady=25)
-
-        home_frame = CTkFrame(master=main_content, fg_color="transparent")
-        settings_frame = CTkFrame(master=main_content, fg_color="transparent")
-
-        # Sidebar State Management
-        btn_nav_home = None
-        btn_nav_settings = None
-
-        def update_nav_styles(active_tab):
-            # Pill-shaped active state
-            default_fg = "transparent"
-            active_fg = "#F0F2F5"
-            default_text = TEXT_MUTED
-            active_text = PRIMARY_BLUE
-
-            btn_nav_home.configure(fg_color=active_fg if active_tab == "home" else default_fg, 
-                                   text_color=active_text if active_tab == "home" else default_text)
-            btn_nav_settings.configure(fg_color=active_fg if active_tab == "settings" else default_fg,
-                                       text_color=active_text if active_tab == "settings" else default_text)
-
-        def show_home():
-            settings_frame.pack_forget()
-            home_frame.pack(fill=BOTH, expand=True)
-            update_nav_styles("home")
-
-        def show_settings():
-            home_frame.pack_forget()
-            settings_frame.pack(fill=BOTH, expand=True)
-            update_nav_styles("settings")
-
-        # Sidebar Branding
-        logo_label = CTkLabel(master=sidebar, text="KodeArrow", font=(FONT_FAMILY, 18, "bold"), text_color=TEXT_TITLE)
-        logo_label.pack(pady=(40, 40), padx=25, anchor="w")
-
-        # Nav Buttons (Pill-shaped, soft hover)
-        nav_container = CTkFrame(master=sidebar, fg_color="transparent")
-        nav_container.pack(fill=X, padx=15)
-
-        btn_nav_home = CTkButton(master=nav_container, text="Overview", font=(FONT_FAMILY, 14), height=38, corner_radius=19,
-                                 fg_color="transparent", text_color=TEXT_MUTED, hover_color="#F8F9FB", anchor="w", command=show_home)
-        btn_nav_home.pack(fill=X, pady=4)
+        CTkLabel(master=lic_header_frame, text="LICENSE STATUS", font=(FONT_FAMILY, 11, "bold"), text_color=TEXT_MAIN).pack(side=LEFT)
         
-        btn_nav_settings = CTkButton(master=nav_container, text="Shortcuts", font=(FONT_FAMILY, 14), height=38, corner_radius=19,
-                                     fg_color="transparent", text_color=TEXT_MUTED, hover_color="#F8F9FB", anchor="w", command=show_settings)
-        btn_nav_settings.pack(fill=X, pady=4)
-
-        # ==========================================
-        # HOME TAB - Elegant Cards
-        # ==========================================
-        CTkLabel(master=home_frame, text="Overview", font=(FONT_FAMILY, 28), text_color=TEXT_TITLE).pack(anchor="w", pady=(20, 30))
-
         is_premium = is_premium_fn()
-        status_text = "Premium Active" if is_premium else "Unlicensed Mode"
-        status_color = "#34C759" if is_premium else "#FF6B6B" # Softer modern red
         
-        # License Card (Soft shadow simulation via light border, rounded corners)
-        status_card = CTkFrame(master=home_frame, fg_color=BG_SURFACE, corner_radius=16, border_width=1, border_color=BORDER_SOFT)
-        status_card.pack(fill=X, pady=(0, 25), ipadx=25, ipady=25)
+        # The big status block
+        status_bg = "#E6FBE9" if is_premium else "#FBE6E6"
+        status_border = "#34C759" if is_premium else "#FF3B30"
+        status_text_color = "#28A745" if is_premium else "#DC3545"
+        status_msg = "PREMIUM ACTIVE" if is_premium else "UNLICENSED"
+
+        status_box = CTkFrame(master=main_border, fg_color=status_bg, border_color=status_border, border_width=2, corner_radius=6, height=75)
+        status_box.pack(fill=X, padx=20)
+        status_box.pack_propagate(False)
         
-        CTkLabel(master=status_card, text="License Status", font=(FONT_FAMILY, 13), text_color=TEXT_MUTED).pack(anchor="w", padx=25, pady=(15, 2))
-        CTkLabel(master=status_card, text=status_text, font=(FONT_FAMILY, 20), text_color=status_color).pack(anchor="w", padx=25, pady=(0, 15))
+        # Emulating the big 100% text from the battery inspiration
+        CTkLabel(master=status_box, text=status_msg, font=(FONT_FAMILY, 24, "bold"), text_color=status_text_color).pack(expand=True)
 
-        # Auto-Start Card
-        system_card = CTkFrame(master=home_frame, fg_color=BG_SURFACE, corner_radius=16, border_width=1, border_color=BORDER_SOFT)
-        system_card.pack(fill=X, ipadx=25, ipady=15)
+        # ------------------------------------------------
+        # QUICK SHORTCUTS SECTION
+        # ------------------------------------------------
+        short_header_frame = CTkFrame(master=main_border, fg_color="transparent")
+        short_header_frame.pack(fill=X, padx=20, pady=(25, 5))
+        CTkLabel(master=short_header_frame, text="QUICK SHORTCUTS", font=(FONT_FAMILY, 11, "bold"), text_color=TEXT_MAIN).pack(side=LEFT)
 
-        def toggle_autostart():
-            if switch_var.get() == "on": enable_autostart()
-            else: disable_autostart()
+        # Card container for shortcuts
+        short_card = CTkFrame(master=main_border, fg_color="white", border_color=BORDER_COLOR, border_width=1, corner_radius=8)
+        short_card.pack(fill=X, padx=20, ipadx=10, ipady=15)
 
-        switch_var = StringVar(value="on" if is_autostart_enabled() else "off")
-        
-        switch_frame = CTkFrame(master=system_card, fg_color="transparent")
-        switch_frame.pack(fill=X, padx=25, pady=15)
-        
-        switch_info = CTkFrame(master=switch_frame, fg_color="transparent")
-        switch_info.pack(side=LEFT)
-        CTkLabel(master=switch_info, text="System Startup", font=(FONT_FAMILY, 15), text_color=TEXT_TITLE).pack(anchor="w")
-        CTkLabel(master=switch_info, text="Launch KodeArrow smoothly in the background when Windows starts", font=(FONT_FAMILY, 12), text_color=TEXT_MUTED).pack(anchor="w")
-
-        # Modern iOS-style switch
-        switch = CTkSwitch(master=switch_frame, text="", command=toggle_autostart, variable=switch_var, onvalue="on", offvalue="off",
-                           fg_color="#E9E9EA", progress_color="#34C759", button_color="#FFFFFF", button_hover_color="#F4F5F7", switch_width=44, switch_height=24)
-        switch.pack(side=RIGHT, pady=5)
-
-        # ==========================================
-        # SETTINGS TAB - Clean Grid
-        # ==========================================
-        CTkLabel(master=settings_frame, text="Shortcuts", font=(FONT_FAMILY, 28), text_color=TEXT_TITLE).pack(anchor="w", pady=(20, 8))
-        CTkLabel(master=settings_frame, text="Modify your personal workflow keys. Hold 'Alt' to trigger.", font=(FONT_FAMILY, 14), text_color=TEXT_MUTED).pack(anchor="w", pady=(0, 40))
-
-        grid_card = CTkFrame(master=settings_frame, fg_color=BG_SURFACE, corner_radius=16, border_width=1, border_color=BORDER_SOFT)
-        grid_card.pack(fill=BOTH, expand=True, ipadx=20, ipady=20)
+        CTkLabel(master=short_card, text="Modifier: Alt + [Key]", font=(FONT_FAMILY, 12), text_color=TEXT_SUB).pack(pady=(0, 10))
 
         prefs = UserPrefs.load()
         hotkeys = prefs.get("hotkeys", {})
-        
         entries = {}
+
+        # Build a compact grid for the hotkeys inside the card
+        grid_frame = CTkFrame(master=short_card, fg_color="transparent")
+        grid_frame.pack(fill=BOTH, expand=True, padx=10)
+
         row, col = 0, 0
         for action, current_key in hotkeys.items():
-            field_frame = CTkFrame(master=grid_card, fg_color="transparent")
-            field_frame.grid(row=row, column=col, padx=(20, 60), pady=12, sticky="w")
+            field_frame = CTkFrame(master=grid_frame, fg_color="transparent")
+            field_frame.grid(row=row, column=col, padx=10, pady=6, sticky="w")
             
-            CTkLabel(master=field_frame, text=f"{action.capitalize()}", font=(FONT_FAMILY, 14), width=80, anchor="w", text_color=TEXT_TITLE).pack(side=LEFT)
+            CTkLabel(master=field_frame, text=f"{action.capitalize()}", font=(FONT_FAMILY, 13), width=65, anchor="w", text_color=TEXT_MAIN).pack(side=LEFT)
             
-            # Refined Entry Box
-            entry = CTkEntry(master=field_frame, width=45, height=34, font=(FONT_FAMILY, 14), justify="center", 
-                             fg_color="#F4F5F7", text_color=TEXT_INPUT, border_width=0, corner_radius=8)
+            entry = CTkEntry(master=field_frame, width=35, height=28, font=(FONT_FAMILY, 13), justify="center", 
+                             fg_color="#F0F0F0", text_color=TEXT_MAIN, border_width=1, border_color="#D0D0D0", corner_radius=4)
             entry.insert(0, current_key)
-            entry.pack(side=LEFT, padx=10)
+            entry.pack(side=LEFT)
             entries[action] = entry
             
             col += 1
@@ -175,32 +122,40 @@ class DashboardWindow:
                 if len(val) == 1: new_prefs["hotkeys"][action] = val
             UserPrefs.save(new_prefs)
             on_reload_engine() 
-            
-            save_btn.configure(text="Changes Saved")
-            app.after(2500, lambda: save_btn.configure(text="Save Preferences"))
+            save_btn.configure(text="SAVED")
+            app.after(2000, lambda: save_btn.configure(text="APPLY SHORTCUTS"))
 
-        save_btn = CTkButton(master=grid_card, text="Save Preferences", width=150, height=38, corner_radius=19, font=(FONT_FAMILY, 13), 
-                             fg_color=PRIMARY_BLUE, text_color="white", hover_color=HOVER_BLUE, command=save_hotkeys)
-        save_btn.grid(row=row+1, column=1, sticky="e", pady=(20, 0), padx=(0, 60))
+        save_btn = CTkButton(master=short_card, text="APPLY SHORTCUTS", width=120, height=30, corner_radius=4, font=(FONT_FAMILY, 12, "bold"), 
+                             fg_color="transparent", text_color=HEADER_BG, border_width=1, border_color=HEADER_BG, hover_color="#E6EEFF", command=save_hotkeys)
+        save_btn.pack(pady=(15, 0))
 
-        # ==========================================
-        # BOTTOM FOOTER (Sidebar)
-        # ==========================================
-        footer_frame = CTkFrame(master=sidebar, fg_color="transparent")
-        footer_frame.pack(side=BOTTOM, fill=X, pady=25, padx=20)
+        # ------------------------------------------------
+        # SYSTEM SETTINGS
+        # ------------------------------------------------
+        sys_header_frame = CTkFrame(master=main_border, fg_color="transparent")
+        sys_header_frame.pack(fill=X, padx=20, pady=(25, 5))
+        CTkLabel(master=sys_header_frame, text="SYSTEM", font=(FONT_FAMILY, 11, "bold"), text_color=TEXT_MAIN).pack(side=LEFT)
 
-        # Elegant solid filled buttons
-        btn_website = CTkButton(master=footer_frame, text="Visit Website", height=38, corner_radius=10, font=(FONT_FAMILY, 13),
-                                fg_color=PRIMARY_BLUE, text_color="white", hover_color=HOVER_BLUE, command=on_open_website)
-        btn_website.pack(fill=X, pady=(0, 10))
+        def toggle_autostart():
+            if switch_var.get() == "on": enable_autostart()
+            else: disable_autostart()
 
-        def close_and_exit():
-            app.destroy()
-            on_exit()
+        switch_var = StringVar(value="on" if is_autostart_enabled() else "off")
+        
+        switch = CTkSwitch(master=main_border, text=" Auto-Start with Windows", command=toggle_autostart, variable=switch_var, onvalue="on", offvalue="off",
+                           fg_color="#D0D0D0", progress_color=HEADER_BG, text_color=TEXT_MAIN, font=(FONT_FAMILY, 13))
+        switch.pack(anchor="w", padx=20, pady=5)
 
-        btn_exit = CTkButton(master=footer_frame, text="Exit App", height=38, corner_radius=10, font=(FONT_FAMILY, 13),
-                             fg_color="#F4F5F7", text_color="#E03A3A", hover_color="#E8E9EB", command=close_and_exit)
-        btn_exit.pack(fill=X)
+        # ------------------------------------------------
+        # BOTTOM FOOTER
+        # ------------------------------------------------
+        # Big pill button at the bottom
+        btn_website = CTkButton(master=main_border, text="VISIT KODEARROW WEBSITE", height=45, corner_radius=22, font=(FONT_FAMILY, 13, "bold"),
+                                fg_color=HEADER_BG, text_color="white", hover_color="#3A63CC", command=on_open_website)
+        btn_website.pack(fill=X, padx=20, side=BOTTOM, pady=(0, 20))
+        
+        btn_exit = CTkButton(master=main_border, text="Quit KodeArrow Process", height=20, fg_color="transparent", text_color="#888888", 
+                             hover_color=BG_COLOR, font=(FONT_FAMILY, 11, "underline"), command=lambda: [app.destroy(), on_exit()])
+        btn_exit.pack(side=BOTTOM, pady=(0, 10))
 
-        show_home()
         app.mainloop()
