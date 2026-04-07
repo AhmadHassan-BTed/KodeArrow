@@ -57,9 +57,12 @@ class KodeArrowApp:
         webbrowser.open("http://kodearrow.wuaze.com/")
 
     def open_dashboard(self):
+        def on_unlock():
+            threading.Thread(target=UIWindowManager.unlock_functionality, args=(self.submit_key,), daemon=True).start()
+            
         threading.Thread(
             target=DashboardWindow.open,
-            args=(self.is_premium, self.open_url_buy, self.stop, self.engine.reload_hotkeys),
+            args=(self.is_premium, self.open_url_buy, self.stop, self.engine.reload_hotkeys, on_unlock),
             daemon=True
         ).start()
 

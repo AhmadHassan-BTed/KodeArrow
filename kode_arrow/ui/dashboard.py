@@ -7,7 +7,7 @@ from kode_arrow.config.user_prefs import UserPrefs
 
 class DashboardWindow:
     @staticmethod
-    def open(is_premium_fn, on_open_website, on_exit, on_reload_engine):
+    def open(is_premium_fn, on_open_website, on_exit, on_reload_engine, on_unlock):
         app = CTk()
         app.title("KodeArrow Dashboard")
         app.iconbitmap(get_resource_path(os.path.join('assets', 'branding', 'icon.ico')))
@@ -23,30 +23,29 @@ class DashboardWindow:
         # ------------------------------------------------
         # THEME CONSTANTS (Strictly matching dialogs.py)
         # ------------------------------------------------
-        PRIMARY_COLOR = "#00207f"    # The exact royal blue from dialogs.py
-        PRIMARY_HOVER = "#00134c"    # The exact hover blue from dialogs.py
-        BG_WHITE = "white"           # The exact background color from dialogs.py
-        TEXT_BLACK = "black"         # The exact text color from dialogs.py
+        PRIMARY_COLOR = "#00207f"    
+        PRIMARY_HOVER = "#00134c"    
+        BG_WHITE = "white"           
+        TEXT_BLACK = "black"         
         
-        FONT_FAMILY = "Bahnschrift"  # The exact font from dialogs.py
-        CORNER_RADIUS = 7            # The exact button corner radius from dialogs.py
+        FONT_FAMILY = "Bahnschrift"  
+        CORNER_RADIUS = 7            
         
-        # Main Container
         container = CTkFrame(master=app, fg_color=BG_WHITE, corner_radius=0)
         container.pack(fill=BOTH, expand=True)
 
         # ------------------------------------------------
-        # FULL HEIGHT SIDEBAR (Using Primary Color)
+        # FULL HEIGHT SIDEBAR
         # ------------------------------------------------
         sidebar = CTkFrame(master=container, width=240, fg_color=PRIMARY_COLOR, corner_radius=0)
         sidebar.pack(side=LEFT, fill=Y)
         sidebar.pack_propagate(False)
 
         # ------------------------------------------------
-        # MAIN CONTENT AREA (Pure White)
+        # MAIN CONTENT AREA
         # ------------------------------------------------
         main_content = CTkFrame(master=container, fg_color=BG_WHITE, corner_radius=0)
-        main_content.pack(side=LEFT, fill=BOTH, expand=True, padx=45, pady=40)
+        main_content.pack(side=LEFT, fill=BOTH, expand=True, padx=55, pady=50) # Increased breathing room
 
         home_frame = CTkFrame(master=main_content, fg_color=BG_WHITE)
         settings_frame = CTkFrame(master=main_content, fg_color=BG_WHITE)
@@ -57,7 +56,6 @@ class DashboardWindow:
         def update_nav_styles(active_tab):
             active_color = PRIMARY_HOVER
             default_color = "transparent"
-
             btn_nav_home.configure(fg_color=active_color if active_tab == "home" else default_color)
             btn_nav_settings.configure(fg_color=active_color if active_tab == "settings" else default_color)
 
@@ -72,20 +70,20 @@ class DashboardWindow:
             update_nav_styles("settings")
 
         # Sidebar Branding
-        logo_label = CTkLabel(master=sidebar, text="KodeArrow© 2023", font=(FONT_FAMILY, 20, "bold"), text_color="white")
-        logo_label.pack(pady=(45, 10), padx=25, anchor="w")
-        subtitle_label = CTkLabel(master=sidebar, text="a project by Ahmad Hassan", font=(FONT_FAMILY, 12, "bold"), text_color="white")
-        subtitle_label.pack(pady=(0, 40), padx=25, anchor="w")
+        logo_label = CTkLabel(master=sidebar, text="KodeArrow© 2023", font=(FONT_FAMILY, 18, "bold"), text_color="white")
+        logo_label.pack(pady=(45, 5), padx=25, anchor="w")
+        subtitle_label = CTkLabel(master=sidebar, text="a project by Ahmad Hassan", font=(FONT_FAMILY, 12), text_color="white")
+        subtitle_label.pack(pady=(0, 45), padx=25, anchor="w")
 
         # Sidebar Navigation Buttons
         nav_container = CTkFrame(master=sidebar, fg_color="transparent")
         nav_container.pack(fill=X, padx=15)
 
-        btn_nav_home = CTkButton(master=nav_container, text="Dashboard", font=(FONT_FAMILY, 15), height=40, corner_radius=CORNER_RADIUS,
+        btn_nav_home = CTkButton(master=nav_container, text="Dashboard", font=(FONT_FAMILY, 14), height=38, corner_radius=CORNER_RADIUS,
                                  fg_color="transparent", text_color="white", hover_color=PRIMARY_HOVER, anchor="w", command=show_home)
         btn_nav_home.pack(fill=X, pady=4)
         
-        btn_nav_settings = CTkButton(master=nav_container, text="Shortcuts", font=(FONT_FAMILY, 15), height=40, corner_radius=CORNER_RADIUS,
+        btn_nav_settings = CTkButton(master=nav_container, text="Shortcuts", font=(FONT_FAMILY, 14), height=38, corner_radius=CORNER_RADIUS,
                                      fg_color="transparent", text_color="white", hover_color=PRIMARY_HOVER, anchor="w", command=show_settings)
         btn_nav_settings.pack(fill=X, pady=4)
 
@@ -93,7 +91,7 @@ class DashboardWindow:
         footer_frame = CTkFrame(master=sidebar, fg_color="transparent")
         footer_frame.pack(side=BOTTOM, fill=X, pady=30, padx=15)
 
-        btn_website = CTkButton(master=footer_frame, text="Visit Website", height=35, corner_radius=CORNER_RADIUS, font=(FONT_FAMILY, 14),
+        btn_website = CTkButton(master=footer_frame, text="Visit Website", height=35, corner_radius=CORNER_RADIUS, font=(FONT_FAMILY, 13),
                                 fg_color="white", text_color=PRIMARY_COLOR, hover_color="#e6e6e6", command=on_open_website)
         btn_website.pack(fill=X, pady=(0, 10))
 
@@ -101,26 +99,35 @@ class DashboardWindow:
             app.destroy()
             on_exit()
 
-        btn_exit = CTkButton(master=footer_frame, text="Exit Application", height=35, corner_radius=CORNER_RADIUS, font=(FONT_FAMILY, 14),
+        btn_exit = CTkButton(master=footer_frame, text="Exit Application", height=35, corner_radius=CORNER_RADIUS, font=(FONT_FAMILY, 13),
                              fg_color="transparent", text_color="#FFB3B3", border_width=1, border_color="#FFB3B3", hover_color="#cc0000", command=close_and_exit)
         btn_exit.pack(fill=X)
 
         # ==========================================
         # HOME TAB
         # ==========================================
-        CTkLabel(master=home_frame, text="Overview", font=(FONT_FAMILY, 28, "bold"), text_color=PRIMARY_COLOR).pack(anchor="w", pady=(0, 30))
+        CTkLabel(master=home_frame, text="Overview", font=(FONT_FAMILY, 24, "bold"), text_color=PRIMARY_COLOR).pack(anchor="w", pady=(0, 40))
 
         is_premium = is_premium_fn()
         status_text = "Premium Active" if is_premium else "Unlicensed Mode"
         status_color = "#008000" if is_premium else "#cc0000" 
         
-        # Status Section (No cards, flat design like dialogs.py)
-        CTkLabel(master=home_frame, text="License Status:", font=(FONT_FAMILY, 16, "bold"), text_color=TEXT_BLACK).pack(anchor="w", pady=(0, 5))
-        CTkLabel(master=home_frame, text=status_text, font=(FONT_FAMILY, 24, "bold"), text_color=status_color).pack(anchor="w", pady=(0, 30))
+        # Status Section
+        CTkLabel(master=home_frame, text="License Status:", font=(FONT_FAMILY, 14, "bold"), text_color=TEXT_BLACK).pack(anchor="w", pady=(0, 5))
+        
+        status_row = CTkFrame(master=home_frame, fg_color="transparent")
+        status_row.pack(fill=X, pady=(0, 40))
+        
+        CTkLabel(master=status_row, text=status_text, font=(FONT_FAMILY, 18), text_color=status_color).pack(side=LEFT)
+        
+        if not is_premium:
+            btn_unlock = CTkButton(master=status_row, text="Unlock Premium", height=28, width=110, corner_radius=CORNER_RADIUS, font=(FONT_FAMILY, 12),
+                                   fg_color=PRIMARY_COLOR, text_color="white", hover_color=PRIMARY_HOVER, command=on_unlock)
+            btn_unlock.pack(side=LEFT, padx=15)
 
         # Auto-Start Section
-        CTkLabel(master=home_frame, text="System Startup:", font=(FONT_FAMILY, 16, "bold"), text_color=TEXT_BLACK).pack(anchor="w", pady=(0, 5))
-        CTkLabel(master=home_frame, text="Launch KodeArrow in the background when Windows starts", font=(FONT_FAMILY, 14), text_color=TEXT_BLACK).pack(anchor="w", pady=(0, 10))
+        CTkLabel(master=home_frame, text="System Startup:", font=(FONT_FAMILY, 14, "bold"), text_color=TEXT_BLACK).pack(anchor="w", pady=(0, 5))
+        CTkLabel(master=home_frame, text="Launch KodeArrow automatically in the background when Windows starts", font=(FONT_FAMILY, 13), text_color=TEXT_BLACK).pack(anchor="w", pady=(0, 15))
 
         def toggle_autostart():
             if switch_var.get() == "on": enable_autostart()
@@ -128,15 +135,15 @@ class DashboardWindow:
 
         switch_var = StringVar(value="on" if is_autostart_enabled() else "off")
         
-        switch = CTkSwitch(master=home_frame, text=" Enable Auto-Start", command=toggle_autostart, variable=switch_var, onvalue="on", offvalue="off",
-                           fg_color="#cccccc", progress_color=PRIMARY_COLOR, text_color=TEXT_BLACK, font=(FONT_FAMILY, 14, "bold"))
-        switch.pack(anchor="w", pady=10)
+        switch = CTkSwitch(master=home_frame, text=" Enabled", command=toggle_autostart, variable=switch_var, onvalue="on", offvalue="off",
+                           fg_color="#cccccc", progress_color=PRIMARY_COLOR, text_color=TEXT_BLACK, font=(FONT_FAMILY, 13))
+        switch.pack(anchor="w")
 
         # ==========================================
         # SETTINGS TAB
         # ==========================================
-        CTkLabel(master=settings_frame, text="Shortcuts", font=(FONT_FAMILY, 28, "bold"), text_color=PRIMARY_COLOR).pack(anchor="w", pady=(0, 10))
-        CTkLabel(master=settings_frame, text="Modify your personal workflow keys. Hold 'Alt' to trigger.", font=(FONT_FAMILY, 14), text_color=TEXT_BLACK).pack(anchor="w", pady=(0, 30))
+        CTkLabel(master=settings_frame, text="Shortcuts", font=(FONT_FAMILY, 24, "bold"), text_color=PRIMARY_COLOR).pack(anchor="w", pady=(0, 10))
+        CTkLabel(master=settings_frame, text="Modify your personal workflow keys. Hold 'Alt' to trigger.", font=(FONT_FAMILY, 13), text_color=TEXT_BLACK).pack(anchor="w", pady=(0, 40))
 
         grid_frame = CTkFrame(master=settings_frame, fg_color="transparent")
         grid_frame.pack(fill=BOTH, expand=True)
@@ -148,12 +155,13 @@ class DashboardWindow:
         row, col = 0, 0
         for action, current_key in hotkeys.items():
             field_frame = CTkFrame(master=grid_frame, fg_color="transparent")
-            field_frame.grid(row=row, column=col, padx=(0, 50), pady=15, sticky="w")
+            field_frame.grid(row=row, column=col, padx=(0, 60), pady=12, sticky="w")
             
-            CTkLabel(master=field_frame, text=f"{action.capitalize()}:", font=(FONT_FAMILY, 15, "bold"), width=80, anchor="w", text_color=TEXT_BLACK).pack(side=LEFT)
+            # Action labels are no longer bold, just standard text
+            CTkLabel(master=field_frame, text=f"{action.capitalize()}:", font=(FONT_FAMILY, 13), width=70, anchor="w", text_color=TEXT_BLACK).pack(side=LEFT)
             
-            entry = CTkEntry(master=field_frame, width=45, height=35, font=(FONT_FAMILY, 15), justify="center", 
-                             fg_color="#f2f2f2", text_color=TEXT_BLACK, border_width=1, border_color="#cccccc", corner_radius=CORNER_RADIUS)
+            entry = CTkEntry(master=field_frame, width=45, height=32, font=(FONT_FAMILY, 13), justify="center", 
+                             fg_color="#f5f5f5", text_color=TEXT_BLACK, border_width=1, border_color="#e0e0e0", corner_radius=CORNER_RADIUS)
             entry.insert(0, current_key)
             entry.pack(side=LEFT, padx=10)
             entries[action] = entry
@@ -173,7 +181,7 @@ class DashboardWindow:
             save_btn.configure(text="Changes Saved")
             app.after(2500, lambda: save_btn.configure(text="Save Preferences"))
 
-        save_btn = CTkButton(master=settings_frame, text="Save Preferences", width=160, height=40, corner_radius=CORNER_RADIUS, font=(FONT_FAMILY, 14), 
+        save_btn = CTkButton(master=settings_frame, text="Save Preferences", width=140, height=35, corner_radius=CORNER_RADIUS, font=(FONT_FAMILY, 13), 
                              fg_color=PRIMARY_COLOR, text_color="white", hover_color=PRIMARY_HOVER, command=save_hotkeys)
         save_btn.pack(anchor="w", pady=(30, 0))
 
