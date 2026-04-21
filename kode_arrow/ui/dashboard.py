@@ -192,7 +192,7 @@ class DashboardWindow:
 
         theme_btn = CTkButton(
             master=logo_row,
-            text="",
+            text="🌙",
             width=28, height=28,
             corner_radius=6,
             fg_color=T("THEME_BG"),
@@ -253,8 +253,8 @@ class DashboardWindow:
             update_nav("settings")
 
         NAV_ITEMS = [
-            ("home",     "  Overview",  show_home,     "nav_overview"),
-            ("settings", "  Shortcuts", show_settings, "nav_shortcuts"),
+            ("home",     " 🏠 Overview",  show_home,     "nav_overview"),
+            ("settings", " ⌨️ Shortcuts", show_settings, "nav_shortcuts"),
         ]
 
         nav_buttons = {}
@@ -526,7 +526,7 @@ class DashboardWindow:
             nav_section_lbl.configure(text_color=T("TEXT_MUTED"))
 
             # Theme button
-            theme_btn.configure(text="☀️ Light Mode" if mode["v"]=="light" else "🌙 Dark Mode", 
+            theme_btn.configure(text="🌙" if mode["v"]=="light" else "☀️", 
 
                 fg_color=T("THEME_BG"),
                 hover_color=T("THEME_HOVER"),
