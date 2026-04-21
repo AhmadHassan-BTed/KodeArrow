@@ -35,6 +35,11 @@ class DashboardWindow:
         w, h = 940, 580
         app.geometry("%dx%d+%d+%d" % (w, h, (ws / 2) - (w / 2), (hs / 2) - (h / 2)))
 
+        def on_closing():
+            app.withdraw()
+            app.quit()
+        app.protocol("WM_DELETE_WINDOW", on_closing)
+
         # ── Theme palettes ────────────────────────────────────────────────────
         THEMES = {
             "light": {
@@ -287,7 +292,8 @@ class DashboardWindow:
         btn_website.pack(fill=X, pady=(0, 5))
 
         def close_and_exit():
-            app.destroy()
+            app.withdraw()
+            app.quit()
             on_exit()
 
         btn_exit = CTkButton(
