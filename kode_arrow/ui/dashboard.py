@@ -5,7 +5,7 @@ from typing import Callable, cast
 import importlib.resources as resources
 
 import lucide
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 from customtkinter import (
     CTk, CTkFrame, CTkLabel, CTkButton, CTkSwitch, CTkEntry,
     CTkImage, BOTH, LEFT, RIGHT, TOP, BOTTOM, X, Y, StringVar,
@@ -20,6 +20,17 @@ from kode_arrow.config.user_prefs import UserPrefs
 # SVGs are read from lucide.zip and rasterized with CairoSVG.
 # ─────────────────────────────────────────────────────────────────────────────
 
+
+
+def _load_emoji_icon(emoji_char, size=16):
+    img = Image.new('RGBA', (size * 2, size * 2), (0, 0, 0, 0))
+    try:
+        font = ImageFont.truetype('C:\\Windows\\Fonts\\seguiemj.ttf', size + 2)
+        draw = ImageDraw.Draw(img)
+        draw.text((size // 2, size // 2), emoji_char, font=font, embedded_color=True)
+    except Exception:
+        pass
+    return CTkImage(light_image=img, dark_image=img, size=(size, size))
 
 class DashboardWindow:
     @staticmethod
@@ -130,16 +141,16 @@ class DashboardWindow:
             return THEMES[mode["v"]][key]
 
         ICO = {
-            "nav_overview_inactive": "🏠",
-            "nav_overview_active":   "🏠",
-            "nav_shortcuts_inactive":"⌨️",
-            "nav_shortcuts_active":  "⌨️",
-            "sun":                   "☀️",
-            "moon":                  "🌙",
-            "globe":                 "🌐",
-            "power":                 "🚪",
-            "shield":                "🛡️",
-            "rocket":                "🚀",
+            "nav_overview_inactive": _load_emoji_icon("🏠", 16),
+            "nav_overview_active":   _load_emoji_icon("🏠", 16),
+            "nav_shortcuts_inactive":_load_emoji_icon("⌨️", 16),
+            "nav_shortcuts_active":  _load_emoji_icon("⌨️", 16),
+            "sun":                   _load_emoji_icon("☀️", 16),
+            "moon":                  _load_emoji_icon("🌙", 16),
+            "globe":                 _load_emoji_icon("🌐", 15),
+            "power":                 _load_emoji_icon("🚪", 15),
+            "shield":                _load_emoji_icon("🛡️", 20),
+            "rocket":                _load_emoji_icon("🚀", 20),
         }
         def ico(key):
             """Return the CTkImage for the current theme mode."""
@@ -197,7 +208,7 @@ class DashboardWindow:
 
         theme_btn = CTkButton(
             master=logo_row,
-            text="🌙",
+            text="", image=ico("moon"),
             width=28, height=28,
             corner_radius=6,
             fg_color=T("THEME_BG"),
@@ -239,7 +250,7 @@ class DashboardWindow:
                     continue
                 is_active = (key == active)
                 btn.configure(
-
+                    image=ico(f"{ico_base}_active" if is_active else f"{ico_base}_inactive"),
                     fg_color=T("NAV_ACTIVE_BG") if is_active else "transparent",
                     text_color=T("NAV_ACTIVE_TEXT") if is_active else T("TEXT_SECONDARY"),
                     hover_color=T("NAV_ACTIVE_BG") if is_active else T("NAV_HOVER"),
@@ -258,14 +269,14 @@ class DashboardWindow:
             update_nav("settings")
 
         NAV_ITEMS = [
-            ("home",     " 🏠 Overview",  show_home,     "nav_overview"),
-            ("settings", " ⌨️ Shortcuts", show_settings, "nav_shortcuts"),
+            ("home",     "  Overview",  show_home,     "nav_overview"),
+            ("settings", "  Shortcuts", show_settings, "nav_shortcuts"),
         ]
 
         nav_buttons = {}
         for key, label, cmd, ico_base in NAV_ITEMS:
             btn = CTkButton(
-                master=nav_container, text=label,
+                master=nav_container, text=label, image=ico(f"{ico_base}_inactive"), compound="left",
                 font=(FONT, 13), height=34, corner_radius=7,
                 fg_color="transparent",
                 text_color=T("TEXT_SECONDARY"),
@@ -284,7 +295,7 @@ class DashboardWindow:
         footer.pack(side=BOTTOM, fill=X, pady=18, padx=10)
 
         btn_website = CTkButton(
-            master=footer, text="🌐 Web Version",
+            master=footer, text="  Visit Website", image=ico("globe"), compound="left",
             height=34, corner_radius=7, font=(FONT, 12),
             fg_color=T("ACCENT"), text_color="#FFFFFF",
             hover_color=T("ACCENT_HOVER"), command=on_open_website,
@@ -297,7 +308,7 @@ class DashboardWindow:
             on_exit()
 
         btn_exit = CTkButton(
-            master=footer, text="🚪 Exit",
+            master=footer, text="  Exit KodeArrow", image=ico("power"), compound="left",
             height=34, corner_radius=7, font=(FONT, 12),
             fg_color=T("BTN_EXIT_BG"),
             text_color=T("BTN_EXIT_TEXT"),
@@ -337,7 +348,7 @@ class DashboardWindow:
         status_inner = CTkFrame(master=status_card, fg_color="transparent")
         status_inner.pack(fill=X, padx=22, pady=18)
 
-        shield_lbl = CTkLabel(master=status_inner, text="🛡️ ")
+        shield_lbl = CTkLabel(master=status_inner, text="", image=ico("shield"))
         shield_lbl.pack(side=LEFT, padx=(0, 14))
 
         left_status = CTkFrame(master=status_inner, fg_color="transparent")
@@ -386,7 +397,7 @@ class DashboardWindow:
         startup_inner = CTkFrame(master=startup_card, fg_color="transparent")
         startup_inner.pack(fill=X, padx=22, pady=18)
 
-        rocket_lbl = CTkLabel(master=startup_inner, text="🚀 ")
+        rocket_lbl = CTkLabel(master=startup_inner, text="", image=ico("rocket"))
         rocket_lbl.pack(side=LEFT, padx=(0, 14))
 
         startup_left = CTkFrame(master=startup_inner, fg_color="transparent")
@@ -532,7 +543,7 @@ class DashboardWindow:
             nav_section_lbl.configure(text_color=T("TEXT_MUTED"))
 
             # Theme button
-            theme_btn.configure(text="🌙" if mode["v"]=="light" else "☀️", 
+            theme_btn.configure(text="", image=ico("moon") if mode["v"]=="light" else "☀️", 
 
                 fg_color=T("THEME_BG"),
                 hover_color=T("THEME_HOVER"),
