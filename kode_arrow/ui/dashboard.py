@@ -543,8 +543,9 @@ class DashboardWindow:
             nav_section_lbl.configure(text_color=T("TEXT_MUTED"))
 
             # Theme button
-            theme_btn.configure(text="", image=ico("moon") if mode["v"]=="light" else "☀️", 
-
+            theme_btn.configure(
+                text="", 
+                image=ico("moon") if mode["v"] == "light" else ico("sun"),
                 fg_color=T("THEME_BG"),
                 hover_color=T("THEME_HOVER"),
             )
