@@ -17,7 +17,8 @@ DEFAULT_PREFS = {
         "backspace": ";",
         "pageup": "[",
         "pagedown": "'"
-    }
+    },
+    "theme": "light"
 }
 
 class UserPrefs:
@@ -32,6 +33,8 @@ class UserPrefs:
                 prefs = DEFAULT_PREFS.copy()
                 if "hotkeys" in data:
                     prefs["hotkeys"].update(data["hotkeys"])
+                if "theme" in data:
+                    prefs["theme"] = data["theme"]
                 return prefs
         except Exception as e:
             print(f"Error loading prefs: {e}")
