@@ -179,3 +179,9 @@ kodearrow.log
 # Sensitive Data & Keys
 data/keys/
 data/metadata/
+
+# Node.js / Web Webpack / Parcel
+node_modules/
+.parcel-cache/
+coverage/
+.npm/
