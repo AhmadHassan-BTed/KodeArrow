@@ -1,0 +1,44 @@
+name: Build and Release Executable
+
+on:
+  push:
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Create .env file from Secrets
+        run: |
+          if (!(Test-Path "config")) { New-Item -ItemType Directory -Force -Path "config" }
+          Set-Content -Path "config\.env" -Value "${{ secrets.ENV_FILE_CONTENT }}"
+
+      - name: Build Executable
+        run: |
+          python scripts/build_exe.py
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: dist/KodeArrow.exe
+          token: ${{ secrets.GITHUB_TOKEN }}
