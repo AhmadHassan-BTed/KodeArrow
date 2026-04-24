@@ -3,7 +3,7 @@ KodeArrow- Move less, Type fast, Code Seamlessly.
 
 Welcome to KodeArrow! 🚀
 
-Note: Please buy Premium at (https://kodearrow.000webhostapp.com/) to unlock Up/Down Keyboard shortcut accessibility.
+Note: Please buy Premium at (https://ahmadhassan-bted.github.io/KodeArrow/) to unlock Up/Down Keyboard shortcut accessibility.
 
 ##Description:
 
@@ -21,7 +21,7 @@ KodeArrow is a revolutionary keyboard software designed to revolutionize the cod
 
 ## Installation
 
-1. Download the KodeArrow installer from (https://kodearrow.000webhostapp.com/).
+1. Download the KodeArrow installer from (https://ahmadhassan-bted.github.io/KodeArrow/).
 2. Extract the WinRar file and follow the simple on-screen instructions.
 3. Launch KodeArrow and start experiencing a new level of coding comfort!
 

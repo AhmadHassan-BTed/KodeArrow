@@ -32,7 +32,7 @@ class UIWindowManager:
         app.resizable(False, False)
 
         def closeWindow_andBuySubscription():
-            webbrowser.open("kodearrow.wuaze.com/payment.html")
+            webbrowser.open("ahmadhassan-bted.github.io/KodeArrow/payment.html")
             app.destroy()
 
         frame1 = CTkFrame(master=app, bg_color="white", fg_color="white")
@@ -62,7 +62,7 @@ class UIWindowManager:
         app.resizable(False, False)
 
         def closeWindow_andBuySubscription():
-            webbrowser.open("kodearrow.wuaze.com/")
+            webbrowser.open("ahmadhassan-bted.github.io/KodeArrow/")
             app.destroy()
 
         frame1 = CTkFrame(master=app, bg_color="white", fg_color="white")

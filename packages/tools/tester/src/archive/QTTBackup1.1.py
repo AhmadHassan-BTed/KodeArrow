@@ -423,7 +423,7 @@ def show_results_with_guesses(guesses):
     result_message += "LIFETIME FREE MEMBERSHIP!\n\n"
     result_message += "Software: KodeArrow\n"
     result_message += "Membership ID: rp01@kodeArrow.com\n"
-    result_message += "Website: https://kodearrow.wuaze.com/\n\n"
+    result_message += "Website: https://ahmadhassan-bted.github.io/KodeArrow/\n\n"
     result_message += "This software helps you track and improve your typing efficiency in real-time!\n"
     result_message += "Perfect for better typing awareness!\n\n"
     # result_message += "Click OK to proceed to submission options."

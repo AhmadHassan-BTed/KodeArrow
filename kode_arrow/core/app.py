@@ -54,7 +54,7 @@ class KodeArrowApp:
         webbrowser.open("https://www.linkedin.com/in/ahmad-hassan-52ab4225b/")
         
     def open_url_buy(self):
-        webbrowser.open("http://kodearrow.wuaze.com/")
+        webbrowser.open("http://ahmadhassan-bted.github.io/KodeArrow/")
 
     def open_dashboard(self):
         def on_unlock():
