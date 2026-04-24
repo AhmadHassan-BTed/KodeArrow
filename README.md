@@ -13,7 +13,7 @@
 [![Architecture: Tiered Mono-Repo](https://img.shields.io/badge/Architecture-Mono--Repo-green.svg)](#architecture-overview)
 [![Build: Local Engine](https://img.shields.io/badge/Build-Local_Engine-blue.svg)](#build--deployment-flow)
 <br><br>
-[🌐 Official Website](https://kodearrow.wuaze.com/) • [📂 Key Features](#-key-features) • [🚀 Quick Start](#-quick-start)
+[🌐 Official Website](https://ahmadhassan-bted.github.io/KodeArrow/) • [📂 Key Features](#-key-features) • [🚀 Quick Start](#-quick-start)
 
 ---
 
@@ -208,7 +208,7 @@ graph LR
     style EXE fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
-**Deployment**: The official web presence is managed and deployed independently at [kodearrow.wuaze.com](https://kodearrow.wuaze.com/).
+**Deployment**: The official web presence is managed and deployed independently at [ahmadhassan-bted.github.io/KodeArrow](https://ahmadhassan-bted.github.io/KodeArrow/).
 
 ---
 
@@ -217,6 +217,6 @@ graph LR
 **Engineered by Ahmad Hassan (B-Ted)**
 _Redefining Human-Computer Interaction_
 
-[Official Website](https://kodearrow.wuaze.com/) • [GitHub](https://github.com/AhmadHassan-BTed) • [Portfolio](https://bted.wuaze.com/) • [LinkedIn](https://www.linkedin.com/in/ahmad-hassan-52ab4225b/)
+[Official Website](https://ahmadhassan-bted.github.io/KodeArrow/) • [GitHub](https://github.com/AhmadHassan-BTed) • [Portfolio](https://bted.wuaze.com/) • [LinkedIn](https://www.linkedin.com/in/ahmad-hassan-52ab4225b/)
 
 </div>

@@ -68,7 +68,7 @@ def open_url(icon, item):
     webbrowser.open("https://bted.000webhostapp.com/")
 
 def open_url_buy(icon, item):
-    webbrowser.open("https://kodearrow.000webhostapp.com/")
+    webbrowser.open("https://ahmadhassan-bted.github.io/KodeArrow/")
 
 def create_hidden_file(file_path, content):
     try:
