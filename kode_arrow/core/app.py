@@ -50,7 +50,7 @@ class KodeArrowApp:
         return os.path.exists(self.premium_file_path)
 
     def open_url(self):
-        webbrowser.open("http://bted.wuaze.com/")
+        webbrowser.open("https://ahmadhassan-bted.github.io/KodeArrow/")
         webbrowser.open("https://www.linkedin.com/in/ahmad-hassan-52ab4225b/")
         
     def open_url_buy(self):
