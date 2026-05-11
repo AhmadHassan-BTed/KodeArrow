@@ -1,3 +1,0 @@
-P:
-cd KodeArrow-Software
-pyinstaller --onefile --windowed --icon=icon.ico --hidden-import plyer.platforms.win.notification KodeArrow.py

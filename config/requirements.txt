@@ -1,0 +1,15 @@
+python-dotenv==1.0.0
+firebase-admin==6.2.0
+pystray==0.19.5
+Pillow==10.0.0
+keyboard==0.13.5
+pyautogui==0.9.54
+customtkinter==5.2.0
+plyer==2.1.0
+python-dateutil==2.8.2
+requests==2.31.0
+wmi==1.5.1
+pytest==7.4.0
+black==23.7.0
+flake8==6.1.0
+mypy==1.5.1
