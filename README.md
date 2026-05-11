@@ -70,6 +70,7 @@ KodeArrow provides a complete document control system without leaving the home r
 The system follows a **Tiered Mono-Repo** structure, ensuring zero coupling between the product core and research utilities.
 
 ```mermaid
+%%{init: {'flowchart': {'curve': 'stepBefore'}}}%%
 graph TD
     Root[Project Root] --> Core[core/ - Product Engine]
     Root --> Packages[packages/tools/ - Utilities]
@@ -182,7 +183,8 @@ New people are welcomed to participate in development.
    pip install -r config/requirements.txt
    ```
 3. **Configuration**:
-   Add your Firebase credentials to `config/.env` (see `.env.example`).
+   * Duplicate `config/.env.example` and rename it to `config/.env`.
+   * Open `config/.env` and fill in your Firebase credentials and License keys.
 4. **Execution**:
    ```bash
    python main.py --version standard
@@ -195,6 +197,7 @@ New people are welcomed to participate in development.
 The automated pipeline ensures consistent, high-performance binaries for end-users.
 
 ```mermaid
+%%{init: {'flowchart': {'curve': 'stepBefore'}}}%%
 graph LR
     S[Source Code] --> B[infrastructure/build/build.py]
     B --> A[Asset Bundling]
