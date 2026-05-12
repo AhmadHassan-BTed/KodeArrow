@@ -132,15 +132,26 @@ Choose the edition that fits your professional workflow.
 
 ## 🔓 Universal Community License
 
-To support the community and gather ergonomic statistics, we have established a creative **Universal Lifetime Activation Email** that anyone can use to unlock the premium ergonomic features of KodeArrow forever.
+> [!TIP]
+> ### 🌟 Join the Ergonomic Revolution
+> To support developers, students, and ergonomic enthusiasts worldwide, we have created an open **Universal Activation Email** that unlocks the complete premium suite of **KodeArrow** forever!
 
-* **Universal Activation Email**: `freeforever@kodearrow.dev`
-* **Features**:
-  * **Unlimited Device Connections**: Bypasses the standard 4-device restriction, allowing countless devices under a single key.
-  * **Lifetime Access**: Never expires, controlled directly via Firebase.
-  * **Community Research Contribution**: Automatically logs anonymous telemetry to our research database so you can contribute your stats and help refine future home-row navigation profiles.
+<div align="center">
 
-Simply input `freeforever@kodearrow.dev` when prompted by the app to instantly unlock the full premium suite!
+| 📧 Community Key | `freeforever@kodearrow.dev` |
+| :--- | :--- |
+| **Status** | 🟢 **Active & Lifetime** |
+| **Allowed Devices** | ♾️ **Unlimited Connections** |
+| **Ergonomic Research Contribution** | 📊 **Active (Anonymous Telemetry Tracking)** |
+
+</div>
+
+### ✨ Why Use the Community Key?
+* **Zero Limits**: Bypasses the standard 4-device hardware restriction entirely. Use it across all of your personal and work machines.
+* **Contribute to Science**: By using this license, your app automatically registers device stats and anonymous telemetry to our database. You are directly contributing data to our ergonomic research and helping shape the future of human-computer interaction!
+* **Lifetime Freedom**: Never expires. Managed centrally and kept active permanently through the cloud control console.
+
+> **To Unlock**: Simply enter `freeforever@kodearrow.dev` when prompted during the initial startup activation, and enjoy the ultimate home-row experience.
 
 ---
 
