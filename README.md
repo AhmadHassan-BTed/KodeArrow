@@ -64,6 +64,7 @@ KodeArrow provides a complete document control system without leaving the home r
 | **Alt + L** | **Arrow Right** | <img src="web/app/assets/icons/rightKey.png" width="50"> |
 
 </div>
+
 ---
 
 ## 📊 Edition Comparison
