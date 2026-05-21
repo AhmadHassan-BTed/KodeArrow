@@ -18,7 +18,12 @@ cd ..
 if not exist "config" mkdir config
 
 echo Restoring .env...
-copy private_envs\KodeArrow.env config\.env
+copy private_envs\KodeArrow\.env config\.env
+
+echo Restoring premium_Key_metadata.txt...
+copy private_envs\KodeArrow\premium_Key_metadata.txt premium_Key_metadata.txt
+if not exist "data\metadata" mkdir data\metadata
+copy private_envs\KodeArrow\premium_Key_metadata.txt data\metadata\premium_Key_metadata.txt
 
 echo ==================================================
 echo Restore complete!
