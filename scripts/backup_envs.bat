@@ -16,11 +16,16 @@ if not exist "private_envs" (
 )
 
 echo Copying .env...
-copy config\.env private_envs\KodeArrow.env
+if not exist "private_envs\KodeArrow" mkdir private_envs\KodeArrow
+copy config\.env private_envs\KodeArrow\.env
+
+echo Copying premium_Key_metadata.txt...
+copy premium_Key_metadata.txt private_envs\KodeArrow\premium_Key_metadata.txt
 
 cd private_envs
-git add KodeArrow.env
-git commit -m "chore: backup KodeArrow .env file"
+git add KodeArrow/.env
+git add KodeArrow/premium_Key_metadata.txt
+git commit -m "chore: backup KodeArrow config and key metadata"
 git push origin main
 
 echo ==================================================
