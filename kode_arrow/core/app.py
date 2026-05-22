@@ -26,8 +26,11 @@ class KodeArrowApp:
         encrypted_inner = encrypt_hardware_id(self.hardware_id)
         encrypted_outer = encrypt_hardware_id(encrypted_inner)
         self.encrypted_id = f"B4{encrypted_inner}3TzD{encrypted_outer}u"
-        self.premium_file_path = f"{self.encrypted_id}.txt"
-        self.usage_file = "premium_Key_metadata.txt"
+        
+        # Absolute paths in the user's home directory to guarantee license and key persistence across launching locations
+        home_dir = os.path.expanduser("~")
+        self.premium_file_path = os.path.join(home_dir, f".kodearrow_license_{self.encrypted_id}.txt")
+        self.usage_file = os.path.join(home_dir, "premium_Key_metadata.txt")
         
         self.firebase = FirebaseService()
         self.licensing = LicensingService(self.firebase)
@@ -57,8 +60,13 @@ class KodeArrowApp:
         webbrowser.open("http://ahmadhassan-bted.github.io/KodeArrow/")
 
     def open_dashboard(self):
-        def on_unlock():
-            threading.Thread(target=UIWindowManager.unlock_functionality, args=(self.submit_key,), daemon=True).start()
+        def on_unlock(on_success=None):
+            def submit_and_callback(email):
+                res = self.submit_key(email)
+                if res and on_success:
+                    on_success()
+                return res
+            threading.Thread(target=UIWindowManager.unlock_functionality, args=(submit_and_callback,), daemon=True).start()
             
         threading.Thread(
             target=DashboardWindow.open,
@@ -109,8 +117,13 @@ class KodeArrowApp:
         
         self.engine.start()
 
-        def on_unlock():
-            threading.Thread(target=UIWindowManager.unlock_functionality, args=(self.submit_key,), daemon=True).start()
+        def on_unlock(on_success=None):
+            def submit_and_callback(email):
+                res = self.submit_key(email)
+                if res and on_success:
+                    on_success()
+                return res
+            threading.Thread(target=UIWindowManager.unlock_functionality, args=(submit_and_callback,), daemon=True).start()
 
 
         self.tray.build_menu(
