@@ -1,93 +1,115 @@
-import pystray
-import webbrowser
-import keyboard
+from __future__ import annotations
+
 import itertools
-from PIL import Image
 import os
+import webbrowser
+from PIL import Image
+
+import keyboard
+
 from ...common.core.base_app import BaseApp
-from ...common.config.settings import Config
-from ...common.services.subscription_service import SubscriptionService
-from ...common.gui.windows import UIWindowManager
+from ...infrastructure.gui.tray_adapter import TrayAdapter, TrayResources
+from ...infrastructure.keyboard.keyboard_adapter import KeyboardAdapter
+from ...infrastructure.keyboard.keypress_adapter import KeypressAdapter
+from ...infrastructure.services.subscription_premium_adapter import SubscriptionPremiumAdapter
+from ...infrastructure.services.firebase_telemetry_adapter import FirebaseTelemetryAdapter
+from ...infrastructure.gui.dialog_adapter import DialogAdapter
+from ...application.use_cases.navigation_action_use_case import NavigationAction, NavigationActionUseCase
+from ...application.use_cases.unlock_premium_use_case import UnlockPremiumUseCase
+
 
 class StandardApp(BaseApp):
     """Standard Edition of KodeArrow."""
-    
+
     def __init__(self):
         super().__init__("Standard Edition")
-        self.subscription = SubscriptionService()
-        self.ui = UIWindowManager()
-        self.resource_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), "assets", "branding")
+
+        self._keyboard = KeyboardAdapter()
+        self._keypress = KeypressAdapter()
+        self._dialog = DialogAdapter()
+        self._premium_port = SubscriptionPremiumAdapter(premium_file_provider=lambda: self.premium_file)
+        self._telemetry = FirebaseTelemetryAdapter()
+
+        self.resource_dir = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),
+            "assets",
+            "branding",
+        )
         self.icon_path = os.path.join(self.resource_dir, "icon.ico")
 
     def setup_hotkeys(self):
-        keys = ['i', 'j', 'k', 'l']
-        
-        # Mapping functions
+        # Create navigation handler (premium-gated rule lives in use-case input flags)
+        navigation = NavigationActionUseCase(is_premium=self.is_premium, keypress_port=self._keypress)
+
         actions = {
-            'i': lambda: self.press_key('up') if self.is_premium else None,
-            'j': lambda: self.press_key('left'),
-            'k': lambda: self.press_key('down') if self.is_premium else None,
-            'l': lambda: self.press_key('right')
+            'i': NavigationAction(key_to_press='up', requires_premium=True),
+            'j': NavigationAction(key_to_press='left', requires_premium=False),
+            'k': NavigationAction(key_to_press='down', requires_premium=True),
+            'l': NavigationAction(key_to_press='right', requires_premium=False),
         }
 
         def handle_combo(*k_list):
             for k in k_list:
-                actions[k]()
+                navigation.execute(actions[k])
 
+        keys = ['i', 'j', 'k', 'l']
         for r in range(1, 5):
             for combo in itertools.permutations(keys, r):
-                keyboard.add_hotkey(f'alt+{"+".join(combo)}', handle_combo, args=combo, suppress=True)
-        
+                hotkey = f"alt+{'+' .join(combo)}".replace(" +", "+")
+                self._keyboard.add_hotkey(
+                    hotkey,
+                    lambda combo=combo: handle_combo(*combo),
+                    suppress=True,
+                )
+
+
         self.register_extended_hotkeys()
         self.logger.info("Hotkeys registered.")
 
     def setup_tray(self):
-        img = Image.open(self.icon_path)
-        
-        def open_creator_links():
+        tray = TrayAdapter(
+            resources=TrayResources(icon_path=self.icon_path),
+            on_open_creator_links=self.open_portfolio,
+        )
+
+        def on_exit():
+            self.stop()
+
+        def on_open_portfolio():
             self.open_portfolio()
-            webbrowser.open("https://www.linkedin.com/in/ahmad-hassan-52ab4225b/")
-        
-        def handle_unlock():
-            def on_email_submit(email):
-                try:
-                    hardware_id = self.hardware_id
-                    is_success, message = self.subscription.validate_and_activate(
-                        email, hardware_id, self.premium_file, is_research=False
+
+        def on_open_website():
+            self.open_website()
+
+        def on_unlock():
+            def on_email_submit(email: str):
+                use_case = UnlockPremiumUseCase(
+                    premium_port=self._premium_port,
+                    hardware_id=self.hardware_id,
+                    premium_file_path=self.premium_file,
+                    is_research=False,
+                )
+                result = use_case.execute(email=email)
+                if result.success:
+                    self._dialog.show_message(
+                        "Success",
+                        "Premium access unlocked! Please restart the application to apply changes.",
                     )
-                    if is_success:
-                        import tkinter as tk
-                        root = tk.Tk()
-                        root.withdraw()
-                        from tkinter import messagebox as msg
-                        msg.showinfo("Success", "Premium access unlocked! Please restart the application to apply changes.")
-                    else:
-                        import tkinter as tk
-                        root = tk.Tk()
-                        root.withdraw()
-                        from tkinter import messagebox as msg
-                        msg.showerror("Unlock Failed", f"Error: {message}")
-                except Exception as e:
-                    import tkinter as tk
-                    root = tk.Tk()
-                    root.withdraw()
-                    from tkinter import messagebox as msg
-                    msg.showerror("Error", f"An error occurred: {str(e)}")
-            
-            self.ui.show_email_input_dialog(on_email_submit)
-        
-        menu_items = [
-            pystray.MenuItem('Created by Ahmad Hassan', open_creator_links),
-            pystray.MenuItem('Visit KodeArrow', self.open_website, default=True),
-        ]
-        
-        if not self.is_premium:
-            menu_items.append(pystray.MenuItem('Already bought? Unlock Here', handle_unlock))
-        
-        menu_items.append(pystray.MenuItem('Exit', self.stop))
-        
-        menu = pystray.Menu(*menu_items)
-        self.icon = pystray.Icon("KodeArrow", img, "KodeArrow", menu)
+                else:
+                    self._dialog.show_error("Unlock Failed", f"Error: {result.message}")
+
+            self._dialog.show_email_input_dialog(on_email_submit)
+
+        tray.build_menu(
+            is_premium=self.is_premium,
+            on_unlock=on_unlock if not self.is_premium else None,
+            on_exit=on_exit,
+            on_open_portfolio=on_open_portfolio,
+            on_open_website=on_open_website,
+            on_show_research_info=None,
+            on_open_portal=self.open_website,
+        )
+        self.icon = tray._icon  # keep compatibility with BaseApp.run_tray
 
     def open_portfolio(self):
         webbrowser.open("https://bted.wuaze.com/")
@@ -97,7 +119,12 @@ class StandardApp(BaseApp):
 
     def on_startup(self):
         self.logger.info("StandardApp specialized startup logic.")
+        # Use existing UI helper directly for now (presentation stays as adapter)
+        from ...common.gui.windows import UIWindowManager
+
+        ui = UIWindowManager()
         if not self.is_premium:
-            self.ui.show_instructions(is_premium=False)
+            ui.show_instructions(is_premium=False)
         else:
-            self.ui.show_instructions(is_premium=True)
+            ui.show_instructions(is_premium=True)
+
