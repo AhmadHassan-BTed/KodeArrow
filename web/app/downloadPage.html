@@ -16,31 +16,51 @@
 
 
     <script>
+        let latestDownloadUrl = null;
+
+        // Function to fetch the latest release URL from GitHub API
+        async function fetchLatestRelease() {
+            try {
+                const response = await fetch("https://api.github.com/repos/AhmadHassan-BTed/KodeArrow/releases/latest");
+                const data = await response.json();
+                
+                // Find the first asset (e.g., KodeArrow.exe)
+                if (data.assets && data.assets.length > 0) {
+                    latestDownloadUrl = data.assets[0].browser_download_url;
+                } else {
+                    // Fallback if no assets found
+                    latestDownloadUrl = "https://github.com/AhmadHassan-BTed/KodeArrow/releases/latest/download/KodeArrow.exe";
+                }
+            } catch (error) {
+                console.error("Error fetching latest release:", error);
+                latestDownloadUrl = "https://github.com/AhmadHassan-BTed/KodeArrow/releases/latest/download/KodeArrow.exe";
+            }
+        }
+
         // Function to initiate the file download
         function initiateDownload() {
-            // Create an anchor element
+            if (!latestDownloadUrl) return;
             var anchor = document.createElement("a");
-            
-            // Set the href attribute to the file's URL
-            anchor.href = "https://github.com/AhmadHassan-BTed/KodeArrow/releases/latest/download/KodeArrow.exe"; // Replace with the actual file URL
-
-            // Set the download attribute to specify the desired filename for the downloaded file
-            anchor.download = "KodeArrow.exe"; // Replace with the desired filename and extension
-
-            // Programmatically click the anchor element to initiate the download
+            anchor.href = latestDownloadUrl;
+            anchor.target = "_blank";
             anchor.click();
         }
 
-        // Execute the initiateDownload function after 3 seconds when the page loads
-        window.onload = function () {
-            setTimeout(initiateDownload, 3000); // 3000 milliseconds = 3 seconds
+        // Execute when the page loads
+        window.onload = async function () {
+            await fetchLatestRelease();
+            // Wait 2 seconds before automatically downloading
+            setTimeout(initiateDownload, 2000); 
         };
 
-        // Attach initiateDownload function to the anchor's click event
+        // Attach initiateDownload function to the 'click here' link
         document.addEventListener("DOMContentLoaded", function () {
             var downloadAnchor = document.getElementById("download-anchor");
-            downloadAnchor.addEventListener("click", function(event) {
-                event.preventDefault(); // Prevent the default behavior of the anchor
+            downloadAnchor.addEventListener("click", async function(event) {
+                event.preventDefault(); 
+                if (!latestDownloadUrl) {
+                    await fetchLatestRelease();
+                }
                 initiateDownload();
             });
         });
