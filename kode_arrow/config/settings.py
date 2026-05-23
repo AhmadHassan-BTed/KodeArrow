@@ -1,9 +1,9 @@
 import os
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv()
-
+# Load environment variables from config/.env file
+env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "config", ".env"))
+load_dotenv(dotenv_path=env_path)
 class Config:
     """Application configuration management."""
     APP_NAME = os.getenv("APP_NAME", "KodeArrow")
