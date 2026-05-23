@@ -1,14 +1,16 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Callable, Optional
+from typing import TYPE_CHECKING, Any, Callable, Optional
 
+if TYPE_CHECKING:
+    import pystray  # type: ignore[reportMissingImports]
+
+pystray: Any
 try:
-    import pystray
-    from pystray import Icon
+    import pystray  # type: ignore[reportMissingImports]
 except ImportError:  # pragma: no cover
-    pystray = None
-    Icon = object  # type: ignore
+    pystray = None  # type: ignore[assignment]
 
 from PIL import Image
 
@@ -24,7 +26,7 @@ class TrayResources:
 class TrayAdapter(TrayPort):
     def __init__(self, *, resources: TrayResources, on_open_creator_links: Optional[Callable[[], None]] = None):
         self._resources = resources
-        self._icon: Optional[pystray.Icon] = None
+        self._icon: Optional[Any] = None
         self._on_open_creator_links = on_open_creator_links
 
     def build_menu(
@@ -68,10 +70,10 @@ class TrayAdapter(TrayPort):
         self._icon = pystray.Icon('KodeArrow', img, 'KodeArrow', pystray.Menu(*menu_items))
 
     def run(self) -> None:
-        if self._icon:
+        if self._icon is not None:
             self._icon.run()
 
     def stop(self) -> None:
-        if self._icon:
+        if self._icon is not None:
             self._icon.stop()
 
