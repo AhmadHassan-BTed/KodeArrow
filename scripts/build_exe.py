@@ -15,6 +15,7 @@ def build():
         "--onefile",
         "--windowed", # Hides the console terminal
         "--clean", # Cleans PyInstaller cache to prevent bloat
+        "--hidden-import=plyer.platforms.win.notification",
         "--icon=assets/branding/icon.ico",
         "--add-data=assets/branding/icon.ico;assets/branding",
         "--add-data=config/.env;config",
