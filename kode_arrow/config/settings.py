@@ -1,8 +1,10 @@
 import os
 from dotenv import load_dotenv
 
+from kode_arrow.utils.resource import get_resource_path
+
 # Load environment variables from config/.env file
-env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "config", ".env"))
+env_path = get_resource_path("config/.env")
 load_dotenv(dotenv_path=env_path)
 class Config:
     """Application configuration management."""
