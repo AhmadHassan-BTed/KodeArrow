@@ -56,7 +56,7 @@ def find_email_in_file(path):
         with open(path, "r") as file:
             for line in file:
                 if line.strip().startswith("Email:"):
-                    return line.strip().split("Email:")[1].strip()
+                    return line.strip().split("Email:")[1].strip().lower()
     except Exception:
         pass
     return None
