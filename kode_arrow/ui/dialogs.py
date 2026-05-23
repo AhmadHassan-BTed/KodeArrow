@@ -165,6 +165,30 @@ class UIWindowManager:
         app.mainloop()
 
     @staticmethod
+    def showMessage_success(title_text, message):
+        app = CTk()
+        app.title("KodeArrow")
+        app.iconbitmap(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'assets', 'branding', 'icon.ico')))
+        ws = app.winfo_screenwidth()
+        hs = app.winfo_screenheight()
+        ctk.set_appearance_mode("Light")
+        app.resizable(False, False)
+
+        frame1 = CTkFrame(master=app, bg_color="white", fg_color="white")
+        title = CTkLabel(master=frame1, text=title_text, bg_color="white", text_color="#00207f", font=("Bahnschrift", 22, "bold"))
+        label = CTkLabel(master=frame1, text=message, bg_color="white", text_color="black", font=("Bahnschrift", 14))
+        btn = CTkButton(master=frame1, text="Awesome!", width=120, height=35, corner_radius=7, fg_color="#00207f", hover_color="#00134c", bg_color="white", command=app.destroy)
+
+        frame1.pack(fill=BOTH, expand=True)
+        title.place(relx=0.5, rely=0.25, anchor="center")
+        label.place(relx=0.5, rely=0.55, anchor="center")
+        btn.place(relx=0.5, rely=0.82, anchor="center")
+
+        w, h = 400, 200
+        app.geometry('%dx%d+%d+%d' % (w, h, (ws/2)-(w/2), (hs/2)-(h/2)))
+        app.mainloop()
+
+    @staticmethod
     def unlock_functionality(on_submit):
         app = CTk()
         app.title("KodeArrow")
@@ -192,8 +216,9 @@ class UIWindowManager:
         def submit_key():
             email = field.get().strip().lower()
             if on_submit(email):
-                messagebox.showinfo("Congratulations", "Premium Unlocked")
                 app.destroy()
+                UIWindowManager.showMessage_success("Congratulations!", "Premium Unlocked Successfully.\n\nEnjoy all KodeArrow features!")
+
     
         btn = CTkButton(master=frame1, text="Submit", width=90, height=35, corner_radius=7, fg_color="#00207f", hover_color="#000d34", bg_color="white", command=submit_key)
         btn.place(relx=0.5, rely=0.79, anchor="center")
