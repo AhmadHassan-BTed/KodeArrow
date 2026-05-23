@@ -18,6 +18,7 @@ DEFAULT_PREFS = {
         "pageup": "[",
         "pagedown": "'"
     },
+    "modifier": "alt",
     "theme": "light"
 }
 
@@ -33,6 +34,8 @@ class UserPrefs:
                 prefs = DEFAULT_PREFS.copy()
                 if "hotkeys" in data:
                     prefs["hotkeys"].update(data["hotkeys"])
+                if "modifier" in data:
+                    prefs["modifier"] = data["modifier"]
                 if "theme" in data:
                     prefs["theme"] = data["theme"]
                 return prefs

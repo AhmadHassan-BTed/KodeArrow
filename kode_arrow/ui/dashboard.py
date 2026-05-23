@@ -492,11 +492,32 @@ class DashboardWindow:
         grid_inner.columnconfigure(0, weight=1)
         grid_inner.columnconfigure(1, weight=1)
 
+        # Base key selector/input
+        base_key_frame = CTkFrame(master=grid_inner, fg_color="transparent")
+        base_key_frame.grid(row=0, column=0, columnspan=2, padx=(0, 24), pady=(0, 16), sticky="w")
+        
+        base_key_lbl = CTkLabel(
+            master=base_key_frame, text="Modifier / Base Key:  ",
+            font=(FONT, 12, "bold"), text_color=T("TEXT_PRIMARY")
+        )
+        base_key_lbl.pack(side=LEFT)
+        
+        base_key_val = prefs.get("modifier", "alt")
+        base_key_combo = CTkComboBox(
+            master=base_key_frame, values=["alt", "ctrl", "shift", "windows"],
+            width=100, height=28, font=(FONT, 11, "bold"),
+            fg_color=T("ENTRY_BG"), text_color=T("TEXT_INPUT"),
+            border_color=T("BORDER"), button_color=T("ACCENT"),
+            button_hover_color=T("ACCENT_HOVER"), corner_radius=6
+        )
+        base_key_combo.set(base_key_val)
+        base_key_combo.pack(side=LEFT)
+
         prefs        = UserPrefs.load()
         hotkeys      = prefs.get("hotkeys", {})
         entries      = {}
         entry_widgets = []
-        row_i, col   = 0, 0
+        row_i, col   = 1, 0
 
         for action, current_key in hotkeys.items():
             field_frame = CTkFrame(master=grid_inner, fg_color="transparent")
@@ -511,7 +532,7 @@ class DashboardWindow:
             lbl.grid(row=0, column=0, sticky="w")
 
             alt_lbl = CTkLabel(
-                master=field_frame, text="Alt +",
+                master=field_frame, text=f"{base_key_val.capitalize()} +",
                 font=(FONT, 11), text_color=T("TEXT_MUTED"),
             )
             alt_lbl.grid(row=0, column=1, padx=(8, 4))
@@ -537,25 +558,40 @@ class DashboardWindow:
 
         def save_hotkeys():
             new_prefs = prefs.copy()
+            new_prefs["modifier"] = base_key_combo.get().strip().lower()
             for action, entry in entries.items():
                 val = entry.get().strip().lower()
                 if len(val) == 1:
                     new_prefs["hotkeys"][action] = val
             UserPrefs.save(new_prefs)
             on_reload_engine()
+            
+            # Update prefix labels
+            new_mod = base_key_combo.get().strip().capitalize()
+            for _, alt_w, _ in entry_widgets:
+                alt_w.configure(text=f"{new_mod} +")
+                
             save_btn.configure(text="✓  Saved")
             app.after(2200, lambda: save_btn.configure(text="Save Preferences"))
 
         def reset_hotkeys():
             from kode_arrow.config.user_prefs import DEFAULT_PREFS
+            base_key_combo.set(DEFAULT_PREFS["modifier"])
             for action, default_key in DEFAULT_PREFS["hotkeys"].items():
                 if action in entries:
                     entries[action].delete(0, END)
                     entries[action].insert(0, default_key)
             new_prefs = prefs.copy()
             new_prefs["hotkeys"] = DEFAULT_PREFS["hotkeys"].copy()
+            new_prefs["modifier"] = DEFAULT_PREFS["modifier"]
             UserPrefs.save(new_prefs)
             on_reload_engine()
+            
+            # Reset prefix labels to default modifier
+            default_mod = DEFAULT_PREFS["modifier"].capitalize()
+            for _, alt_w, _ in entry_widgets:
+                alt_w.configure(text=f"{default_mod} +")
+                
             reset_btn.configure(text="✓  Reset Done")
             app.after(2200, lambda: reset_btn.configure(text="Reset to Defaults"))
 
@@ -649,6 +685,14 @@ class DashboardWindow:
                 fg_color="#F3F4F6" if m == "light" else "#374151",
                 text_color="#1F2937" if m == "light" else "#F3F4F6",
                 hover_color="#E5E7EB" if m == "light" else "#4B5563"
+            )
+            base_key_lbl.configure(text_color=T("TEXT_PRIMARY"))
+            base_key_combo.configure(
+                fg_color=T("ENTRY_BG"),
+                text_color=T("TEXT_INPUT"),
+                border_color=T("BORDER"),
+                button_color=T("ACCENT"),
+                button_hover_color=T("ACCENT_HOVER")
             )
 
             for lbl_w, alt_w, ent_w in entry_widgets:
