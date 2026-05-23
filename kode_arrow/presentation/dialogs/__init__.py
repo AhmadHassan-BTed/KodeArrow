@@ -1,4 +1,6 @@
-"""Dialogs presentation module.
+"""Dialog UI components for user interactions."""
 
-Provides custom dialog components and user input interfaces.
-"""
+from .windows import DialogManager, UIWindowManager
+
+__all__ = ["DialogManager", "UIWindowManager"]
+
