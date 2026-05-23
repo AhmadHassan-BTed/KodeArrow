@@ -134,7 +134,8 @@ class DashboardWindow:
         }
 
         FONT         = "Segoe UI"
-        mode         = {"v": "light"}   # single mutable dict — avoids closure issues
+        prefs        = UserPrefs.load()
+        mode         = {"v": prefs.get("theme", "light")}   # single mutable dict — avoids closure issues
         _rebuild_ref: list[Callable[[], None] | None] = [None]
 
         def T(key):
@@ -157,7 +158,7 @@ class DashboardWindow:
             return ICO[key]
 
         # ── Root ──────────────────────────────────────────────────────────────
-        set_appearance_mode("Light")
+        set_appearance_mode("Dark" if mode["v"] == "dark" else "Light")
 
         root_frame = CTkFrame(master=app, fg_color=T("BG_APP"), corner_radius=0)
         root_frame.pack(fill=BOTH, expand=True)
@@ -203,12 +204,15 @@ class DashboardWindow:
 
         def toggle_theme():
             mode["v"] = "dark" if mode["v"] == "light" else "light"
+            p = UserPrefs.load()
+            p["theme"] = mode["v"]
+            UserPrefs.save(p)
             if _rebuild_ref[0]:
                 _rebuild_ref[0]()
 
         theme_btn = CTkButton(
             master=logo_row,
-            text="", image=ico("moon"),
+            text="", image=ico("moon") if mode["v"] == "light" else ico("sun"),
             width=28, height=28,
             corner_radius=6,
             fg_color=T("THEME_BG"),
