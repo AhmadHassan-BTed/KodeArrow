@@ -1,43 +1,40 @@
-import time
+import threading
+from kode_arrow.utils.file import read_from_file, add_hidden_attribute, remove_hidden_attribute, find_email_in_file
 
 class TelemetryService:
-    """Collects and batches usage stats, uploading to Firebase when thresholds are reached."""
-
-    def __init__(self, firebase_service, email: str, multiplier: int, on_uploaded=None):
+    def __init__(self, firebase_service, premium_file_path, usage_file_path="premium_Key_metadata.txt"):
         self.firebase = firebase_service
-        self.email = email
-        self.multiplier = multiplier
-        self.on_uploaded = on_uploaded
-        self.stats = {
-            "charactersTyped": 0,
-            "kodeArrowHotkeys": 0,
-            "TotalUsageMinutes": 0.0,
-        }
-        self.last_batch_time = time.time()
+        self.premium_file_path = premium_file_path
+        self.usage_file = usage_file_path
 
-    def record_character(self) -> None:
-        self.stats["charactersTyped"] += 1
-        if self.stats["charactersTyped"] >= self.multiplier:
-            self.upload_and_reset()
+    def run_async_upload_threaded(self):
+        def target_function():
+            try:
+                remove_hidden_attribute(self.usage_file)
+                temp_total_keyStrokes, temp_total_shortcuts, temp_total_runtime = read_from_file(self.usage_file)
 
-    def record_hotkey(self) -> None:
-        self.stats["kodeArrowHotkeys"] += 1
+                email = find_email_in_file(self.premium_file_path)
+                if not email: return
+                
+                doc_ref_user = self.firebase.db.collection('ControlGroup').document(email)
+                usage_ref = doc_ref_user.collection('usage').document('usage_data')
 
-    def upload_and_reset(self) -> None:
-        now = time.time()
-        interval_minutes = (now - self.last_batch_time) / 60
-        self.stats["TotalUsageMinutes"] = float(self.stats["TotalUsageMinutes"]) + float(interval_minutes)
+                usage_doc = usage_ref.get()
+                if usage_doc.exists:
+                    existing_data = usage_doc.to_dict()
+                    existing_data['charactersTyped'] += temp_total_keyStrokes
+                    existing_data['kodeArrowHotkeys'] += temp_total_shortcuts
+                    existing_data['TotalUsageMinutes'] += temp_total_runtime
+                    
+                    usage_ref.set(existing_data)
+                    
+                    with open(self.usage_file, "w") as file:
+                        file.write(f"{0}\n{0}\n{0}\n")
+                
+                add_hidden_attribute(self.usage_file)
+            except Exception as e:
+                print(f"Failed to upload data from file '{self.usage_file}': {e}")
 
-        data_snapshot = dict(self.stats)
-        self.firebase.upload_usage_data(
-            collection="ControlGroup",
-            email=self.email,
-            data=data_snapshot
-        )
-
-        self.stats["charactersTyped"] = 0
-        self.stats["kodeArrowHotkeys"] = 0
-        self.last_batch_time = now
-
-        if self.on_uploaded:
-            self.on_uploaded()
+        thread = threading.Thread(target=target_function)
+        thread.start()
+        return thread

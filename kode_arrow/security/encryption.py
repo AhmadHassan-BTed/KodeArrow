@@ -1,16 +1,6 @@
-"""Encryption utilities for hardware IDs and sensitive data."""
-
-def encrypt_hardware_id(hardware_id: str) -> str:
-    """Encrypt hardware ID using Caesar cipher (shift 3).
-
-    Args:
-        hardware_id: The hardware ID to encrypt
-
-    Returns:
-        The encrypted hardware ID
-    """
+def encrypt_hardware_id(s):
     encrypted_chars = []
-    for char in hardware_id:
+    for char in s:
         if char.isalnum():
             if char.isalpha():
                 if char.isupper():
