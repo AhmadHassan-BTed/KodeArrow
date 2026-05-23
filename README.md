@@ -217,6 +217,6 @@ graph LR
 **Engineered by Ahmad Hassan (B-Ted)**
 _Redefining Human-Computer Interaction_
 
-[Official Website](https://ahmadhassan-bted.github.io/KodeArrow/) • [GitHub](https://github.com/AhmadHassan-BTed) • [Portfolio](https://bted.wuaze.com/) • [LinkedIn](https://www.linkedin.com/in/ahmad-hassan-52ab4225b/)
+[Official Website](https://ahmadhassan-bted.github.io/KodeArrow/) • [GitHub](https://github.com/AhmadHassan-BTed) • [Portfolio](https://ahmadhassan-bted.github.io/KodeArrow/) • [LinkedIn](https://www.linkedin.com/in/ahmad-hassan-52ab4225b/)
 
 </div>
