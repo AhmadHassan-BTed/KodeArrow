@@ -32,7 +32,11 @@ jobs:
         
       - name: Build with Parcel
         working-directory: ./web/app
-        run: npm run build
+        env:
+          ENV_FILE_CONTENT: ${{ secrets.ENV_FILE_CONTENT }}
+        run: |
+          echo "$ENV_FILE_CONTENT" > .env
+          npm run build
         
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v3
