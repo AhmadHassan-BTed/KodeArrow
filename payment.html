@@ -1,0 +1,86 @@
+<!DOCTYPE html><meta charset=utf-8><meta name=viewport content="initial-scale=1, width=device-width"><link rel=stylesheet href=/payment.ecdd4afc.css><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;700&amp;display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;700&amp;display=swap"><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&amp;family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&amp;display=swap" rel=stylesheet><body>
+    <div class=background></div>
+    
+    <img class=backgroundSVGPhone alt src=/background.81ab4765.svg>
+    
+    <img class=dartStand alt src=/dartStand.ac8b070a.png>
+    <img class=dart alt src=/dart.0506daa1.png>
+    
+    <svg xmlns:xmlns=http://www.w3.org/2000/svg width=21 height=35 fill=none class=back onclick=history.go(-1) viewBox="0 0 21 35"><path fill=#d9d9d9 fill-rule=evenodd d="M.008 17.658 0 17.665 17.335 35l3.31-3.31L6.612 17.658 20.96 3.31 17.65 0 0 17.65Z" clip-rule=evenodd /></svg>
+
+    <div class=recipt>
+        
+      <div class=reciptsection1>
+          
+        <img class=reciptpaper1-icon alt src=/reciptpaper1.bfb464e2.svg>
+         
+        <div class=reciptText>
+          
+          <b class=title1>Receipt</b>
+          
+          <div class=reciptData>
+            
+            <div class=account-sadapay>
+              <p class=infoText>Name: <span class=ahmadHassan> Ahmad Hassan</span> <br>
+              Acc no: <span class=myNo> +923225522383</span> <br>
+              Account: <span class=sadaPay> <font color=#2AC6AE>Sada</font><font color=#FF6C5A>Pay</font></span></p>
+              <img class=sadaLogo alt src=/sadalogo@2x.7b349edd.png>  
+            </div>
+    
+            <form id=myForm method=post name=paymentFormName>
+                
+                <input id=fullName name=fullName placeholder="Full Name" required class=full-name>
+                <input type=tel id=phoneNo name=phoneNo placeholder="Phone no." required class=phone-no>
+            <br>
+                <input type=email id=email name=email placeholder=Email required class=email>
+             <br>
+                
+                <input id=bank name=bank placeholder=Bank required class=bank>
+                 
+                            
+                <input name=date id=date style=display:none>
+                <input name=time id=time style=display:none>  
+                
+                <label for=uploadScreenshot class=custom-file-upload>
+                  <input type=file id=uploadScreenshot name=screenshot class=uploadButton onchange=updateLabel()>
+                  Choose File
+                </label>
+  
+                <input id=accountNumber name=accountNumber placeholder="Account Number" required class=account-number>
+              <br>
+            
+            <p class=note><b>Note:</b> Key will be Sent to your Email &amp; Phone no. within few minutes </p>
+              
+            <br>
+            
+            <div>
+              <label class=custom-checkbox>
+                <input type=checkbox class=termsAndConditions id=_checkbox name=termsAndConditions required>
+                <label for=_checkbox>
+                  <div id=tick_mark></div>
+                </label>
+                <p class=agreement> I Agree to <a class=terms-and-conditions1 href=https://bted.000webhostapp.com/terms.html>Terms and Conditions</a>
+                </p>
+            </label></div>
+              <div class=reciptsection2>
+                <img class=reciptpaper2-icon alt src=/reciptpaper2.3595b3ef.svg>
+                
+                <input type=submit id=drawButton class=submitButton value=submit>
+                <h3 class=payback>100% Payback</h3>
+              </div>
+      
+            </form>
+          </div>
+      
+        </div>
+      </div>
+    </div>
+    
+    <p class=footer> Copyright <font color=#00ACEC>©</font> 2023. Project by Ahmad Hassan </p>
+  
+   
+    <script src=/payment.1036a485.js></script>
+    
+    <script>const fileInput=document.getElementById("uploadScreenshot"),label=fileInput.parentElement;function updateLabel(){fileInput.files[0]?label.innerText="Uploaded":label.innerText="Choose File"}fileInput.addEventListener("change",updateLabel);</script>
+  
+  
