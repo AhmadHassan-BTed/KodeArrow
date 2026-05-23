@@ -5,7 +5,6 @@ import customtkinter as ctk
 import os
 from kode_arrow.security.encryption import encrypt_hardware_id
 from kode_arrow.security.hardware_identifier import get_hardware_id
-from kode_arrow.utils.resource import get_resource_path
 from plyer import notification
 
 class UIWindowManager:
@@ -18,14 +17,14 @@ class UIWindowManager:
             message='Right-Click KodeArrow icon to open',
             app_name='KodeArrow',
             timeout=0,
-            app_icon=get_resource_path(os.path.join('assets', 'branding', 'icon.ico'))
+            app_icon=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'assets', 'branding', 'icon.ico'))
         )
 
     @staticmethod
     def showMessage_subscriptionEnded(message):
         app = CTk()
         app.title("KodeArrow")
-        app.iconbitmap(get_resource_path(os.path.join('assets', 'branding', 'icon.ico')))
+        app.iconbitmap(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'assets', 'branding', 'icon.ico')))
         ws = app.winfo_screenwidth()
         hs = app.winfo_screenheight()
         ctk.set_appearance_mode("Light")
@@ -33,7 +32,7 @@ class UIWindowManager:
 
         def closeWindow_andBuySubscription():
             webbrowser.open("kodearrow.wuaze.com/payment.html")
-            app.after(150, app.destroy)
+            app.destroy()
 
         frame1 = CTkFrame(master=app, bg_color="white", fg_color="white")
         title = CTkLabel(master=frame1, text="KodeArrow© 2023", bg_color="white", text_color="#00207f", font=("Bahnschrift", 20, "bold"))
@@ -55,7 +54,7 @@ class UIWindowManager:
     def showMessage_versionEnded(message):
         app = CTk()
         app.title("KodeArrow")
-        app.iconbitmap(get_resource_path(os.path.join('assets', 'branding', 'icon.ico')))
+        app.iconbitmap(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'assets', 'branding', 'icon.ico')))
         ws = app.winfo_screenwidth()
         hs = app.winfo_screenheight()
         ctk.set_appearance_mode("Light")
@@ -63,7 +62,7 @@ class UIWindowManager:
 
         def closeWindow_andBuySubscription():
             webbrowser.open("kodearrow.wuaze.com/")
-            app.after(150, app.destroy)
+            app.destroy()
 
         frame1 = CTkFrame(master=app, bg_color="white", fg_color="white")
         title = CTkLabel(master=frame1, text="KodeArrow© 2023", bg_color="white", text_color="#00207f", font=("Bahnschrift", 20, "bold"))
@@ -85,7 +84,7 @@ class UIWindowManager:
     def show_instructions(is_premium):
         app = CTk()
         app.title("KodeArrow")
-        app.iconbitmap(get_resource_path(os.path.join('assets', 'branding', 'icon.ico')))
+        app.iconbitmap(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'assets', 'branding', 'icon.ico')))
         UIWindowManager.windows.append(app)
         ws = app.winfo_screenwidth()
         hs = app.winfo_screenheight()
@@ -95,7 +94,7 @@ class UIWindowManager:
 
         def closeWindow():
             UIWindowManager.show_notification()
-            app.after(150, app.destroy)
+            app.destroy()
 
         def changeMessage():
             if is_premium:
@@ -169,7 +168,7 @@ class UIWindowManager:
     def showMessage_success(title_text, message):
         app = CTk()
         app.title("KodeArrow")
-        app.iconbitmap(get_resource_path(os.path.join('assets', 'branding', 'icon.ico')))
+        app.iconbitmap(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'assets', 'branding', 'icon.ico')))
         ws = app.winfo_screenwidth()
         hs = app.winfo_screenheight()
         ctk.set_appearance_mode("Light")
@@ -178,7 +177,7 @@ class UIWindowManager:
         frame1 = CTkFrame(master=app, bg_color="white", fg_color="white")
         title = CTkLabel(master=frame1, text=title_text, bg_color="white", text_color="#00207f", font=("Bahnschrift", 22, "bold"))
         label = CTkLabel(master=frame1, text=message, bg_color="white", text_color="black", font=("Bahnschrift", 14))
-        btn = CTkButton(master=frame1, text="Awesome!", width=120, height=35, corner_radius=7, fg_color="#00207f", hover_color="#00134c", bg_color="white", command=lambda: app.after(150, app.destroy))
+        btn = CTkButton(master=frame1, text="Awesome!", width=120, height=35, corner_radius=7, fg_color="#00207f", hover_color="#00134c", bg_color="white", command=app.destroy)
 
         frame1.pack(fill=BOTH, expand=True)
         title.place(relx=0.5, rely=0.25, anchor="center")
@@ -193,7 +192,7 @@ class UIWindowManager:
     def unlock_functionality(on_submit):
         app = CTk()
         app.title("KodeArrow")
-        app.iconbitmap(get_resource_path(os.path.join('assets', 'branding', 'icon.ico')))
+        app.iconbitmap(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'assets', 'branding', 'icon.ico')))
         ws = app.winfo_screenwidth()
         hs = app.winfo_screenheight()
 
@@ -220,7 +219,7 @@ class UIWindowManager:
                 messagebox.showwarning("Warning", "Please enter an email address.")
                 return
             if on_submit(email):
-                app.after(150, app.destroy)
+                app.destroy()
                 UIWindowManager.showMessage_success("Congratulations!", "Premium Unlocked Successfully.\n\nEnjoy all KodeArrow features!")
 
     
