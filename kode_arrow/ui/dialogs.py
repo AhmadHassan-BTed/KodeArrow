@@ -215,6 +215,9 @@ class UIWindowManager:
    
         def submit_key():
             email = field.get().strip().lower()
+            if not email:
+                messagebox.showwarning("Warning", "Please enter an email address.")
+                return
             if on_submit(email):
                 app.destroy()
                 UIWindowManager.showMessage_success("Congratulations!", "Premium Unlocked Successfully.\n\nEnjoy all KodeArrow features!")
