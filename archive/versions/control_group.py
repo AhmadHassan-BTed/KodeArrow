@@ -362,7 +362,7 @@ def showMessage_subscriptionEnded(message):
     app.resizable(False, False)
 
     def closeWindow_andBuySubscription():
-        webbrowser.open("kodearrow.wuaze.com/payment.html")
+        webbrowser.open("ahmadhassan-bted.github.io/KodeArrow/payment.html")
         app.destroy()
 
     frame1 = CTkFrame(master=app, bg_color="white", fg_color="white")
@@ -398,7 +398,7 @@ def showMessage_versionEnded(message):
     app.resizable(False, False)
 
     def closeWindow_andBuySubscription():
-        webbrowser.open("kodearrow.wuaze.com/")
+        webbrowser.open("ahmadhassan-bted.github.io/KodeArrow/")
         app.destroy()
 
     frame1 = CTkFrame(master=app, bg_color="white", fg_color="white")
@@ -525,7 +525,7 @@ def open_url():
     webbrowser.open("https://www.linkedin.com/in/ahmad-hassan-52ab4225b/")
 
 def open_url_buy():
-    webbrowser.open("kodearrow.wuaze.com/")
+    webbrowser.open("ahmadhassan-bted.github.io/KodeArrow/")
 
 def create_hidden_file(file_path, content):
     try:
