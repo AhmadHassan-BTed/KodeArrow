@@ -13,6 +13,7 @@ from kode_arrow.services.licensing import LicensingService
 from kode_arrow.services.telemetry import TelemetryService
 from kode_arrow.ui.tray import SystemTray
 from kode_arrow.ui.dialogs import UIWindowManager
+from kode_arrow.ui.dashboard import DashboardWindow
 from kode_arrow.core.engine import HotkeyEngine
 from kode_arrow.utils.file import create_hidden_file, find_email_in_file
 from kode_arrow.utils.network import check_internet_connection
@@ -54,6 +55,13 @@ class KodeArrowApp:
         
     def open_url_buy(self):
         webbrowser.open("http://kodearrow.wuaze.com/")
+
+    def open_dashboard(self):
+        threading.Thread(
+            target=DashboardWindow.open,
+            args=(self.is_premium, self.open_url_buy, self.stop),
+            daemon=True
+        ).start()
 
     def statup_configuration(self):
         try:
@@ -104,6 +112,7 @@ class KodeArrowApp:
 
         self.tray.build_menu(
             is_premium_fn=self.is_premium,
+            on_open_dashboard=self.open_dashboard,
             on_unlock=on_unlock,
             on_exit=self.stop,
             on_open_portfolio=self.open_url,
