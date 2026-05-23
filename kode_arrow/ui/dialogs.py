@@ -32,7 +32,7 @@ class UIWindowManager:
 
         def closeWindow_andBuySubscription():
             webbrowser.open("kodearrow.wuaze.com/payment.html")
-            app.destroy()
+            app.after(150, app.destroy)
 
         frame1 = CTkFrame(master=app, bg_color="white", fg_color="white")
         title = CTkLabel(master=frame1, text="KodeArrow© 2023", bg_color="white", text_color="#00207f", font=("Bahnschrift", 20, "bold"))
@@ -62,7 +62,7 @@ class UIWindowManager:
 
         def closeWindow_andBuySubscription():
             webbrowser.open("kodearrow.wuaze.com/")
-            app.destroy()
+            app.after(150, app.destroy)
 
         frame1 = CTkFrame(master=app, bg_color="white", fg_color="white")
         title = CTkLabel(master=frame1, text="KodeArrow© 2023", bg_color="white", text_color="#00207f", font=("Bahnschrift", 20, "bold"))
@@ -94,7 +94,7 @@ class UIWindowManager:
 
         def closeWindow():
             UIWindowManager.show_notification()
-            app.destroy()
+            app.after(150, app.destroy)
 
         def changeMessage():
             if is_premium:
@@ -177,7 +177,7 @@ class UIWindowManager:
         frame1 = CTkFrame(master=app, bg_color="white", fg_color="white")
         title = CTkLabel(master=frame1, text=title_text, bg_color="white", text_color="#00207f", font=("Bahnschrift", 22, "bold"))
         label = CTkLabel(master=frame1, text=message, bg_color="white", text_color="black", font=("Bahnschrift", 14))
-        btn = CTkButton(master=frame1, text="Awesome!", width=120, height=35, corner_radius=7, fg_color="#00207f", hover_color="#00134c", bg_color="white", command=app.destroy)
+        btn = CTkButton(master=frame1, text="Awesome!", width=120, height=35, corner_radius=7, fg_color="#00207f", hover_color="#00134c", bg_color="white", command=lambda: app.after(150, app.destroy))
 
         frame1.pack(fill=BOTH, expand=True)
         title.place(relx=0.5, rely=0.25, anchor="center")
@@ -219,7 +219,7 @@ class UIWindowManager:
                 messagebox.showwarning("Warning", "Please enter an email address.")
                 return
             if on_submit(email):
-                app.destroy()
+                app.after(150, app.destroy)
                 UIWindowManager.showMessage_success("Congratulations!", "Premium Unlocked Successfully.\n\nEnjoy all KodeArrow features!")
 
     
