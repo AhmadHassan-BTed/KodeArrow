@@ -4,7 +4,7 @@
     "description": "",
     "scripts": {
       "start": "parcel ./*.html ",
-      "build": "parcel build ./*.html  --dist-dir ./build"
+      "build": "parcel build ./*.html  --dist-dir ./build --public-url ./"
     },
     "author": "",
     "license": "ISC",
