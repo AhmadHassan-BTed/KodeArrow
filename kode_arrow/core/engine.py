@@ -2,6 +2,7 @@ import itertools
 import keyboard
 import pyautogui
 import time
+import threading
 from kode_arrow.utils.file import write_to_file
 from kode_arrow.utils.network import check_internet_connection
 from kode_arrow.config.user_prefs import UserPrefs
@@ -132,13 +133,21 @@ class HotkeyEngine:
             time_interval = current_time - self.previous_time
             self.previous_time = current_time
 
-            write_to_file(self.usage_file, self.total_keyStrokes, self.total_shortcuts, time_interval/60)
-
-            if check_internet_connection():
-                self.telemetry.run_async_upload_threaded()
+            strokes = self.total_keyStrokes
+            shortcuts = self.total_shortcuts
 
             self.total_shortcuts = 0
             self.total_keyStrokes = 0
+
+            def bg_calc():
+                try:
+                    write_to_file(self.usage_file, strokes, shortcuts, time_interval / 60)
+                    if check_internet_connection():
+                        self.telemetry.run_async_upload_threaded()
+                except Exception as e:
+                    print(f"Error in background telemetry check: {e}")
+
+            threading.Thread(target=bg_calc, daemon=True).start()
 
     def increment_total_keyStrokes(self, event):
         if event.event_type == 'down':
