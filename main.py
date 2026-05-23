@@ -11,7 +11,7 @@ from kode_arrow.core.app import KodeArrowApp
 
 def run():
     parser = argparse.ArgumentParser(description="KodeArrow - Professional Productivity Tool")
-    parser.add_argument('--version', choices=['standard', 'r_edition'], default='standard',
+    parser.add_argument('--version', choices=['standard', 'r_edition'], default='r_edition',
                         help='Choose the application edition to run')
     args = parser.parse_args()
 
