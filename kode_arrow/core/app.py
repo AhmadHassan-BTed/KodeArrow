@@ -27,10 +27,16 @@ class KodeArrowApp:
         encrypted_outer = encrypt_hardware_id(encrypted_inner)
         self.encrypted_id = f"B4{encrypted_inner}3TzD{encrypted_outer}u"
         
-        # Absolute paths in the user's home directory to guarantee license and key persistence across launching locations
-        home_dir = os.path.expanduser("~")
-        self.premium_file_path = os.path.join(home_dir, f".kodearrow_license_{self.encrypted_id}.txt")
-        self.usage_file = os.path.join(home_dir, "premium_Key_metadata.txt")
+        # Co-locate license and usage files in the application's executable/script directory.
+        # This keeps the activation state secure and co-located with the binary (preventing unauthorized global bypass),
+        # while resolving startup/shortcut folder CWD location shifts.
+        if getattr(sys, "frozen", False):
+            app_dir = os.path.dirname(sys.executable)
+        else:
+            app_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+            
+        self.premium_file_path = os.path.join(app_dir, f"{self.encrypted_id}.txt")
+        self.usage_file = os.path.join(app_dir, "premium_Key_metadata.txt")
         
         self.firebase = FirebaseService()
         self.licensing = LicensingService(self.firebase)
