@@ -5,6 +5,7 @@ import customtkinter as ctk
 import os
 from kode_arrow.security.encryption import encrypt_hardware_id
 from kode_arrow.security.hardware_identifier import get_hardware_id
+from kode_arrow.utils.resource import get_resource_path
 from plyer import notification
 
 class UIWindowManager:
@@ -17,14 +18,14 @@ class UIWindowManager:
             message='Right-Click KodeArrow icon to open',
             app_name='KodeArrow',
             timeout=0,
-            app_icon=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'assets', 'branding', 'icon.ico'))
+            app_icon=get_resource_path(os.path.join('assets', 'branding', 'icon.ico'))
         )
 
     @staticmethod
     def showMessage_subscriptionEnded(message):
         app = CTk()
         app.title("KodeArrow")
-        app.iconbitmap(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'assets', 'branding', 'icon.ico')))
+        app.iconbitmap(get_resource_path(os.path.join('assets', 'branding', 'icon.ico')))
         ws = app.winfo_screenwidth()
         hs = app.winfo_screenheight()
         ctk.set_appearance_mode("Light")
@@ -54,7 +55,7 @@ class UIWindowManager:
     def showMessage_versionEnded(message):
         app = CTk()
         app.title("KodeArrow")
-        app.iconbitmap(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'assets', 'branding', 'icon.ico')))
+        app.iconbitmap(get_resource_path(os.path.join('assets', 'branding', 'icon.ico')))
         ws = app.winfo_screenwidth()
         hs = app.winfo_screenheight()
         ctk.set_appearance_mode("Light")
@@ -84,7 +85,7 @@ class UIWindowManager:
     def show_instructions(is_premium):
         app = CTk()
         app.title("KodeArrow")
-        app.iconbitmap(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'assets', 'branding', 'icon.ico')))
+        app.iconbitmap(get_resource_path(os.path.join('assets', 'branding', 'icon.ico')))
         UIWindowManager.windows.append(app)
         ws = app.winfo_screenwidth()
         hs = app.winfo_screenheight()
@@ -168,7 +169,7 @@ class UIWindowManager:
     def showMessage_success(title_text, message):
         app = CTk()
         app.title("KodeArrow")
-        app.iconbitmap(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'assets', 'branding', 'icon.ico')))
+        app.iconbitmap(get_resource_path(os.path.join('assets', 'branding', 'icon.ico')))
         ws = app.winfo_screenwidth()
         hs = app.winfo_screenheight()
         ctk.set_appearance_mode("Light")
@@ -192,7 +193,7 @@ class UIWindowManager:
     def unlock_functionality(on_submit):
         app = CTk()
         app.title("KodeArrow")
-        app.iconbitmap(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'assets', 'branding', 'icon.ico')))
+        app.iconbitmap(get_resource_path(os.path.join('assets', 'branding', 'icon.ico')))
         ws = app.winfo_screenwidth()
         hs = app.winfo_screenheight()
 
