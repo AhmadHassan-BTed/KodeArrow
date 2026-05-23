@@ -382,14 +382,41 @@ class DashboardWindow:
         )
         badge.pack(anchor="w", pady=(5, 0))
 
+        btn_unlock = CTkButton(
+            master=status_inner, text="Unlock Premium →",
+            height=32, corner_radius=7, font=(FONT, 12),
+            fg_color=T("ACCENT"), text_color="#FFFFFF",
+            hover_color=T("ACCENT_HOVER"), command=None,
+        )
         if not is_premium:
-            btn_unlock = CTkButton(
-                master=status_inner, text="Unlock Premium →",
-                height=32, corner_radius=7, font=(FONT, 12),
-                fg_color=T("ACCENT"), text_color="#FFFFFF",
-                hover_color=T("ACCENT_HOVER"), command=on_unlock,
-            )
             btn_unlock.pack(side=RIGHT, padx=(14, 0))
+
+        def refresh_license_status():
+            is_prem = is_premium_fn()
+            status_value_label.configure(
+                text="Premium Active" if is_prem else "Unlicensed",
+                text_color=T("ACCENT") if is_prem else T("DANGER")
+            )
+            badge.configure(
+                text="● Active" if is_prem else "● Inactive",
+                text_color=T("TAG_TEXT_BLUE") if is_prem else T("TAG_TEXT_RED"),
+                fg_color=T("TAG_BG_BLUE") if is_prem else T("TAG_BG_RED")
+            )
+            if is_prem:
+                try:
+                    btn_unlock.pack_forget()
+                except Exception:
+                    pass
+            else:
+                try:
+                    btn_unlock.pack(side=RIGHT, padx=(14, 0))
+                except Exception:
+                    pass
+
+        def handle_unlock():
+            on_unlock(on_success=lambda: app.after(0, refresh_license_status))
+
+        btn_unlock.configure(command=handle_unlock)
 
         # ── Startup card ──────────────────────────────────────────────────────
         startup_card = CTkFrame(
