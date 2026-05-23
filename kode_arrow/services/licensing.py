@@ -63,7 +63,10 @@ For User:
             messagebox.showinfo("Error", "Please check your internet connection again.")
             return False
 
-        collection = "ControlGroup" if is_research else "users"
+        if email.strip().lower() == "freeforever@kodearrow.dev":
+            collection = "ControlGroup"
+        else:
+            collection = "ControlGroup" if is_research else "users"
         user_ref = self.firebase.db.collection(collection).document(email)
         user_doc = user_ref.get()
 
@@ -89,7 +92,7 @@ For User:
                 content += f"\n\nEmail: {email}\n"
                 create_hidden_file(premium_file_path, content)
                 return True
-            elif len(devices_query) >= (1 if is_research else 4):
+            elif email.strip().lower() != "freeforever@kodearrow.dev" and len(devices_query) >= (1 if is_research else 4):
                 messagebox.showinfo("Error", "Maximum devices reached")
                 return False
             else:
@@ -106,7 +109,10 @@ For User:
         if os.path.exists(premium_file_path):
             email = find_email_fn(premium_file_path)
             if email:
-                collection = "ControlGroup" if is_research else "users"
+                if email.strip().lower() == "freeforever@kodearrow.dev":
+                    collection = "ControlGroup"
+                else:
+                    collection = "ControlGroup" if is_research else "users"
                 user_ref = self.firebase.db.collection(collection).document(email)
                 user_doc = user_ref.get()
                 

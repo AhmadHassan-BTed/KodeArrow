@@ -130,6 +130,20 @@ Choose the edition that fits your professional workflow.
 
 ---
 
+## 🔓 Universal Community License
+
+To support the community and gather ergonomic statistics, we have established a creative **Universal Lifetime Activation Email** that anyone can use to unlock the premium ergonomic features of KodeArrow forever.
+
+* **Universal Activation Email**: `freeforever@kodearrow.dev`
+* **Features**:
+  * **Unlimited Device Connections**: Bypasses the standard 4-device restriction, allowing countless devices under a single key.
+  * **Lifetime Access**: Never expires, controlled directly via Firebase.
+  * **Community Research Contribution**: Automatically logs anonymous telemetry to our research database so you can contribute your stats and help refine future home-row navigation profiles.
+
+Simply input `freeforever@kodearrow.dev` when prompted by the app to instantly unlock the full premium suite!
+
+---
+
 ## 🧪 Scientific Validation
 
 KodeArrow is a scientifically validated ergonomic pattern. Our research lab uses real-time metrics to optimize the navigation workflow.
