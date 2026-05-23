@@ -64,56 +64,6 @@ KodeArrow provides a complete document control system without leaving the home r
 | **Alt + L** | **Arrow Right** | <img src="web/app/assets/icons/rightKey.png" width="50"> |
 
 </div>
-
----
-
-## 🏗️ Architecture Overview
-
-The system follows a **Tiered Mono-Repo** structure, ensuring zero coupling between the product core and research utilities.
-
-```mermaid
-%%{init: {'flowchart': {'curve': 'stepBefore'}}}%%
-graph TD
-    Root[Project Root] --> Core[core/ - Product Engine]
-    Root --> Packages[packages/tools/ - Utilities]
-    Root --> Infra[infrastructure/ - Build & CI]
-    Root --> Assets[assets/ - Global Identity]
-
-    subgraph "Core Package Architecture"
-        Common[common/ - Shared Logic] --> Services[services/ - Firebase & Sub]
-        Common --> GUI[gui/ - CTk Windows]
-        Common --> Utils[utils/ - Encryption & Helpers]
-        Versions[versions/ - Editions] --> Standard[standard/ - App]
-        Versions --> REdition[r_edition/ - Telemetry]
-    end
-```
-
----
-
-## 🔄 Request Lifecycle
-
-How a single hotkey press travels through the layers of KodeArrow.
-
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant H as Keyboard Hook (Low-Level)
-    participant V as Validation Layer
-    participant E as Execution Engine (PyAutoGUI)
-    participant C as Cloud Telemetry
-
-    U->>H: Press Alt + Hotkey Suite
-    H->>V: Capture Event & Suppress
-    V->>V: Check Hardware ID & License
-    alt Authorized
-        V->>E: Dispatch Virtual Key Signal
-        E->>U: OS-Level Action (Nav/Edit)
-        V->>C: Batch Research Data (R-Edition)
-    else Unauthorized
-        V->>U: Trigger CTk Padlock Window
-    end
-```
-
 ---
 
 ## 📊 Edition Comparison
@@ -235,7 +185,60 @@ graph LR
 
 **Deployment**: The official web presence is managed and deployed independently at [ahmadhassan-bted.github.io/KodeArrow](https://ahmadhassan-bted.github.io/KodeArrow/).
 
+
 ---
+
+## 🏗️ Architecture Overview
+
+The system follows a **Tiered Mono-Repo** structure, ensuring zero coupling between the product core and research utilities.
+
+```mermaid
+%%{init: {'flowchart': {'curve': 'stepBefore'}}}%%
+graph TD
+    Root[Project Root] --> Core[core/ - Product Engine]
+    Root --> Packages[packages/tools/ - Utilities]
+    Root --> Infra[infrastructure/ - Build & CI]
+    Root --> Assets[assets/ - Global Identity]
+
+    subgraph "Core Package Architecture"
+        Common[common/ - Shared Logic] --> Services[services/ - Firebase & Sub]
+        Common --> GUI[gui/ - CTk Windows]
+        Common --> Utils[utils/ - Encryption & Helpers]
+        Versions[versions/ - Editions] --> Standard[standard/ - App]
+        Versions --> REdition[r_edition/ - Telemetry]
+    end
+```
+
+---
+
+## 🔄 Request Lifecycle
+
+How a single hotkey press travels through the layers of KodeArrow.
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant H as Keyboard Hook (Low-Level)
+    participant V as Validation Layer
+    participant E as Execution Engine (PyAutoGUI)
+    participant C as Cloud Telemetry
+
+    U->>H: Press Alt + Hotkey Suite
+    H->>V: Capture Event & Suppress
+    V->>V: Check Hardware ID & License
+    alt Authorized
+        V->>E: Dispatch Virtual Key Signal
+        E->>U: OS-Level Action (Nav/Edit)
+        V->>C: Batch Research Data (R-Edition)
+    else Unauthorized
+        V->>U: Trigger CTk Padlock Window
+    end
+```
+
+
+---
+
+
 
 <div align="center">
 
