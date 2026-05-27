@@ -10,6 +10,16 @@ def build():
 
     print("Building KodeArrow executable...")
 
+    # Terminate any running instances of KodeArrow to release locks on the target EXE and build directories
+    print("Terminating any running instances of KodeArrow.exe...")
+    try:
+        if sys.platform == "win32":
+            subprocess.run(["taskkill", "/IM", "KodeArrow.exe", "/F"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            import time
+            time.sleep(1.0)
+    except Exception as e:
+        print(f"Notice: Failed to run taskkill (may not be active): {e}")
+
     env_file = os.path.join(project_root, "config", ".env")
     private_env_source = os.path.join(project_root, "private_envs", "KodeArrow.env")
     env_example = os.path.join(project_root, "config", ".env.example")
