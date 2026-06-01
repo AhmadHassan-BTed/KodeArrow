@@ -1,17 +1,21 @@
 import logging
 import sys
+import os
 from .settings import Config
 
 def setup_logging():
     """Configures application-wide logging."""
     log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     
+    # Store log file absolutely in the user's home directory to prevent PermissionError when launched from system directories (e.g., startup registry)
+    log_path = os.path.join(os.path.expanduser("~"), "kodearrow.log")
+    
     logging.basicConfig(
         level=Config.LOG_LEVEL,
         format=log_format,
         handlers=[
             logging.StreamHandler(sys.stdout),
-            logging.FileHandler("kodearrow.log", encoding='utf-8')
+            logging.FileHandler(log_path, encoding='utf-8')
         ]
     )
     
