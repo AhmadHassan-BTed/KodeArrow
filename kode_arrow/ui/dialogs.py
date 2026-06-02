@@ -223,6 +223,8 @@ class UIWindowManager:
                 app.destroy()
                 UIWindowManager.showMessage_success("Congratulations!", "Premium Unlocked Successfully.\n\nEnjoy all KodeArrow features!")
 
+        # Bind the Return/Enter key to automatically submit the form
+        field.bind("<Return>", lambda event: submit_key())
     
         btn = CTkButton(master=frame1, text="Submit", width=90, height=35, corner_radius=7, fg_color="#00207f", hover_color="#000d34", bg_color="white", command=submit_key)
         btn.place(relx=0.5, rely=0.79, anchor="center")
