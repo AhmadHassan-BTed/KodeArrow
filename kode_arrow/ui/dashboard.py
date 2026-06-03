@@ -546,6 +546,29 @@ class DashboardWindow:
             save_btn.configure(text="✓  Saved")
             app.after(2200, lambda: save_btn.configure(text="Save Preferences"))
 
+        def reset_hotkeys():
+            from kode_arrow.config.user_prefs import DEFAULT_PREFS
+            for action, default_key in DEFAULT_PREFS["hotkeys"].items():
+                if action in entries:
+                    entries[action].delete(0, END)
+                    entries[action].insert(0, default_key)
+            new_prefs = prefs.copy()
+            new_prefs["hotkeys"] = DEFAULT_PREFS["hotkeys"].copy()
+            UserPrefs.save(new_prefs)
+            on_reload_engine()
+            reset_btn.configure(text="✓  Reset Done")
+            app.after(2200, lambda: reset_btn.configure(text="Reset to Defaults"))
+
+        reset_btn = CTkButton(
+            master=grid_inner, text="Reset to Defaults",
+            width=145, height=34, corner_radius=7,
+            font=(FONT, 12), fg_color="#F3F4F6" if mode["v"] == "light" else "#374151",
+            text_color="#1F2937" if mode["v"] == "light" else "#F3F4F6",
+            hover_color="#E5E7EB" if mode["v"] == "light" else "#4B5563",
+            command=reset_hotkeys,
+        )
+        reset_btn.grid(row=row_i + 2, column=0, sticky="w", pady=(0, 2))
+
         save_btn = CTkButton(
             master=grid_inner, text="Save Preferences",
             width=155, height=34, corner_radius=7,
@@ -622,6 +645,11 @@ class DashboardWindow:
             grid_card.configure(fg_color=T("BG_SURFACE"), border_color=T("BORDER"))
             sep.configure(fg_color=T("SEP"))
             save_btn.configure(fg_color=T("ACCENT"), hover_color=T("ACCENT_HOVER"))
+            reset_btn.configure(
+                fg_color="#F3F4F6" if m == "light" else "#374151",
+                text_color="#1F2937" if m == "light" else "#F3F4F6",
+                hover_color="#E5E7EB" if m == "light" else "#4B5563"
+            )
 
             for lbl_w, alt_w, ent_w in entry_widgets:
                 lbl_w.configure(text_color=T("TEXT_SECONDARY"))
