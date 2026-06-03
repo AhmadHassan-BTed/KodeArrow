@@ -76,6 +76,7 @@ This version introduces real-time hotkey remapping, a designer-grade sidebar das
 
 * Home-Row Shortcut Customization:
   - Remap your home-row shortcuts directly from the settings interface (e.g. changing Alt + IJKL).
+  - Select your preferred modifier/base key (e.g. `alt`, `ctrl`, `shift`, `windows`) directly from the shortcuts interface to customize your layout.
   - Dynamic hotkey engine reloading—re-binds keys in milliseconds without needing to restart the application.
   - Local preferences are saved securely to '~/.kodearrow_prefs.json' for persistence.
 * Universal Community Lifetime Key:
@@ -107,12 +108,12 @@ This version introduces real-time hotkey remapping, a designer-grade sidebar das
 
 ## Hotkeys
 
-| Action              | Default Shortcut      | Configurable? |
-| ------------------- | --------------------- | ------------- |
-| Arrow Keys          | Alt + I / J / K / L   | Yes           |
-| Home / End          | Alt + U / O           | Yes           |
-| Delete / Backspace  | Alt + P / ;           | Yes           |
-| Page Up / Page Down | Alt + [ / '           | Yes           |
+| Action              | Default Shortcut           | Configurable? |
+| ------------------- | -------------------------- | ------------- |
+| Arrow Keys          | Base Key + I / J / K / L   | Yes           |
+| Home / End          | Base Key + U / O           | Yes           |
+| Delete / Backspace  | Base Key + P / ;           | Yes           |
+| Page Up / Page Down | Base Key + [ / '           | Yes           |
 
 ---
 
