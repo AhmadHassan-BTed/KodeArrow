@@ -23,7 +23,10 @@ class HotkeyEngine:
         self.load_prefs()
 
     def load_prefs(self):
-        prefs = UserPrefs.load()["hotkeys"]
+        prefs_data = UserPrefs.load()
+        prefs = prefs_data["hotkeys"]
+        self.modifier = prefs_data.get("modifier", "alt")
+        
         self.hk_up = prefs.get("up", "i")
         self.hk_down = prefs.get("down", "k")
         self.hk_left = prefs.get("left", "j")
@@ -51,72 +54,72 @@ class HotkeyEngine:
         self.total_shortcuts += 1
 
     def left_arrow(self):
-        keyboard.add_hotkey('alt+left', self._hehe, suppress=True)
+        keyboard.add_hotkey(f'{self.modifier}+left', self._hehe, suppress=True)
         pyautogui.press('left')
         self.updateData()
-        keyboard.remove_hotkey('alt+left')
+        keyboard.remove_hotkey(f'{self.modifier}+left')
 
     def right_arrow(self):
-        keyboard.add_hotkey('alt+right', self._hehe, suppress=True)
+        keyboard.add_hotkey(f'{self.modifier}+right', self._hehe, suppress=True)
         pyautogui.press('right')
         self.updateData()
-        keyboard.remove_hotkey('alt+right')
+        keyboard.remove_hotkey(f'{self.modifier}+right')
 
     def down_arrow(self):
         if self.is_premium():
-            keyboard.add_hotkey('alt+down', self._hehe, suppress=True)
+            keyboard.add_hotkey(f'{self.modifier}+down', self._hehe, suppress=True)
             pyautogui.press('down')
             self.updateData()
-            keyboard.remove_hotkey('alt+down')
+            keyboard.remove_hotkey(f'{self.modifier}+down')
 
     def up_arrow(self):
         if self.is_premium():
-            keyboard.add_hotkey('alt+up', self._hehe, suppress=True)
+            keyboard.add_hotkey(f'{self.modifier}+up', self._hehe, suppress=True)
             pyautogui.press('up')
             self.updateData()
-            keyboard.remove_hotkey('alt+up')
+            keyboard.remove_hotkey(f'{self.modifier}+up')
 
     def page_up_key(self):
         if self.is_premium():
-            keyboard.add_hotkey('alt+pageup', self._hehe, suppress=True)
+            keyboard.add_hotkey(f'{self.modifier}+pageup', self._hehe, suppress=True)
             pyautogui.press('pageup')
             self.updateData()
-            keyboard.remove_hotkey('alt+pageup')
+            keyboard.remove_hotkey(f'{self.modifier}+pageup')
 
     def page_down_key(self):
         if self.is_premium():
-            keyboard.add_hotkey('alt+pagedown', self._hehe, suppress=True)
+            keyboard.add_hotkey(f'{self.modifier}+pagedown', self._hehe, suppress=True)
             pyautogui.press('pagedown')
             self.updateData()
-            keyboard.remove_hotkey('alt+pagedown')
+            keyboard.remove_hotkey(f'{self.modifier}+pagedown')
 
     def end_key(self):
         if self.is_premium():
-            keyboard.add_hotkey('alt+end', self._hehe, suppress=True)
+            keyboard.add_hotkey(f'{self.modifier}+end', self._hehe, suppress=True)
             pyautogui.press('end')
             self.updateData()
-            keyboard.remove_hotkey('alt+end')
+            keyboard.remove_hotkey(f'{self.modifier}+end')
 
     def home_key(self):
         if self.is_premium():
-            keyboard.add_hotkey('alt+home', self._hehe, suppress=True)
+            keyboard.add_hotkey(f'{self.modifier}+home', self._hehe, suppress=True)
             pyautogui.press('home')
             self.updateData()
-            keyboard.remove_hotkey('alt+home')
+            keyboard.remove_hotkey(f'{self.modifier}+home')
 
     def backspace_key(self):
         if self.is_premium():
-            keyboard.add_hotkey('alt+backspace', self._hehe, suppress=True)
+            keyboard.add_hotkey(f'{self.modifier}+backspace', self._hehe, suppress=True)
             pyautogui.press('backspace')
             self.updateData()
-            keyboard.remove_hotkey('alt+backspace')
+            keyboard.remove_hotkey(f'{self.modifier}+backspace')
             
     def delete_key(self):
         if self.is_premium():
-            keyboard.add_hotkey('alt+delete', self._hehe, suppress=True)
+            keyboard.add_hotkey(f'{self.modifier}+delete', self._hehe, suppress=True)
             pyautogui.press('delete')
             self.updateData()
-            keyboard.remove_hotkey('alt+delete')
+            keyboard.remove_hotkey(f'{self.modifier}+delete')
 
     def handle_combination(self, *keys):
         for key in keys:
@@ -144,21 +147,22 @@ class HotkeyEngine:
 
     def start(self):
         keys = [self.hk_up, self.hk_left, self.hk_down, self.hk_right]
+        mod = self.modifier
         for key in keys:
-            if key: keyboard.add_hotkey(f'alt+{key}', self.handle_combination, args=(key,), suppress=True)
+            if key: keyboard.add_hotkey(f'{mod}+{key}', self.handle_combination, args=(key,), suppress=True)
         for combo in itertools.permutations(keys, 2):
-            if all(combo): keyboard.add_hotkey(f'alt+{combo[0]}+{combo[1]}', self.handle_combination, args=combo, suppress=True)
+            if all(combo): keyboard.add_hotkey(f'{mod}+{combo[0]}+{combo[1]}', self.handle_combination, args=combo, suppress=True)
         for combo in itertools.permutations(keys, 3):
-            if all(combo): keyboard.add_hotkey(f'alt+{combo[0]}+{combo[1]}+{combo[2]}', self.handle_combination, args=combo, suppress=True)
+            if all(combo): keyboard.add_hotkey(f'{mod}+{combo[0]}+{combo[1]}+{combo[2]}', self.handle_combination, args=combo, suppress=True)
         for combo in itertools.permutations(keys, 4):
-            if all(combo): keyboard.add_hotkey(f'alt+{combo[0]}+{combo[1]}+{combo[2]}+{combo[3]}', self.handle_combination, args=combo, suppress=True)
+            if all(combo): keyboard.add_hotkey(f'{mod}+{combo[0]}+{combo[1]}+{combo[2]}+{combo[3]}', self.handle_combination, args=combo, suppress=True)
 
-        if self.hk_home: keyboard.add_hotkey(f'alt+{self.hk_home}', self.home_key, suppress=True)
-        if self.hk_end: keyboard.add_hotkey(f'alt+{self.hk_end}', self.end_key, suppress=True)
-        if self.hk_delete: keyboard.add_hotkey(f'alt+{self.hk_delete}', self.delete_key, suppress=True)
-        if self.hk_backspace: keyboard.add_hotkey(f'alt+{self.hk_backspace}', self.backspace_key, suppress=True)
-        if self.hk_pageup: keyboard.add_hotkey(f'alt+{self.hk_pageup}', self.page_up_key, suppress=True)
-        if self.hk_pagedown: keyboard.add_hotkey(f'alt+{self.hk_pagedown}', self.page_down_key, suppress=True)
+        if self.hk_home: keyboard.add_hotkey(f'{mod}+{self.hk_home}', self.home_key, suppress=True)
+        if self.hk_end: keyboard.add_hotkey(f'{mod}+{self.hk_end}', self.end_key, suppress=True)
+        if self.hk_delete: keyboard.add_hotkey(f'{mod}+{self.hk_delete}', self.delete_key, suppress=True)
+        if self.hk_backspace: keyboard.add_hotkey(f'{mod}+{self.hk_backspace}', self.backspace_key, suppress=True)
+        if self.hk_pageup: keyboard.add_hotkey(f'{mod}+{self.hk_pageup}', self.page_up_key, suppress=True)
+        if self.hk_pagedown: keyboard.add_hotkey(f'{mod}+{self.hk_pagedown}', self.page_down_key, suppress=True)
 
         if not self._is_hooked:
             keyboard.hook(self.increment_total_keyStrokes)
