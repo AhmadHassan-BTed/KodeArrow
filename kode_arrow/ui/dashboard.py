@@ -493,6 +493,29 @@ class DashboardWindow:
         grid_inner.columnconfigure(1, weight=1)
 
         # Base key selector/input
+        def map_keysym(keysym):
+            k = keysym.lower()
+            mappings = {
+                "prior": "pageup",
+                "next": "pagedown",
+                "return": "enter",
+                "backspace": "backspace",
+                "semicolon": ";",
+                "colon": ":",
+                "bracketleft": "[",
+                "bracketright": "]",
+                "apostrophe": "'",
+                "quotedbl": '"',
+                "comma": ",",
+                "period": ".",
+                "slash": "/",
+                "backslash": "\\",
+                "minus": "-",
+                "equal": "=",
+                "grave": "`",
+            }
+            return mappings.get(k, k)
+
         base_key_frame = CTkFrame(master=grid_inner, fg_color="transparent")
         base_key_frame.grid(row=0, column=0, columnspan=2, padx=(0, 24), pady=(0, 16), sticky="w")
         
@@ -503,15 +526,60 @@ class DashboardWindow:
         base_key_lbl.pack(side=LEFT)
         
         base_key_val = prefs.get("modifier", "alt")
-        base_key_combo = CTkComboBox(
-            master=base_key_frame, values=["alt", "ctrl", "shift", "windows"],
-            width=100, height=28, font=(FONT, 11, "bold"),
+        
+        base_key_entry = CTkEntry(
+            master=base_key_frame, width=120, height=28,
+            font=(FONT, 11, "bold"), justify="center",
             fg_color=T("ENTRY_BG"), text_color=T("TEXT_INPUT"),
-            border_color=T("BORDER"), button_color=T("ACCENT"),
-            button_hover_color=T("ACCENT_HOVER"), corner_radius=6
+            border_width=1, border_color=T("BORDER"), corner_radius=6,
         )
-        base_key_combo.set(base_key_val)
-        base_key_combo.pack(side=LEFT)
+        base_key_entry.insert(0, base_key_val)
+        base_key_entry.pack(side=LEFT)
+
+        def on_mod_focus_in(e):
+            base_key_entry.delete(0, END)
+            base_key_entry.insert(0, "Press Mod...")
+            base_key_entry.configure(text_color=T("TEXT_MUTED"))
+            base_key_entry.bind("<KeyPress>", on_mod_key_press)
+            
+        def on_mod_key_press(e):
+            keysym = e.keysym
+            mod_map = {
+                "control_l": "ctrl",
+                "control_r": "ctrl",
+                "alt_l": "alt",
+                "alt_r": "alt",
+                "shift_l": "shift",
+                "shift_r": "shift",
+                "win_l": "windows",
+                "win_r": "windows",
+                "meta_l": "windows",
+                "meta_r": "windows",
+                "super_l": "windows",
+                "super_r": "windows"
+            }
+            mapped = mod_map.get(keysym.lower())
+            if mapped:
+                base_key_entry.delete(0, END)
+                base_key_entry.insert(0, mapped)
+                base_key_entry.configure(text_color=T("TEXT_INPUT"))
+                base_key_entry.unbind("<KeyPress>")
+                app.focus()
+            return "break"
+
+        def on_mod_focus_out(e):
+            val = base_key_entry.get().strip().lower()
+            if val not in ("alt", "ctrl", "shift", "windows", "Press Mod..."):
+                val = prefs.get("modifier", "alt")
+            if val == "Press Mod...":
+                val = prefs.get("modifier", "alt")
+            base_key_entry.delete(0, END)
+            base_key_entry.insert(0, val)
+            base_key_entry.configure(text_color=T("TEXT_INPUT"))
+            base_key_entry.unbind("<KeyPress>")
+
+        base_key_entry.bind("<FocusIn>", on_mod_focus_in)
+        base_key_entry.bind("<FocusOut>", on_mod_focus_out)
 
         prefs        = UserPrefs.load()
         hotkeys      = prefs.get("hotkeys", {})
@@ -546,6 +614,40 @@ class DashboardWindow:
             ent.insert(0, current_key)
             ent.grid(row=0, column=2)
 
+            def setup_key_capture(entry_widget, action_name):
+                def on_key_focus_in(e):
+                    entry_widget.delete(0, END)
+                    entry_widget.insert(0, "...")
+                    entry_widget.configure(text_color=T("TEXT_MUTED"))
+                    entry_widget.bind("<KeyPress>", on_key_press)
+                    
+                def on_key_press(e):
+                    keysym = e.keysym
+                    if keysym in ("Alt_L", "Alt_R", "Control_L", "Control_R", "Shift_L", "Shift_R", "Win_L", "Win_R", "Meta_L", "Meta_R", "Super_L", "Super_R"):
+                        return "break"
+                    
+                    key_name = map_keysym(keysym)
+                    entry_widget.delete(0, END)
+                    entry_widget.insert(0, key_name)
+                    entry_widget.configure(text_color=T("TEXT_INPUT"))
+                    entry_widget.unbind("<KeyPress>")
+                    app.focus()
+                    return "break"
+
+                def on_key_focus_out(e):
+                    val = entry_widget.get().strip().lower()
+                    if not val or val == "...":
+                        saved_val = prefs.get("hotkeys", {}).get(action_name, "")
+                        entry_widget.delete(0, END)
+                        entry_widget.insert(0, saved_val)
+                    entry_widget.configure(text_color=T("TEXT_INPUT"))
+                    entry_widget.unbind("<KeyPress>")
+
+                entry_widget.bind("<FocusIn>", on_key_focus_in)
+                entry_widget.bind("<FocusOut>", on_key_focus_out)
+
+            setup_key_capture(ent, action)
+
             entries[action] = ent
             entry_widgets.append((lbl, alt_lbl, ent))
 
@@ -558,16 +660,16 @@ class DashboardWindow:
 
         def save_hotkeys():
             new_prefs = prefs.copy()
-            new_prefs["modifier"] = base_key_combo.get().strip().lower()
+            new_prefs["modifier"] = base_key_entry.get().strip().lower()
             for action, entry in entries.items():
                 val = entry.get().strip().lower()
-                if len(val) == 1:
+                if val and val != "...":
                     new_prefs["hotkeys"][action] = val
             UserPrefs.save(new_prefs)
             on_reload_engine()
             
             # Update prefix labels
-            new_mod = base_key_combo.get().strip().capitalize()
+            new_mod = base_key_entry.get().strip().capitalize()
             for _, alt_w, _ in entry_widgets:
                 alt_w.configure(text=f"{new_mod} +")
                 
@@ -576,7 +678,8 @@ class DashboardWindow:
 
         def reset_hotkeys():
             from kode_arrow.config.user_prefs import DEFAULT_PREFS
-            base_key_combo.set(DEFAULT_PREFS["modifier"])
+            base_key_entry.delete(0, END)
+            base_key_entry.insert(0, DEFAULT_PREFS["modifier"])
             for action, default_key in DEFAULT_PREFS["hotkeys"].items():
                 if action in entries:
                     entries[action].delete(0, END)
@@ -687,12 +790,10 @@ class DashboardWindow:
                 hover_color="#E5E7EB" if m == "light" else "#4B5563"
             )
             base_key_lbl.configure(text_color=T("TEXT_PRIMARY"))
-            base_key_combo.configure(
+            base_key_entry.configure(
                 fg_color=T("ENTRY_BG"),
                 text_color=T("TEXT_INPUT"),
                 border_color=T("BORDER"),
-                button_color=T("ACCENT"),
-                button_hover_color=T("ACCENT_HOVER")
             )
 
             for lbl_w, alt_w, ent_w in entry_widgets:
