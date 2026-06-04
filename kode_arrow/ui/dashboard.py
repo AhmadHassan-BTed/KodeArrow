@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw, ImageFont
 from customtkinter import (
     CTk, CTkFrame, CTkLabel, CTkButton, CTkSwitch, CTkEntry,
     CTkImage, BOTH, LEFT, RIGHT, TOP, BOTTOM, X, Y, StringVar,
-    set_appearance_mode
+    set_appearance_mode, CTkComboBox, END
 )
 from kode_arrow.utils.resource import get_resource_path
 from kode_arrow.utils.system import enable_autostart, disable_autostart, is_autostart_enabled
