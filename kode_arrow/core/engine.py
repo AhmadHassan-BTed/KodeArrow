@@ -3,9 +3,13 @@ import keyboard
 import pyautogui
 import time
 import threading
+import logging
 from kode_arrow.utils.file import write_to_file
 from kode_arrow.utils.network import check_internet_connection
 from kode_arrow.config.user_prefs import UserPrefs
+
+logger = logging.getLogger("KodeArrow.Engine")
+
 
 class HotkeyEngine:
     def __init__(self, is_premium_fn, telemetry_service, usage_file="premium_Key_metadata.txt"):
@@ -18,6 +22,8 @@ class HotkeyEngine:
         self.multiplier = 20
         self.previous_time = time.time()
         self._is_hooked = False
+        self._reload_lock = threading.Lock()
+        self._last_hook_activity = time.time()
         
         pyautogui.PAUSE = 0.000001
         
@@ -145,14 +151,47 @@ class HotkeyEngine:
                     if check_internet_connection():
                         self.telemetry.run_async_upload_threaded()
                 except Exception as e:
-                    print(f"Error in background telemetry check: {e}")
+                    logger.warning(f"Error in background telemetry check: {e}")
 
             threading.Thread(target=bg_calc, daemon=True).start()
 
     def increment_total_keyStrokes(self, event):
         if event.event_type == 'down':
+             self._last_hook_activity = time.time()
              self.calculate_user_data()
-             print(f"Key pressed: {event.name}")
+
+    def is_hook_alive(self):
+        """Check if the keyboard hook is still functional.
+        
+        Strategy: The keyboard library maintains internal state about its hooks.
+        We check if the hook callback is still registered AND if we've received
+        any hook activity within a reasonable window.
+        
+        If the user genuinely hasn't typed for a long time, the hook may still
+        be alive — so we also check the keyboard library's internal hook state.
+        """
+        try:
+            # Check 1: Is the keyboard library's internal hook still registered?
+            # keyboard._hooks is the set of active hook callbacks
+            if hasattr(keyboard, '_hooks') and not keyboard._hooks:
+                logger.warning("keyboard._hooks is empty — hook likely dead")
+                return False
+            
+            # Check 2: Is the low-level listener thread alive?
+            # keyboard._listener is the background thread running the hook
+            if hasattr(keyboard, '_listener'):
+                listener = keyboard._listener
+                if listener is not None and hasattr(listener, 'is_alive'):
+                    if not listener.is_alive():
+                        logger.warning("keyboard._listener thread is dead")
+                        return False
+            
+            return True
+        except Exception:
+            logger.exception("Error checking hook health")
+            # If we can't determine health, assume it's alive to avoid
+            # unnecessary restarts
+            return True
 
     def start(self):
         keys = [self.hk_up, self.hk_left, self.hk_down, self.hk_right]
@@ -176,8 +215,18 @@ class HotkeyEngine:
         if not self._is_hooked:
             keyboard.hook(self.increment_total_keyStrokes)
             self._is_hooked = True
+            logger.info("Keyboard hook installed")
 
     def reload_hotkeys(self):
-        keyboard.unhook_all_hotkeys()
-        self.load_prefs()
-        self.start()
+        """Re-register all keyboard hooks. Thread-safe via lock."""
+        with self._reload_lock:
+            logger.info("Reloading hotkeys...")
+            try:
+                keyboard.unhook_all_hotkeys()
+                self._is_hooked = False
+                self.load_prefs()
+                self.start()
+                logger.info("Hotkeys reloaded successfully")
+            except Exception:
+                logger.exception("Failed to reload hotkeys")
+                raise

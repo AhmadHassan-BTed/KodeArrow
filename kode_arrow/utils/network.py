@@ -1,4 +1,8 @@
+import logging
 import requests
+
+logger = logging.getLogger("KodeArrow.Network")
+
 
 def check_internet_connection():
     try:
