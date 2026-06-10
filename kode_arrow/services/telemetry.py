@@ -1,5 +1,9 @@
 import threading
+import logging
 from kode_arrow.utils.file import read_from_file, add_hidden_attribute, remove_hidden_attribute, find_email_in_file
+
+logger = logging.getLogger("KodeArrow.Telemetry")
+
 
 class TelemetryService:
     def __init__(self, firebase_service, premium_file_path, usage_file_path="premium_Key_metadata.txt"):
@@ -33,8 +37,8 @@ class TelemetryService:
                 
                 add_hidden_attribute(self.usage_file)
             except Exception as e:
-                print(f"Failed to upload data from file '{self.usage_file}': {e}")
+                logger.warning(f"Failed to upload data from file '{self.usage_file}': {e}")
 
-        thread = threading.Thread(target=target_function)
+        thread = threading.Thread(target=target_function, daemon=True)
         thread.start()
         return thread
