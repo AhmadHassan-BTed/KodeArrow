@@ -1,7 +1,10 @@
 import os
+import logging
 from dotenv import load_dotenv
 
 from kode_arrow.utils.resource import get_resource_path
+
+logger = logging.getLogger("KodeArrow.Config")
 
 # Load environment variables from config/.env file
 env_path = get_resource_path("config/.env")
@@ -37,6 +40,7 @@ class Config:
         critical_keys = ["FIREBASE_PROJECT_ID", "FIREBASE_PRIVATE_KEY", "FIREBASE_CLIENT_EMAIL"]
         missing = [key for key in critical_keys if not os.getenv(key)]
         if missing:
-            print(f"Warning: Missing critical configuration: {', '.join(missing)}")
+            logger.warning(f"Missing critical configuration: {', '.join(missing)}")
             return False
         return True
+

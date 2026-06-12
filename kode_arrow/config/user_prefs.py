@@ -1,6 +1,9 @@
 import json
 import os
+import logging
 from kode_arrow.utils.resource import get_resource_path
+
+logger = logging.getLogger("KodeArrow.UserPrefs")
 
 # Standard locations
 PREFS_FILE = os.path.join(os.path.expanduser("~"), ".kodearrow_prefs.json")
@@ -40,7 +43,7 @@ class UserPrefs:
                     prefs["theme"] = data["theme"]
                 return prefs
         except Exception as e:
-            print(f"Error loading prefs: {e}")
+            logger.warning(f"Error loading prefs: {e}")
             return DEFAULT_PREFS.copy()
 
     @staticmethod
@@ -50,5 +53,5 @@ class UserPrefs:
                 json.dump(prefs_dict, f, indent=4)
             return True
         except Exception as e:
-            print(f"Error saving prefs: {e}")
+            logger.warning(f"Error saving prefs: {e}")
             return False
