@@ -1,8 +1,10 @@
 import os
 import sys
+import logging
 import winreg
 
 APP_NAME = "KodeArrow"
+logger = logging.getLogger("KodeArrow.System")
 
 def get_executable_path():
     """Returns the path to the running executable (or python script)."""
@@ -23,7 +25,7 @@ def is_autostart_enabled():
     except FileNotFoundError:
         return False
     except Exception as e:
-        print(f"Error checking autostart: {e}")
+        logger.warning(f"Error checking autostart: {e}")
         return False
 
 def enable_autostart():
@@ -34,7 +36,7 @@ def enable_autostart():
         winreg.CloseKey(key)
         return True
     except Exception as e:
-        print(f"Error enabling autostart: {e}")
+        logger.warning(f"Error enabling autostart: {e}")
         return False
 
 def disable_autostart():
@@ -47,5 +49,5 @@ def disable_autostart():
     except FileNotFoundError:
         return True # Already disabled
     except Exception as e:
-        print(f"Error disabling autostart: {e}")
+        logger.warning(f"Error disabling autostart: {e}")
         return False
