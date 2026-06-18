@@ -2,7 +2,7 @@
 
 <img src="web/app/assets/illustrations/codearrow3dpng.png" width="220" alt="KodeArrow Logo">
 
-# 🏹 KodeArrow
+# KodeArrow
 
 ### The Next Evolution in Keyboard Navigation
 
@@ -84,23 +84,26 @@ Choose the edition that fits your professional workflow.
 ## 🔓 Universal Community License
 
 > [!TIP]
+>
 > ### 🌟 Join the Ergonomic Revolution
+>
 > To support developers, students, and ergonomic enthusiasts worldwide, we have created an open **Universal Activation Email** that unlocks the complete premium suite of **KodeArrow** forever!
 
 <div align="center">
 
-| 📧 Community Key | `freeforever@kodearrow.dev` |
-| :--- | :--- |
-| **Status** | 🟢 **Active & Lifetime** |
-| **Allowed Devices** | ♾️ **Unlimited Connections** |
+| 📧 Community Key                    | `freeforever@kodearrow.dev`                  |
+| :---------------------------------- | :------------------------------------------- |
+| **Status**                          | 🟢 **Active & Lifetime**                     |
+| **Allowed Devices**                 | ♾️ **Unlimited Connections**                 |
 | **Ergonomic Research Contribution** | 📊 **Active (Anonymous Telemetry Tracking)** |
 
 </div>
 
 ### ✨ Why Use the Community Key?
-* **Zero Limits**: Bypasses the standard 4-device hardware restriction entirely. Use it across all of your personal and work machines.
-* **Contribute to Science**: By using this license, your app automatically registers device stats and anonymous telemetry to our database. You are directly contributing data to our ergonomic research and helping shape the future of human-computer interaction!
-* **Lifetime Freedom**: Never expires. Managed centrally and kept active permanently through the cloud control console.
+
+- **Zero Limits**: Bypasses the standard 4-device hardware restriction entirely. Use it across all of your personal and work machines.
+- **Contribute to Science**: By using this license, your app automatically registers device stats and anonymous telemetry to our database. You are directly contributing data to our ergonomic research and helping shape the future of human-computer interaction!
+- **Lifetime Freedom**: Never expires. Managed centrally and kept active permanently through the cloud control console.
 
 > **To Unlock**: Simply enter `freeforever@kodearrow.dev` when prompted during the initial startup activation, and enjoy the ultimate home-row experience.
 
@@ -119,22 +122,30 @@ KodeArrow is a scientifically validated ergonomic pattern. Our research lab uses
 ---
 
 ## ⚙️ Execution & Compilation
+
 KodeArrow uses a standardized entry point system for both execution and distribution.
 
 ### Running the Application
+
 Launch specific editions using the `--version` flag:
-*   **Standard Edition**: `python main.py --version standard`
-*   **Research Edition**: `python main.py --version r_edition`
+
+- **Standard Edition**: `python main.py --version standard`
+- **Research Edition**: `python main.py --version r_edition`
 
 ### Compiling to Executable
+
 The production build pipeline is fully automated. To generate a standalone `.exe`:
+
 ```bash
 python infrastructure/build/build.py
 ```
-*Generated binaries will be located in the `dist/` directory.*
+
+_Generated binaries will be located in the `dist/` directory._
 
 ### Running the Test Suite
+
 Verify architectural and logical integrity before deployment:
+
 ```bash
 python -m pytest
 ```
@@ -161,8 +172,8 @@ New people are welcomed to participate in development.
    pip install -r config/requirements.txt
    ```
 3. **Configuration**:
-   * Duplicate `config/.env.example` and rename it to `config/.env`.
-   * Open `config/.env` and fill in your Firebase credentials and License keys.
+   - Duplicate `config/.env.example` and rename it to `config/.env`.
+   - Open `config/.env` and fill in your Firebase credentials and License keys.
 4. **Execution**:
    ```bash
    python main.py --version standard
@@ -185,7 +196,6 @@ graph LR
 ```
 
 **Deployment**: The official web presence is managed and deployed independently at [ahmadhassan-bted.github.io/KodeArrow](https://ahmadhassan-bted.github.io/KodeArrow/).
-
 
 ---
 
@@ -236,10 +246,7 @@ sequenceDiagram
     end
 ```
 
-
 ---
-
-
 
 <div align="center">
 
