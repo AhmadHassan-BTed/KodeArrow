@@ -2,6 +2,8 @@ import os
 import sys
 import asyncio
 import threading
+import logging
+import time
 from concurrent.futures import ThreadPoolExecutor
 from tkinter import messagebox
 import webbrowser
@@ -15,12 +17,21 @@ from kode_arrow.ui.tray import SystemTray
 from kode_arrow.ui.dialogs import UIWindowManager
 from kode_arrow.ui.dashboard import DashboardWindow
 from kode_arrow.core.engine import HotkeyEngine
+from kode_arrow.core.resilience import WatchdogThread
 from kode_arrow.utils.file import create_hidden_file, find_email_in_file
 from kode_arrow.utils.network import check_internet_connection
+
+logger = logging.getLogger("KodeArrow.App")
+
+# Maximum number of tray restart attempts before giving up
+TRAY_MAX_RETRIES = 10
+TRAY_RETRY_DELAY = 2  # seconds
+
 
 class KodeArrowApp:
     def __init__(self, is_research=True):
         self.is_research = is_research
+        self._watchdog = None
         
         self.hardware_id = get_hardware_id()
         encrypted_inner = encrypt_hardware_id(self.hardware_id)
@@ -109,7 +120,7 @@ Ahmad Hassan (B-Ted)
                 with open(txt_path, "w", encoding="utf-8") as f:
                     f.write(changelog_content)
             except Exception as e:
-                print(f"Failed to generate KodeArrow.txt on startup: {e}")
+                logger.warning(f"Failed to generate KodeArrow.txt on startup: {e}")
         
         self.firebase = FirebaseService()
         self.licensing = LicensingService(self.firebase)
@@ -170,7 +181,7 @@ Ahmad Hassan (B-Ted)
             else:
                 self.licensing.validate_email_info_on_startup(self.premium_file_path, find_email_in_file, self.is_research)
         except Exception as e:
-            print(f"Startup config check failed: {e}")
+            logger.warning(f"Startup config check failed: {e}")
 
     async def run_check_and_update_with_timeout(self):
         with ThreadPoolExecutor() as executor:
@@ -190,11 +201,19 @@ Ahmad Hassan (B-Ted)
 
     def start(self):
         if check_internet_connection():
-            threading.Thread(target=self.start_check_and_update).start()
+            threading.Thread(target=self.start_check_and_update, daemon=True).start()
             
         threading.Thread(target=UIWindowManager.show_instructions, args=(self.is_premium(),), daemon=True).start()
         
         self.engine.start()
+        logger.info("Hotkey engine started")
+
+        # =====================================================================
+        # Start the Watchdog — monitors hook health and power events
+        # =====================================================================
+        self._watchdog = WatchdogThread(engine=self.engine, heartbeat_interval=30)
+        self._watchdog.start()
+        logger.info("Watchdog thread started")
 
         def on_unlock(on_success=None):
             def submit_and_callback(email):
@@ -203,7 +222,6 @@ Ahmad Hassan (B-Ted)
                     on_success()
                 return res
             threading.Thread(target=UIWindowManager.unlock_functionality, args=(submit_and_callback,), daemon=True).start()
-
 
         self.tray.build_menu(
             is_premium_fn=self.is_premium,
@@ -216,15 +234,70 @@ Ahmad Hassan (B-Ted)
         
         if check_internet_connection():
             self.telemetry.run_async_upload_threaded()
-            
-        self.tray.run()
+
+        # =====================================================================
+        # Tray retry loop — if pystray dies (e.g. after sleep/wake GDI handle
+        # invalidation), rebuild the tray and re-enter the event loop.
+        # =====================================================================
+        for tray_attempt in range(1, TRAY_MAX_RETRIES + 1):
+            try:
+                if tray_attempt > 1:
+                    logger.warning(
+                        "Tray restart attempt %d/%d",
+                        tray_attempt, TRAY_MAX_RETRIES
+                    )
+                    # Rebuild the tray icon from scratch
+                    from kode_arrow.utils.resource import get_resource_path
+                    icon_path = get_resource_path(os.path.join("assets", "branding", "icon.ico"))
+                    self.tray = SystemTray(icon_path=icon_path, on_open_creator_links=self.open_url)
+                    self.tray.build_menu(
+                        is_premium_fn=self.is_premium,
+                        on_open_dashboard=self.open_dashboard,
+                        on_unlock=on_unlock,
+                        on_exit=self.stop,
+                        on_open_portfolio=self.open_url,
+                        on_open_website=self.open_url_buy,
+                    )
+                
+                logger.info("Starting system tray event loop (attempt %d)", tray_attempt)
+                self.tray.run()
+                
+                # If run() returns cleanly (user chose Exit), break out
+                logger.info("System tray exited cleanly")
+                break
+                
+            except Exception:
+                logger.exception(
+                    "System tray crashed on attempt %d/%d",
+                    tray_attempt, TRAY_MAX_RETRIES
+                )
+                if tray_attempt < TRAY_MAX_RETRIES:
+                    time.sleep(TRAY_RETRY_DELAY)
+                else:
+                    logger.critical("All tray restart attempts exhausted — re-raising")
+                    raise
 
     def submit_key(self, email):
         return self.licensing.validate_and_activate(email, self.hardware_id, self.premium_file_path, self.is_research)
 
     def stop(self):
-        if check_internet_connection():
-            self.telemetry.run_async_upload_threaded()
-        if self.tray:
-            self.tray.stop()
+        logger.info("KodeArrow shutting down...")
+        try:
+            if check_internet_connection():
+                self.telemetry.run_async_upload_threaded()
+        except Exception:
+            logger.exception("Failed to upload telemetry during shutdown")
+        
+        try:
+            if self._watchdog:
+                self._watchdog.stop()
+        except Exception:
+            logger.exception("Failed to stop watchdog during shutdown")
+        
+        try:
+            if self.tray:
+                self.tray.stop()
+        except Exception:
+            logger.exception("Failed to stop tray during shutdown")
+        
         os._exit(0)
