@@ -96,12 +96,14 @@ This version introduces real-time hotkey remapping, a designer-grade sidebar das
 
 ## Hotkeys
 
-| Action              | Default Shortcut      | Configurable? |
-| ------------------- | --------------------- | ------------- |
-| Arrow Keys          | Alt + I / J / K / L   | Yes           |
-| Home / End          | Alt + U / O           | Yes           |
-| Delete / Backspace  | Alt + P / ;           | Yes           |
-| Page Up / Page Down | Alt + [ / '           | Yes           |
+| Action              | Default Shortcut                     | Configurable? |
+| ------------------- | ------------------------------------ | ------------- |
+| Arrow Keys          | Alt + I / J / K / L                  | Yes           |
+| Home / End          | Alt + U / O                          | Yes           |
+| Delete / Backspace  | Alt + P / ;                          | Yes           |
+| Page Up / Page Down | Alt + [ / '                          | Yes           |
+| Word/Line Selection | Ctrl + Alt + U / I / O / J / K / L    | Yes (follows) |
+| (Selection Option)  | Ctrl + Both Alts + U/I/O/J/K/L       | Yes (follows) |
 
 ---
 

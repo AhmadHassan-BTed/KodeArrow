@@ -123,11 +123,13 @@ class UIWindowManager:
             "Alt + K\n(Arrow Down)\n\nRemember: Right click KodeArrow icon in System Tray to access menu"
         )
         showMoreMessage = (
-            " Thank you for using KodeArrow, a product of ByTed Technologies\n\n\n"
+            " Thank you for using KodeArrow, a product of ByTed Technologies\n\n"
             "{:<26} {:<26} {:<26} {:<26} {:<0}\n"
-            "   {:20} {:<25} {:<24} {:<22} {:0}\n\n\n\n"
+            "   {:20} {:<25} {:<24} {:<22} {:0}\n\n\n"
             "{:<26} {:<26} {:<26} {:<26} {:<0}\n"
-            "{:<18} {:<18} {:<18} {:<18} {:<0}\n"
+            "{:<18} {:<18} {:<18} {:<18} {:<0}\n\n"
+            "Selection: Ctrl + Alt + [U, I, O, J, K, L] (or both Alts)\n"
+            "  -> Select text/words (Home/Up/End/Left/Down/Right) (Free)"
         ).format(
                 "Alt + U", "Alt + I", "Alt + O", "Alt + P", "Alt + [",
                 "(Home)", "(Arrow Up)", "(End)", "(Delete)", "(Page Up)",
@@ -151,13 +153,13 @@ class UIWindowManager:
         subtitle.place(relx=0.5, rely=0.164, anchor="center")
 
         if is_premium:
-            w, h = 480, 350
+            w, h = 480, 390
             app.geometry('%dx%d+%d+%d' % (w, h, (ws/2)-(w/2), (hs/2)-(h/2)))
             labelUnlocked.place(relx=0.5, rely=0.5, anchor="center")
             btn.place(relx=0.5, rely=0.87, anchor="center")
             btnShowMore.place(relx=0.9, rely=0.87, anchor="center")
         else:
-            w, h = 480, 360
+            w, h = 480, 390
             app.geometry('%dx%d+%d+%d' % (w, h, (ws/2)-(w/2), (hs/2)-(h/2)))
             labelLocked.place(relx=0.5, rely=0.51, anchor="center")
             btn.place(relx=0.5, rely=0.88, anchor="center")
