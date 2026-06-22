@@ -47,7 +47,17 @@ def build():
         "--onefile",
         "--windowed", # Hides the console terminal
         "--clean", # Cleans PyInstaller cache to prevent bloat
+        "--hidden-import=plyer",
+        "--hidden-import=plyer.platforms",
+        "--hidden-import=plyer.platforms.win",
         "--hidden-import=plyer.platforms.win.notification",
+        "--hidden-import=keyboard",
+        "--hidden-import=pyautogui",
+        "--hidden-import=pystray",
+        "--hidden-import=lucide",
+        "--hidden-import=psutil",
+        "--hidden-import=wmi",
+        "--hidden-import=dotenv",
         "--icon=assets/branding/icon.ico",
         "--add-data=assets/branding/icon.ico;assets/branding",
         "--add-data=config/.env;config",
