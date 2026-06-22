@@ -14,6 +14,8 @@ KodeArrow is a revolutionary keyboard software designed to revolutionize the cod
 
 - Customizable Shortcuts: We understand that every coder has their own unique style. With KodeArrow, you can use personalized key combinations to suit your preferences, giving you ultimate control over your workflow.
 
+- Word/Line Selection: Hold Ctrl + Alt + [U/I/O/J/K/L] (or both Alts simultaneously) to instantly select text/words in any direction (Home, Up, End, Left, Down, Right) without moving your hands from the home row.
+
 - Compatible with All Languages and Environments: Whether you're coding in Python, Java, or any other language, even Gaming, KodeArrow Pro seamlessly integrates with your favorite coding environments, ensuring consistent performance across the board.
 
 - Intuitive and User-Friendly: Our sleek and intuitive interface makes it a breeze to set up and start using KodeArrow Pro. No complicated configurations, no steep learning curves – just pure coding efficiency.

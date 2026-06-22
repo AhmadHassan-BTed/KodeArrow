@@ -1,2 +1,3 @@
-The functionaliuty of moving a line up and donw in code editiors has been added in KodeArrow, by pressing alt with both thumbs simuntaniusly nd press u,h,j,k as per needed.
-Add this in documnetationa and the startup popup of the codearrow
+- The functionality of selecting words/lines using Ctrl + Alt + [u,i,o,j,k,l] (and with both Alts simultaneously) has been added in KodeArrow.
+- This has been documented in README.md, docs/architecture/README.txt, KodeArrow.txt, and the startup popup of KodeArrow.
+Status: Completed.

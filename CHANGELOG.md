@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Global exception handlers (`sys.excepthook` + `threading.excepthook`) — catches all unhandled exceptions across all threads and logs them.
   - `WatchdogThread` — heartbeats every 30s, monitors keyboard hook health, auto-recovers dead hooks, and calls `SetThreadExecutionState` to prevent Windows from suspending the process.
   - `PowerEventListener` — listens for Windows sleep/wake events via hidden Win32 message window and triggers automatic hook re-registration on resume.
+- Word and line selection hotkeys (`Ctrl + Alt + [u,i,o,j,k,l]`, with support for both Alts pressed simultaneously) mapping to `Ctrl + Shift + [Home/Up/End/Left/Down/Right]`.
+- Refined repository directory structure by relocating the `research` folder to `docs/research` to clean up the root workspace.
 - In-process retry loop (5 attempts) with full process restart as last resort.
 - System tray retry loop (10 attempts) with full icon rebuild on each crash.
 - Customizable base modifier key in shortcuts dashboard (Alt, Ctrl, Shift, Windows).
