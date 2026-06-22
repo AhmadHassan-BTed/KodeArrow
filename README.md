@@ -43,12 +43,14 @@ KodeArrow provides a complete document control system without leaving the home r
 
 ### 🧭 Navigation & Editing
 
-| Key               | Mapping             | Action                          |
-| :---------------- | :------------------ | :------------------------------ |
-| **Alt + I/J/K/L** | ⬆️ ⬅️ ⬇️ ➡️         | **Core Directional Navigation** |
-| **Alt + U / O**   | **Home / End**      | **Line Boundaries**             |
-| **Alt + P / ;**   | **Del / Backspace** | **Instant Text Deletion**       |
-| **Alt + [ / '**   | **PgUp / PgDn**     | **Document Paging**             |
+| Key                          | Mapping                                        | Action                          |
+| :--------------------------- | :--------------------------------------------- | :------------------------------ |
+| **Alt + I/J/K/L**            | ⬆️ ⬅️ ⬇️ ➡️                                    | **Core Directional Navigation** |
+| **Alt + U / O**              | **Home / End**                                 | **Line Boundaries**             |
+| **Alt + P / ;**              | **Del / Backspace**                            | **Instant Text Deletion**       |
+| **Alt + [ / '**              | **PgUp / PgDn**                                | **Document Paging**             |
+| **Ctrl + Alt + U/I/O/J/K/L** | **Ctrl + Shift + Home/Up/End/Left/Down/Right** | **Word/Text Selection (Free)**  |
+| **Ctrl + Alt + P / ;**        | **Ctrl + Del / Backspace**                     | **Word Delete / Bksp (Free)**   |
 
 </div>
 
@@ -114,7 +116,7 @@ Choose the edition that fits your professional workflow.
 KodeArrow is a scientifically validated ergonomic pattern. Our research lab uses real-time metrics to optimize the navigation workflow.
 
 <div align="center">
-<img src="research/outputs/visualizations/Accuracy Rate_3D_plot.png" width="550" alt="Accuracy Rate Research Plot">
+<img src="docs/research/outputs/visualizations/Accuracy Rate_3D_plot.png" width="550" alt="Accuracy Rate Research Plot">
 <br>
 <i>Figure 1: 3D Visualization of user accuracy across the Alt+IJKL navigation field.</i>
 </div>

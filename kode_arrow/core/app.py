@@ -104,6 +104,7 @@ This version introduces real-time hotkey remapping, a designer-grade sidebar das
 | Page Up / Page Down | Alt + [ / '                          | Yes           |
 | Word/Line Selection | Ctrl + Alt + U / I / O / J / K / L    | Yes (follows) |
 | (Selection Option)  | Ctrl + Both Alts + U/I/O/J/K/L       | Yes (follows) |
+| Word Delete / Bksp  | Ctrl + Alt + P / ;                   | Yes (follows) |
 
 ---
 
