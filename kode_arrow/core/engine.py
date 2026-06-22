@@ -128,6 +128,52 @@ class HotkeyEngine:
             self.updateData()
             keyboard.remove_hotkey(f'{self.modifier}+delete')
 
+    def _execute_selection(self, key_target):
+        alt_was_down = keyboard.is_pressed('alt') or keyboard.is_pressed('left alt') or keyboard.is_pressed('right alt')
+        left_alt_was_down = keyboard.is_pressed('left alt')
+        right_alt_was_down = keyboard.is_pressed('right alt')
+        
+        if left_alt_was_down:
+            pyautogui.keyUp('left alt')
+        if right_alt_was_down:
+            pyautogui.keyUp('right alt')
+        if alt_was_down and not (left_alt_was_down or right_alt_was_down):
+            pyautogui.keyUp('alt')
+            
+        pyautogui.hotkey('ctrl', 'shift', key_target)
+        
+        if left_alt_was_down:
+            pyautogui.keyDown('left alt')
+        if right_alt_was_down:
+            pyautogui.keyDown('right alt')
+        if alt_was_down and not (left_alt_was_down or right_alt_was_down):
+            pyautogui.keyDown('alt')
+            
+        self.updateData()
+
+    def select_word_left(self):
+        self._execute_selection('left')
+
+    def select_word_right(self):
+        self._execute_selection('right')
+
+    def select_text_up(self):
+        self._execute_selection('up')
+
+    def select_text_down(self):
+        self._execute_selection('down')
+
+    def select_text_home(self):
+        self._execute_selection('home')
+
+    def select_text_end(self):
+        self._execute_selection('end')
+
+    def handle_selection_combination(self, *keys):
+        for key in keys:
+            if key in self.selection_actions:
+                self.selection_actions[key]()
+
     def handle_combination(self, *keys):
         for key in keys:
             self.key_actions[key]()
@@ -211,6 +257,30 @@ class HotkeyEngine:
         if self.hk_backspace: keyboard.add_hotkey(f'{mod}+{self.hk_backspace}', self.backspace_key, suppress=True)
         if self.hk_pageup: keyboard.add_hotkey(f'{mod}+{self.hk_pageup}', self.page_up_key, suppress=True)
         if self.hk_pagedown: keyboard.add_hotkey(f'{mod}+{self.hk_pagedown}', self.page_down_key, suppress=True)
+
+        # Selection hotkeys (Ctrl + Alt + [u, i, o, j, k, l] and permutations)
+        selection_mods = [
+            "ctrl+alt",
+            "ctrl+left alt+right alt",
+            "ctrl+right alt+left alt"
+        ]
+        self.selection_actions = {
+            self.hk_home: self.select_text_home,
+            self.hk_up: self.select_text_up,
+            self.hk_end: self.select_text_end,
+            self.hk_left: self.select_word_left,
+            self.hk_down: self.select_text_down,
+            self.hk_right: self.select_word_right
+        }
+        self.selection_keys = [k for k in [self.hk_home, self.hk_up, self.hk_end, self.hk_left, self.hk_down, self.hk_right] if k]
+
+        for mod_prefix in selection_mods:
+            for key in self.selection_keys:
+                keyboard.add_hotkey(f'{mod_prefix}+{key}', self.handle_selection_combination, args=(key,), suppress=True)
+            for combo in itertools.permutations(self.selection_keys, 2):
+                keyboard.add_hotkey(f'{mod_prefix}+{combo[0]}+{combo[1]}', self.handle_selection_combination, args=combo, suppress=True)
+            for combo in itertools.permutations(self.selection_keys, 3):
+                keyboard.add_hotkey(f'{mod_prefix}+{combo[0]}+{combo[1]}+{combo[2]}', self.handle_selection_combination, args=combo, suppress=True)
 
         if not self._is_hooked:
             keyboard.hook(self.increment_total_keyStrokes)
