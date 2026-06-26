@@ -37,3 +37,8 @@
 - [ ] Import checks for both editions.
 - [ ] Manual smoke tests: tray, hotkeys, unlock flow, telemetry batching.
 
+## Phase 6 — Release (To Be Done by User)
+- [ ] Run & manually verify selection / word actions (`Ctrl+Alt`, `Alt+Ctrl` and both Alts + Ctrl).
+- [ ] Build the application to executable (`python infrastructure/build/build.py`).
+- [ ] Deploy the new build executable to the release channel.
+
