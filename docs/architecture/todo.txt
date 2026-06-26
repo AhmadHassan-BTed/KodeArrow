@@ -1,3 +1,8 @@
-- The functionality of selecting words/lines using Ctrl + Alt + [u,i,o,j,k,l] (and with both Alts simultaneously) has been added in KodeArrow.
-- This has been documented in README.md, docs/architecture/README.txt, KodeArrow.txt, and the startup popup of KodeArrow.
-Status: Completed.
+- Word/Line Selection and Word Actions (Delete/Backspace word) are fully implemented.
+- Modifier combinations (Ctrl + Alt, Alt + Ctrl, and both Alts + Ctrl) are registered in HotkeyEngine.
+- All documentation and popup instructions have been updated to match.
+- Left to do for user:
+  1. Run the application to test the keys.
+  2. Build the application to executable (.exe).
+  3. Deploy the built executable to the release channel.
+Status: Implementation Completed. Pending release verification and build.
