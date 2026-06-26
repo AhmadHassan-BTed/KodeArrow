@@ -290,8 +290,11 @@ class HotkeyEngine:
         # Selection hotkeys (Ctrl + Alt + [u, i, o, j, k, l] and permutations)
         selection_mods = [
             "ctrl+alt",
+            "alt+ctrl",
             "ctrl+left alt+right alt",
-            "ctrl+right alt+left alt"
+            "ctrl+right alt+left alt",
+            "left alt+right alt+ctrl",
+            "right alt+left alt+ctrl"
         ]
         self.selection_actions = {
             self.hk_home: self.select_text_home,
