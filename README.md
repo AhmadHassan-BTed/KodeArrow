@@ -13,7 +13,7 @@
 [![Architecture: Tiered Mono-Repo](https://img.shields.io/badge/Architecture-Mono--Repo-green.svg)](#architecture-overview)
 [![Build: Local Engine](https://img.shields.io/badge/Build-Local_Engine-blue.svg)](#build--deployment-flow)
 <br><br>
-[🌐 Official Website](https://ahmadhassan-bted.github.io/KodeArrow/) • [📂 Key Features](#-key-features) • [🚀 Quick Start](#-quick-start)
+[ Official Website](https://ahmadhassan-bted.github.io/KodeArrow/) • [ Key Features](#-key-features) • [ Quick Start](#-quick-start)
 
 ---
 
@@ -26,7 +26,7 @@ It bridges the gap between hardware input and fluid navigation, enabling a seaml
 
 ---
 
-## 📖 The Vision & Philosophy
+##  The Vision & Philosophy
 
 > "Navigation should be an extension of thought, not a physical strain."
 > — **Ahmad Hassan (B-Ted)**
@@ -35,17 +35,17 @@ Navigation inefficiency is often ignored until it causes physical fatigue. KodeA
 
 ---
 
-## ⌨️ The Ergonomic Suite
+## ⌨ The Ergonomic Suite
 
 KodeArrow provides a complete document control system without leaving the home row.
 
 <div align="center">
 
-### 🧭 Navigation & Editing
+###  Navigation & Editing
 
 | Key                          | Mapping                                        | Action                          |
 | :--------------------------- | :--------------------------------------------- | :------------------------------ |
-| **Alt + I/J/K/L**            | ⬆️ ⬅️ ⬇️ ➡️                                    | **Core Directional Navigation** |
+| **Alt + I/J/K/L**            | ⬆ ⬅ ⬇                                     | **Core Directional Navigation** |
 | **Alt + U / O**              | **Home / End**                                 | **Line Boundaries**             |
 | **Alt + P / ;**              | **Del / Backspace**                            | **Instant Text Deletion**       |
 | **Alt + [ / '**              | **PgUp / PgDn**                                | **Document Paging**             |
@@ -54,7 +54,7 @@ KodeArrow provides a complete document control system without leaving the home r
 
 </div>
 
-### 🎨 Visual Mapping Overview
+###  Visual Mapping Overview
 
 <div align="center">
 
@@ -69,7 +69,7 @@ KodeArrow provides a complete document control system without leaving the home r
 
 ---
 
-## 📊 Edition Comparison
+##  Edition Comparison
 
 Choose the edition that fits your professional workflow.
 
@@ -83,25 +83,25 @@ Choose the edition that fits your professional workflow.
 
 ---
 
-## 🔓 Universal Community License
+##  Universal Community License
 
 > [!TIP]
 >
-> ### 🌟 Join the Ergonomic Revolution
+> ###  Join the Ergonomic Revolution
 >
 > To support developers, students, and ergonomic enthusiasts worldwide, we have created an open **Universal Activation Email** that unlocks the complete premium suite of **KodeArrow** forever!
 
 <div align="center">
 
-| 📧 Community Key                    | `freeforever@kodearrow.dev`                  |
+|  Community Key                    | `freeforever@kodearrow.dev`                  |
 | :---------------------------------- | :------------------------------------------- |
 | **Status**                          | 🟢 **Active & Lifetime**                     |
-| **Allowed Devices**                 | ♾️ **Unlimited Connections**                 |
-| **Ergonomic Research Contribution** | 📊 **Active (Anonymous Telemetry Tracking)** |
+| **Allowed Devices**                 |  **Unlimited Connections**                 |
+| **Ergonomic Research Contribution** |  **Active (Anonymous Telemetry Tracking)** |
 
 </div>
 
-### ✨ Why Use the Community Key?
+###  Why Use the Community Key?
 
 - **Zero Limits**: Bypasses the standard 4-device hardware restriction entirely. Use it across all of your personal and work machines.
 - **Contribute to Science**: By using this license, your app automatically registers device stats and anonymous telemetry to our database. You are directly contributing data to our ergonomic research and helping shape the future of human-computer interaction!
@@ -111,7 +111,7 @@ Choose the edition that fits your professional workflow.
 
 ---
 
-## 🧪 Scientific Validation
+##  Scientific Validation
 
 KodeArrow is a scientifically validated ergonomic pattern. Our research lab uses real-time metrics to optimize the navigation workflow.
 
@@ -123,7 +123,7 @@ KodeArrow is a scientifically validated ergonomic pattern. Our research lab uses
 
 ---
 
-## ⚙️ Execution & Compilation
+##  Execution & Compilation
 
 KodeArrow uses a standardized entry point system for both execution and distribution.
 
@@ -154,7 +154,7 @@ python -m pytest
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 New people are welcomed to participate in development.
 
@@ -183,7 +183,7 @@ New people are welcomed to participate in development.
 
 ---
 
-## 🛠️ Build & Deployment Flow
+##  Build & Deployment Flow
 
 The project utilizes a high-performance local build engine to ensure consistent, secure binaries for end-users.
 
@@ -201,7 +201,7 @@ graph LR
 
 ---
 
-## 🏗️ Architecture Overview
+##  Architecture Overview
 
 The system follows a **Tiered Mono-Repo** structure, ensuring zero coupling between the product core and research utilities.
 
@@ -224,7 +224,7 @@ graph TD
 
 ---
 
-## 🔄 Request Lifecycle
+##  Request Lifecycle
 
 How a single hotkey press travels through the layers of KodeArrow.
 

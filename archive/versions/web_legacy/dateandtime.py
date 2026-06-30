@@ -19,4 +19,4 @@ import customtkinter as ctk
 
 
 
-showMessage_subscriptionEnded("your Subscription Period has ended :(\nThank you for joining us 💙 and hope you enjoyed it!\n\nPlase renew your subsription, and enjoy premium services again")
+showMessage_subscriptionEnded("your Subscription Period has ended :(\nThank you for joining us  and hope you enjoyed it!\n\nPlase renew your subsription, and enjoy premium services again")

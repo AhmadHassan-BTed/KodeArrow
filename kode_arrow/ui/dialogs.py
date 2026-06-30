@@ -111,9 +111,9 @@ class UIWindowManager:
 
         message = (
             "Thank you for using KodeArrow, a product of ByTed Technologies\n\n"
-            "Alt + I\n(Arrow 🔒 Up)\n\n"
+            "Alt + I\n(Arrow  [SECURE]  Up)\n\n"
             "Alt + J\t\t\t\tAlt + L\n(Arrow Left)\t\t\t(Arrow Right)\n\n"
-            "Alt + K\n(Arrow 🔒 Down)\n\n"
+            "Alt + K\n(Arrow  [SECURE]  Down)\n\n"
             "\"Right click KodeArrow icon in System Tray to access menu\"\nNote: Please buy Premium version to unlock locked keys"
         )
         messageUnlocked = (
@@ -144,8 +144,8 @@ class UIWindowManager:
         labelUnlocked = CTkLabel(master=frame1, text=messageUnlocked, bg_color="white", text_color="black", font=("Bahnschrift", 12))
         showMore = CTkLabel(master=frame1, text=showMoreMessage, bg_color="white", text_color="black", font=("Bahnschrift", 12))
         btn = CTkButton(master=frame1, text="Ok", width=90, height=35, corner_radius=7, fg_color="#00207f", hover_color="#00134c", bg_color="white", command=closeWindow)
-        btnShowMore = CTkButton(master=frame1, text="➜", width=30, height=15, corner_radius=1, fg_color="white",text_color="#00207f", hover_color="white", bg_color="white", command=changeMessage, font=("Arial", 24))
-        showLock = ctk.CTkLabel( master=frame1, text="🔒", bg_color="transparent", text_color="#00207f", font=("Bahnschrif", 50, "bold"))
+        btnShowMore = CTkButton(master=frame1, text="", width=30, height=15, corner_radius=1, fg_color="white",text_color="#00207f", hover_color="white", bg_color="white", command=changeMessage, font=("Arial", 24))
+        showLock = ctk.CTkLabel( master=frame1, text=" [SECURE] ", bg_color="transparent", text_color="#00207f", font=("Bahnschrif", 50, "bold"))
         padlockText = ctk.CTkLabel( master=frame1, text="These services are premium locked", bg_color="transparent", text_color="black", font=("Bahnschrif", 12, "bold"))
 
         frame1.pack(fill=BOTH, expand=True)

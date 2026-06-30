@@ -403,9 +403,9 @@ def show_results_with_guesses(guesses):
         result_message += f"{stat_names[stat_key]}: Guessed {guessed_value} | Actual {actual_value}"
         
         if difference == 0:
-            result_message += " ✓ Perfect!\n"
+            result_message += "  Perfect!\n"
         elif difference <= 2:
-            result_message += " ✓ Very close!\n"
+            result_message += "  Very close!\n"
         elif difference <= 5:
             result_message += " ~ Close\n"
         else:
@@ -418,8 +418,8 @@ def show_results_with_guesses(guesses):
     result_message += f"\nOverall Guess Accuracy: {overall_guess_accuracy:.1f}%\n\n"
     
     # Add reward message at the bottom
-    result_message += "🎉 CONGRATULATIONS! 🎉\n\n"
-    result_message += "🎁 SPECIAL REWARD FOR PARTICIPATING 🎁\n\n"
+    result_message += " [SUCCESS]  CONGRATULATIONS!  [SUCCESS] \n\n"
+    result_message += " SPECIAL REWARD FOR PARTICIPATING \n\n"
     result_message += "LIFETIME FREE MEMBERSHIP!\n\n"
     result_message += "Software: KodeArrow\n"
     result_message += "Membership ID: rp01@kodeArrow.com\n"

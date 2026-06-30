@@ -191,7 +191,7 @@ def create_styled_warning(title, message):
     title_frame.pack(pady=(0, 20))
     
     # Warning symbol
-    warning_label = tk.Label(title_frame, text="⚠️", font=('Helvetica', 24), bg='white')
+    warning_label = tk.Label(title_frame, text=" [WARNING] ", font=('Helvetica', 24), bg='white')
     warning_label.pack(side=tk.LEFT, padx=(0, 10))
     
     title_label = tk.Label(title_frame, text=title, 
@@ -460,7 +460,7 @@ def show_guessing_dialog():
     header_frame.pack(fill=tk.X, pady=(0, 20))
     
     # Emoji and title
-    emoji_label = tk.Label(header_frame, text="🤔", font=('Helvetica', 28), bg='white')
+    emoji_label = tk.Label(header_frame, text="", font=('Helvetica', 28), bg='white')
     emoji_label.pack()
     
     title_label = tk.Label(header_frame, text="Before seeing your results...", 
@@ -626,9 +626,9 @@ def show_results_with_guesses(guesses):
         result_message += f"{stat_names[stat_key]}: Guessed {guessed_value} | Actual {actual_value}"
         
         if difference == 0:
-            result_message += " ✓ Perfect!\n"
+            result_message += "  Perfect!\n"
         elif difference <= 2:
-            result_message += " ✓ Very close!\n"
+            result_message += "  Very close!\n"
         elif difference <= 5:
             result_message += " ~ Close\n"
         else:
@@ -640,7 +640,7 @@ def show_results_with_guesses(guesses):
     overall_guess_accuracy = total_accuracy / guess_count if guess_count > 0 else 0
     result_message += f"\nOverall Guess Accuracy: {overall_guess_accuracy:.1f}%\n\n"
     
-    create_styled_messagebox("🏆 Test Results & Your Guesses", result_message)
+    create_styled_messagebox(" Test Results & Your Guesses", result_message)
 
 def main():
     global text_field, start_button, platform_combo, expected_text_widget
