@@ -22,7 +22,7 @@ def showMessage():
     message = (
         "Thank you for using KodeArrow, a project of ByTed Technologies\n\n\n"
         "Alt + I\n(Arrow Up)\n\n"
-        "Alt + J\t\t\t\tAlt + L\n(Arrow 🔒 Left)\t\t\t(Arrow 🔒 Right)\n\n"
+        "Alt + J\t\t\t\tAlt + L\n(Arrow  [SECURE]  Left)\t\t\t(Arrow  [SECURE]  Right)\n\n"
         "Alt + K\n(Arrow Down)\n\n\n"
         "Note: Please buy Premium version to unlock locked keys"
     )

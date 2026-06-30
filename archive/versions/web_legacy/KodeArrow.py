@@ -190,11 +190,11 @@ def validate_email_info_of_the_user():
                         return
                     else:
                         print("Email exists but the subscription period has expired. Deleting premium file.")
-                        showMessage_subscriptionEnded("your Subscription Period has ended :(\nThank you for joining us 💙 and hope you enjoyed it!\n\nPlase renew your subsription, and enjoy premium services again")
+                        showMessage_subscriptionEnded("your Subscription Period has ended :(\nThank you for joining us  and hope you enjoyed it!\n\nPlase renew your subsription, and enjoy premium services again")
                         os.remove(premium_file_path)
                 else:
                     print("Subscription date not found in Firestore. Deleting premium file.")
-                    showMessage_subscriptionEnded("your Subscription Period has ended :(\nThank you for joining us 💙 and hope you enjoyed it!\n\nPlase renew your subsription, and enjoy premium services again")
+                    showMessage_subscriptionEnded("your Subscription Period has ended :(\nThank you for joining us  and hope you enjoyed it!\n\nPlase renew your subsription, and enjoy premium services again")
                     os.remove(premium_file_path)
             else:
                 print("Email does not exist in the Firestore database. Deleting premium file.")
@@ -238,9 +238,9 @@ def showMessage():
 
     message = (
         "Thank you for using KodeArrow, a product of ByTed Technologies\n\n"
-        "Alt + I\n(Arrow 🔒 Up)\n\n"
+        "Alt + I\n(Arrow  [SECURE]  Up)\n\n"
         "Alt + J\t\t\t\tAlt + L\n(Arrow Left)\t\t\t(Arrow Right)\n\n"
-        "Alt + K\n(Arrow 🔒 Down)\n\n"
+        "Alt + K\n(Arrow  [SECURE]  Down)\n\n"
         "\"Right click KodeArrow icon in System Tray to access menu\"\nNote: Please buy Premium version to unlock locked keys"
     )
 
@@ -443,7 +443,7 @@ For User:
         # Compare dates
         if today >= one_year_later:
             print("Email exists but the subscription period has expired. Deleting premium file.")
-            showMessage_subscriptionEnded("your Subscription Period has ended :(\nThank you for joining us 💙 and hope you enjoyed it!\n\nPlase renew your subsription, and enjoy premium services again")
+            showMessage_subscriptionEnded("your Subscription Period has ended :(\nThank you for joining us  and hope you enjoyed it!\n\nPlase renew your subsription, and enjoy premium services again")
             return False
 
         hardware_exists = False

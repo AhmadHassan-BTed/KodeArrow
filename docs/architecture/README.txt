@@ -1,6 +1,6 @@
 KodeArrow- Move less, Type fast, Code Seamlessly.
 
-Welcome to KodeArrow! 🚀
+Welcome to KodeArrow!  [START] 
 
 Note: Please buy Premium at (ahmadhassan-bted.github.io/KodeArrow/) to unlock Up/Down Keyboard shortcut accessibility.
 

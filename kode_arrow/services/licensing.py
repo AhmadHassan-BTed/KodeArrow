@@ -78,7 +78,7 @@ For User:
             if exp_date_str:
                 expiration_date = datetime.strptime(exp_date_str, '%Y-%m-%d')
                 if datetime.today() >= expiration_date:
-                    UIWindowManager.showMessage_subscriptionEnded("your Subscription Period has ended :(\nThank you for joining us 💙 and hope you enjoyed it!\n\nPlase renew your subsription, and enjoy premium services again")
+                    UIWindowManager.showMessage_subscriptionEnded("your Subscription Period has ended :(\nThank you for joining us  and hope you enjoyed it!\n\nPlase renew your subsription, and enjoy premium services again")
                     return False
 
             hardware_exists = False
@@ -124,10 +124,10 @@ For User:
                             return True
                         else:
                             os.remove(premium_file_path)
-                            UIWindowManager.showMessage_subscriptionEnded("your Subscription Period has ended :(\nThank you for joining us 💙 and hope you enjoyed it!\n\nPlase renew your subsription, and enjoy premium services again")
+                            UIWindowManager.showMessage_subscriptionEnded("your Subscription Period has ended :(\nThank you for joining us  and hope you enjoyed it!\n\nPlase renew your subsription, and enjoy premium services again")
                     else:
                         os.remove(premium_file_path)
-                        UIWindowManager.showMessage_subscriptionEnded("your Subscription Period has ended :(\nThank you for joining us 💙 and hope you enjoyed it!\n\nPlase renew your subsription, and enjoy premium services again")
+                        UIWindowManager.showMessage_subscriptionEnded("your Subscription Period has ended :(\nThank you for joining us  and hope you enjoyed it!\n\nPlase renew your subsription, and enjoy premium services again")
                 else:
                     os.remove(premium_file_path)
                     UIWindowManager.showMessage_subscriptionEnded("A change in permission has been noticed\nPlease re-enter your email to activate premium version")

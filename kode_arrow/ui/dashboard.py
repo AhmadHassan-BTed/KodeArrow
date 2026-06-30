@@ -142,16 +142,16 @@ class DashboardWindow:
             return THEMES[mode["v"]][key]
 
         ICO = {
-            "nav_overview_inactive": _load_emoji_icon("🏠", 16),
-            "nav_overview_active":   _load_emoji_icon("🏠", 16),
-            "nav_shortcuts_inactive":_load_emoji_icon("⌨️", 16),
-            "nav_shortcuts_active":  _load_emoji_icon("⌨️", 16),
-            "sun":                   _load_emoji_icon("☀️", 16),
-            "moon":                  _load_emoji_icon("🌙", 16),
-            "globe":                 _load_emoji_icon("🌐", 15),
-            "power":                 _load_emoji_icon("🚪", 15),
-            "shield":                _load_emoji_icon("🛡️", 20),
-            "rocket":                _load_emoji_icon("🚀", 20),
+            "nav_overview_inactive": _load_emoji_icon("", 16),
+            "nav_overview_active":   _load_emoji_icon("", 16),
+            "nav_shortcuts_inactive":_load_emoji_icon("⌨", 16),
+            "nav_shortcuts_active":  _load_emoji_icon("⌨", 16),
+            "sun":                   _load_emoji_icon("", 16),
+            "moon":                  _load_emoji_icon("", 16),
+            "globe":                 _load_emoji_icon("", 15),
+            "power":                 _load_emoji_icon("", 15),
+            "shield":                _load_emoji_icon("", 20),
+            "rocket":                _load_emoji_icon(" [START] ", 20),
         }
         def ico(key):
             """Return the CTkImage for the current theme mode."""
@@ -673,7 +673,7 @@ class DashboardWindow:
             for _, alt_w, _ in entry_widgets:
                 alt_w.configure(text=f"{new_mod} +")
                 
-            save_btn.configure(text="✓  Saved")
+            save_btn.configure(text="  Saved")
             app.after(2200, lambda: save_btn.configure(text="Save Preferences"))
 
         def reset_hotkeys():
@@ -695,7 +695,7 @@ class DashboardWindow:
             for _, alt_w, _ in entry_widgets:
                 alt_w.configure(text=f"{default_mod} +")
                 
-            reset_btn.configure(text="✓  Reset Done")
+            reset_btn.configure(text="  Reset Done")
             app.after(2200, lambda: reset_btn.configure(text="Reset to Defaults"))
 
         reset_btn = CTkButton(
