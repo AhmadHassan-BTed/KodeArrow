@@ -33,3 +33,8 @@ Thank you for your interest in contributing to KodeArrow! We welcome contributio
 
 ---
 By contributing, you agree that your contributions will be licensed under the project's MIT License.
+
+## Code Style
+- Follow PEP 8 guidelines
+- Use type hints for all function signatures
+- Write docstrings for public methods
