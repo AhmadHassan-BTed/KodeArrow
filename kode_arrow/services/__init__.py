@@ -1,1 +1,1 @@
-"""Services module."""
+"""Service modules for KodeArrow including licensing and telemetry."""
