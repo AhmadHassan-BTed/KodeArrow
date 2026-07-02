@@ -36,8 +36,8 @@ class TelemetryService:
                         file.write(f"{0}\n{0}\n{0}\n")
                 
                 add_hidden_attribute(self.usage_file)
-            except Exception as e:
-                logger.warning(f"Failed to upload data from file '{self.usage_file}': {e}")
+            except Exception:
+                pass  # Non-critical telemetry — silently ignore
 
         thread = threading.Thread(target=target_function, daemon=True)
         thread.start()
