@@ -42,3 +42,9 @@
 - [ ] Build the application to executable (`python infrastructure/build/build.py`).
 - [ ] Deploy the new build executable to the release channel.
 
+
+## v2.5.1 Completed
+- [x] Fix Firestore timeout killing the app
+- [x] Add missing handle_selection_combination method
+- [x] Fix WNDCLASSW Python 3.13 compatibility
+- [x] Silence non-critical telemetry warnings
