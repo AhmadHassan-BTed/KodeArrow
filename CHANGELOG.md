@@ -64,3 +64,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial release with basic Alt-key hotkeys.
 - System tray integration.
+
+## [2.5.1] - 2026-07-02
+### Fixed
+- Firestore timeout no longer kills the app
+- Added missing handle_selection_combination method
+- Fixed WNDCLASSW compatibility with Python 3.13
+- Silenced non-critical telemetry warnings
