@@ -191,10 +191,7 @@ Ahmad Hassan (B-Ted)
             try:
                 await asyncio.wait_for(asyncio.get_running_loop().run_in_executor(executor, self.statup_configuration), timeout=30)
             except asyncio.TimeoutError:
-                messagebox.showinfo("Error", "The current version has expired\nPlease update KodeArrow to the newest version")
-                if os.path.exists(self.premium_file_path):
-                    os.remove(self.premium_file_path)
-                os._exit(0)
+                logger.warning("Firestore version check timed out after 30s — continuing normally")
 
     def start_check_and_update(self):
         loop = asyncio.new_event_loop()
