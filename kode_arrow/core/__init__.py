@@ -1,1 +1,1 @@
-"""Core Module."""
+"""Core modules for KodeArrow application logic."""
