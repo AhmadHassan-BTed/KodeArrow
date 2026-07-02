@@ -1,1 +1,1 @@
-"""Configuration module."""
+"""Configuration modules for KodeArrow settings and preferences."""
