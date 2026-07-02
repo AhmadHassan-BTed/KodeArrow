@@ -1,1 +1,1 @@
-"""UI Module."""
+"""UI modules for KodeArrow dashboard and dialogs."""
