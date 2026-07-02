@@ -239,7 +239,7 @@ class PowerEventListener(threading.Thread):
         try:
             self._run_message_loop()
         except Exception:
-            logger.exception("PowerEventListener failed — power events will not be monitored")
+            pass  # Non-critical feature — silently ignore
 
     def _run_message_loop(self):
         """Win32 message loop for power events."""
@@ -248,58 +248,73 @@ class PowerEventListener(threading.Thread):
         user32 = ctypes.windll.user32
         kernel32 = ctypes.windll.kernel32
 
-        # Define WNDPROC callback type
+        # Define WNDPROC callback type (WPARAM=UINT_PTR, LPARAM=LONG_PTR)
         WNDPROCTYPE = ctypes.WINFUNCTYPE(
             ctypes.c_long,  # LRESULT
             ctypes.c_void_p,  # HWND
-            ctypes.c_uint,  # UINT
-            ctypes.c_void_p,  # WPARAM
-            ctypes.c_void_p,  # LPARAM
+            ctypes.c_uint,  # UINT (msg)
+            ctypes.c_uint,  # WPARAM
+            ctypes.c_long,  # LPARAM
         )
 
         def wnd_proc(hwnd, msg, wparam, lparam):
             if msg == self.WM_POWERBROADCAST:
-                wparam_val = wparam if isinstance(wparam, int) else ctypes.cast(wparam, ctypes.c_void_p).value or 0
-                if wparam_val in (self.PBT_APMRESUMEAUTOMATIC, self.PBT_APMRESUMESUSPEND):
-                    logger.info("Power event: RESUME detected (wparam=0x%04X)", wparam_val)
-                    # Fire the callback on a separate thread to not block the msg loop
+                if wparam in (self.PBT_APMRESUMEAUTOMATIC, self.PBT_APMRESUMESUSPEND):
+                    logger.info("Power event: RESUME detected (wparam=0x%04X)", wparam)
                     threading.Thread(
                         target=self._safe_resume_callback,
                         name="KodeArrow-PowerResume",
                         daemon=True
                     ).start()
-                elif wparam_val == self.PBT_APMSUSPEND:
+                elif wparam == self.PBT_APMSUSPEND:
                     logger.info("Power event: SUSPEND detected")
             return user32.DefWindowProcW(hwnd, msg, wparam, lparam)
 
         # Keep a reference to prevent garbage collection
         self._wnd_proc = WNDPROCTYPE(wnd_proc)
 
+        # Define WNDCLASSW manually (removed from ctypes.wintypes in Python 3.13)
+        class WNDCLASSW(ctypes.Structure):
+            _fields_ = [
+                ("style", ctypes.c_uint),
+                ("lpfnWndProc", ctypes.c_void_p),
+                ("cbClsExtra", ctypes.c_int),
+                ("cbWndExtra", ctypes.c_int),
+                ("hInstance", ctypes.c_void_p),
+                ("hIcon", ctypes.c_void_p),
+                ("hCursor", ctypes.c_void_p),
+                ("hbrBackground", ctypes.c_void_p),
+                ("lpszMenuName", ctypes.c_wchar_p),
+                ("lpszClassName", ctypes.c_wchar_p),
+            ]
+
         # Register window class
         class_name = "KodeArrowPowerListener"
-        wndclass = wintypes.WNDCLASSW()
-        wndclass.lpfnWndProc = self._wnd_proc
+        wndclass = WNDCLASSW()
+        wndclass.style = 0
+        wndclass.lpfnWndProc = ctypes.cast(self._wnd_proc, ctypes.c_void_p).value
+        wndclass.cbClsExtra = 0
+        wndclass.cbWndExtra = 0
         wndclass.hInstance = kernel32.GetModuleHandleW(None)
+        wndclass.hIcon = None
+        wndclass.hCursor = None
+        wndclass.hbrBackground = None
+        wndclass.lpszMenuName = None
         wndclass.lpszClassName = class_name
 
         atom = user32.RegisterClassW(ctypes.byref(wndclass))
         if not atom:
-            logger.error("Failed to register power listener window class (error %d)", kernel32.GetLastError())
             return
 
-        # Create message-only window (HWND_MESSAGE parent)
-        HWND_MESSAGE = ctypes.c_void_p(-3)
+        # Create message-only window (HWND_MESSAGE parent = (HWND)-3)
         self._hwnd = user32.CreateWindowExW(
             0, class_name, "KodeArrow Power Monitor",
             0, 0, 0, 0, 0,
-            HWND_MESSAGE, None, kernel32.GetModuleHandleW(None), None
+            ctypes.c_void_p(-3), None, kernel32.GetModuleHandleW(None), None
         )
 
         if not self._hwnd:
-            logger.error("Failed to create power listener window (error %d)", kernel32.GetLastError())
             return
-
-        logger.info("PowerEventListener active (hwnd=%s)", self._hwnd)
 
         # Message pump
         msg = wintypes.MSG()
