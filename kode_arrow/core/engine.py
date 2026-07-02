@@ -198,6 +198,11 @@ class HotkeyEngine:
     def delete_word(self):
         self._execute_word_action('delete')
 
+    def handle_selection_combination(self, *keys):
+        for key in keys:
+            if key in self.selection_actions:
+                self.selection_actions[key]()
+
     def handle_word_combination(self, *keys):
         for key in keys:
             if key in self.word_actions:
