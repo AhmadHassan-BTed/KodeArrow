@@ -18,3 +18,6 @@ We take the security of KodeArrow seriously. If you discover a security vulnerab
 
 ## Hardcoded Credentials
 If you find any hardcoded credentials in historical commits, please note that these have been revoked and replaced with environment variable configurations in Version 2.5.0+.
+
+## Reporting Vulnerabilities
+Report vulnerabilities to the project maintainer directly via email.
