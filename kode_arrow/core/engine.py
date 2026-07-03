@@ -25,10 +25,18 @@ class HotkeyEngine:
         self._reload_lock = threading.Lock()
         self._last_hook_activity = time.time()
         self._during_simulation = False
+        self._last_simulation_time = 0
         
         pyautogui.PAUSE = 0.000001
         
         self.load_prefs()
+
+    def is_simulating(self):
+        if getattr(self, '_during_simulation', False):
+            return True
+        if time.time() - getattr(self, '_last_simulation_time', 0) < 0.2:
+            return True
+        return False
 
     def load_prefs(self):
         prefs_data = UserPrefs.load()
@@ -209,6 +217,7 @@ class HotkeyEngine:
                 
             self.updateData()
         finally:
+            self._last_simulation_time = time.time()
             self._during_simulation = False
             logger.debug("[_execute_selection] END")
 
@@ -271,6 +280,7 @@ class HotkeyEngine:
                 
             self.updateData()
         finally:
+            self._last_simulation_time = time.time()
             self._during_simulation = False
             logger.debug("[_execute_word_action] END")
 
@@ -318,14 +328,15 @@ class HotkeyEngine:
             threading.Thread(target=bg_calc, daemon=True).start()
 
     def increment_total_keyStrokes(self, event):
-        logger.debug(f"[Hook Event] event_type={event.event_type!r}, name={event.name!r}, scan={event.scan_code}, during_sim={getattr(self, '_during_simulation', False)}")
+        during_sim = self.is_simulating()
+        logger.debug(f"[Hook Event] event_type={event.event_type!r}, name={event.name!r}, scan={event.scan_code}, during_sim={during_sim}")
         if event.event_type == 'down':
             self._last_hook_activity = time.time()
             self.calculate_user_data()
         elif event.event_type == 'up':
             # Check if this is a physical keyUp event for the modifier key (e.g. alt)
             # when we are not actively simulating keypresses inside an action
-            if not getattr(self, '_during_simulation', False):
+            if not during_sim:
                 mod = (self.modifier or 'alt').lower()
                 modifier_variants = {mod}
                 if 'alt' in mod:
@@ -339,6 +350,7 @@ class HotkeyEngine:
                 
                 if event.name in modifier_variants:
                     self._during_simulation = True
+                    self._last_simulation_time = time.time()
                     try:
                         logger.debug(f"Physical release of modifier '{event.name}' detected; clearing virtual states.")
                         for var in modifier_variants:
@@ -348,6 +360,7 @@ class HotkeyEngine:
                             except Exception as e:
                                 logger.warning(f"Error during safety release of {var}: {e}")
                     finally:
+                        self._last_simulation_time = time.time()
                         self._during_simulation = False
 
     def is_hook_alive(self):
