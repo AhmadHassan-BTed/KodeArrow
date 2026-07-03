@@ -1,3 +1,5 @@
+import sys
+import ctypes
 import itertools
 import keyboard
 import pyautogui
@@ -9,6 +11,27 @@ from kode_arrow.utils.network import check_internet_connection
 from kode_arrow.config.user_prefs import UserPrefs
 
 logger = logging.getLogger("KodeArrow.Engine")
+
+vk_map = {
+    'alt': 0x12,
+    'left alt': 0xA4,
+    'right alt': 0xA5,
+    'ctrl': 0x11,
+    'control': 0x11,
+    'left ctrl': 0xA2,
+    'left control': 0xA2,
+    'right ctrl': 0xA3,
+    'right control': 0xA3,
+    'shift': 0x10,
+    'left shift': 0xA0,
+    'right shift': 0xA1,
+    'win': 0x5B,
+    'windows': 0x5B,
+    'left win': 0x5B,
+    'left windows': 0x5B,
+    'right win': 0x5C,
+    'right windows': 0x5C,
+}
 
 
 class HotkeyEngine:
@@ -34,6 +57,18 @@ class HotkeyEngine:
         prefs_data = UserPrefs.load()
         prefs = prefs_data["hotkeys"]
         self.modifier = prefs_data.get("modifier", "alt")
+        
+        # Pre-calculate modifier variants for fast lookup in key hooks
+        mod = (self.modifier or 'alt').lower()
+        self._modifier_variants = {mod}
+        if 'alt' in mod:
+            self._modifier_variants.update(('alt', 'left alt', 'right alt'))
+        elif 'ctrl' in mod or 'control' in mod:
+            self._modifier_variants.update(('ctrl', 'left ctrl', 'right ctrl', 'control', 'left control', 'right control'))
+        elif 'shift' in mod:
+            self._modifier_variants.update(('shift', 'left shift', 'right shift'))
+        elif 'win' in mod or 'super' in mod or 'meta' in mod:
+            self._modifier_variants.update(('windows', 'left windows', 'right windows', 'win', 'left win', 'right win'))
         
         self.hk_up = prefs.get("up", "i")
         self.hk_down = prefs.get("down", "k")
@@ -130,33 +165,11 @@ class HotkeyEngine:
             keyboard.remove_hotkey(f'{self.modifier}+delete')
 
     def _is_physical_key_down(self, key_name):
-        import sys
         if sys.platform != 'win32':
             res = keyboard.is_pressed(key_name)
             logger.debug(f"[Physical Check] Non-Win32 key_name={key_name!r} is_down={res}")
             return res
         try:
-            import ctypes
-            vk_map = {
-                'alt': 0x12,
-                'left alt': 0xA4,
-                'right alt': 0xA5,
-                'ctrl': 0x11,
-                'control': 0x11,
-                'left ctrl': 0xA2,
-                'left control': 0xA2,
-                'right ctrl': 0xA3,
-                'right control': 0xA3,
-                'shift': 0x10,
-                'left shift': 0xA0,
-                'right shift': 0xA1,
-                'win': 0x5B,
-                'windows': 0x5B,
-                'left win': 0x5B,
-                'left windows': 0x5B,
-                'right win': 0x5C,
-                'right windows': 0x5C,
-            }
             vk = vk_map.get(key_name.lower())
             if vk is not None:
                 res = bool(ctypes.windll.user32.GetAsyncKeyState(vk) & 0x8000)
@@ -330,22 +343,11 @@ class HotkeyEngine:
             # Check if this is a physical keyUp event for the modifier key (e.g. alt)
             # when we are not actively simulating keypresses inside an action
             if not is_simulated and not getattr(self, '_during_simulation', False):
-                mod = (self.modifier or 'alt').lower()
-                modifier_variants = {mod}
-                if 'alt' in mod:
-                    modifier_variants.update(('alt', 'left alt', 'right alt'))
-                elif 'ctrl' in mod or 'control' in mod:
-                    modifier_variants.update(('ctrl', 'left ctrl', 'right ctrl', 'control', 'left control', 'right control'))
-                elif 'shift' in mod:
-                    modifier_variants.update(('shift', 'left shift', 'right shift'))
-                elif 'win' in mod or 'super' in mod or 'meta' in mod:
-                    modifier_variants.update(('windows', 'left windows', 'right windows', 'win', 'left win', 'right win'))
-                
-                if event.name in modifier_variants:
+                if event.name in getattr(self, '_modifier_variants', set()):
                     self._during_simulation = True
                     try:
                         logger.debug(f"Physical release of modifier '{event.name}' detected; clearing virtual states.")
-                        for var in modifier_variants:
+                        for var in self._modifier_variants:
                             try:
                                 logger.debug(f"Executing safety release: pyautogui.keyUp({var!r})")
                                 pyautogui.keyUp(var)
