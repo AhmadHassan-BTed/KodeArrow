@@ -24,6 +24,7 @@ class HotkeyEngine:
         self._is_hooked = False
         self._reload_lock = threading.Lock()
         self._last_hook_activity = time.time()
+        self._during_simulation = False
         
         pyautogui.PAUSE = 0.000001
         
@@ -129,27 +130,31 @@ class HotkeyEngine:
             keyboard.remove_hotkey(f'{self.modifier}+delete')
 
     def _execute_selection(self, key_target):
-        alt_was_down = keyboard.is_pressed('alt') or keyboard.is_pressed('left alt') or keyboard.is_pressed('right alt')
-        left_alt_was_down = keyboard.is_pressed('left alt')
-        right_alt_was_down = keyboard.is_pressed('right alt')
-        
-        if left_alt_was_down:
-            pyautogui.keyUp('left alt')
-        if right_alt_was_down:
-            pyautogui.keyUp('right alt')
-        if alt_was_down and not (left_alt_was_down or right_alt_was_down):
-            pyautogui.keyUp('alt')
+        self._during_simulation = True
+        try:
+            alt_was_down = keyboard.is_pressed('alt') or keyboard.is_pressed('left alt') or keyboard.is_pressed('right alt')
+            left_alt_was_down = keyboard.is_pressed('left alt')
+            right_alt_was_down = keyboard.is_pressed('right alt')
             
-        pyautogui.hotkey('ctrl', 'shift', key_target)
-        
-        if left_alt_was_down:
-            pyautogui.keyDown('left alt')
-        if right_alt_was_down:
-            pyautogui.keyDown('right alt')
-        if alt_was_down and not (left_alt_was_down or right_alt_was_down):
-            pyautogui.keyDown('alt')
+            if left_alt_was_down:
+                pyautogui.keyUp('left alt')
+            if right_alt_was_down:
+                pyautogui.keyUp('right alt')
+            if alt_was_down and not (left_alt_was_down or right_alt_was_down):
+                pyautogui.keyUp('alt')
+                
+            pyautogui.hotkey('ctrl', 'shift', key_target)
             
-        self.updateData()
+            if left_alt_was_down:
+                pyautogui.keyDown('left alt')
+            if right_alt_was_down:
+                pyautogui.keyDown('right alt')
+            if alt_was_down and not (left_alt_was_down or right_alt_was_down):
+                pyautogui.keyDown('alt')
+                
+            self.updateData()
+        finally:
+            self._during_simulation = False
 
     def select_word_left(self):
         self._execute_selection('left')
@@ -170,27 +175,31 @@ class HotkeyEngine:
         self._execute_selection('end')
 
     def _execute_word_action(self, key_target):
-        alt_was_down = keyboard.is_pressed('alt') or keyboard.is_pressed('left alt') or keyboard.is_pressed('right alt')
-        left_alt_was_down = keyboard.is_pressed('left alt')
-        right_alt_was_down = keyboard.is_pressed('right alt')
-        
-        if left_alt_was_down:
-            pyautogui.keyUp('left alt')
-        if right_alt_was_down:
-            pyautogui.keyUp('right alt')
-        if alt_was_down and not (left_alt_was_down or right_alt_was_down):
-            pyautogui.keyUp('alt')
+        self._during_simulation = True
+        try:
+            alt_was_down = keyboard.is_pressed('alt') or keyboard.is_pressed('left alt') or keyboard.is_pressed('right alt')
+            left_alt_was_down = keyboard.is_pressed('left alt')
+            right_alt_was_down = keyboard.is_pressed('right alt')
             
-        pyautogui.hotkey('ctrl', key_target)
-        
-        if left_alt_was_down:
-            pyautogui.keyDown('left alt')
-        if right_alt_was_down:
-            pyautogui.keyDown('right alt')
-        if alt_was_down and not (left_alt_was_down or right_alt_was_down):
-            pyautogui.keyDown('alt')
+            if left_alt_was_down:
+                pyautogui.keyUp('left alt')
+            if right_alt_was_down:
+                pyautogui.keyUp('right alt')
+            if alt_was_down and not (left_alt_was_down or right_alt_was_down):
+                pyautogui.keyUp('alt')
+                
+            pyautogui.hotkey('ctrl', key_target)
             
-        self.updateData()
+            if left_alt_was_down:
+                pyautogui.keyDown('left alt')
+            if right_alt_was_down:
+                pyautogui.keyDown('right alt')
+            if alt_was_down and not (left_alt_was_down or right_alt_was_down):
+                pyautogui.keyDown('alt')
+                
+            self.updateData()
+        finally:
+            self._during_simulation = False
 
     def backspace_word(self):
         self._execute_word_action('backspace')
@@ -237,8 +246,34 @@ class HotkeyEngine:
 
     def increment_total_keyStrokes(self, event):
         if event.event_type == 'down':
-             self._last_hook_activity = time.time()
-             self.calculate_user_data()
+            self._last_hook_activity = time.time()
+            self.calculate_user_data()
+        elif event.event_type == 'up':
+            # Check if this is a physical keyUp event for the modifier key (e.g. alt)
+            # when we are not actively simulating keypresses inside an action
+            if not getattr(self, '_during_simulation', False):
+                mod = (self.modifier or 'alt').lower()
+                modifier_variants = {mod}
+                if 'alt' in mod:
+                    modifier_variants.update(('alt', 'left alt', 'right alt'))
+                elif 'ctrl' in mod or 'control' in mod:
+                    modifier_variants.update(('ctrl', 'left ctrl', 'right ctrl', 'control', 'left control', 'right control'))
+                elif 'shift' in mod:
+                    modifier_variants.update(('shift', 'left shift', 'right shift'))
+                elif 'win' in mod or 'super' in mod or 'meta' in mod:
+                    modifier_variants.update(('windows', 'left windows', 'right windows', 'win', 'left win', 'right win'))
+                
+                if event.name in modifier_variants:
+                    self._during_simulation = True
+                    try:
+                        logger.debug(f"Physical release of modifier '{event.name}' detected; clearing virtual states.")
+                        for var in modifier_variants:
+                            try:
+                                pyautogui.keyUp(var)
+                            except Exception:
+                                pass
+                    finally:
+                        self._during_simulation = False
 
     def is_hook_alive(self):
         """Check if the keyboard hook is still functional.
