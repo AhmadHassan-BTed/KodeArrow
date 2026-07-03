@@ -129,12 +129,45 @@ class HotkeyEngine:
             self.updateData()
             keyboard.remove_hotkey(f'{self.modifier}+delete')
 
+    def _is_physical_key_down(self, key_name):
+        import sys
+        if sys.platform != 'win32':
+            return keyboard.is_pressed(key_name)
+        try:
+            import ctypes
+            vk_map = {
+                'alt': 0x12,
+                'left alt': 0xA4,
+                'right alt': 0xA5,
+                'ctrl': 0x11,
+                'control': 0x11,
+                'left ctrl': 0xA2,
+                'left control': 0xA2,
+                'right ctrl': 0xA3,
+                'right control': 0xA3,
+                'shift': 0x10,
+                'left shift': 0xA0,
+                'right shift': 0xA1,
+                'win': 0x5B,
+                'windows': 0x5B,
+                'left win': 0x5B,
+                'left windows': 0x5B,
+                'right win': 0x5C,
+                'right windows': 0x5C,
+            }
+            vk = vk_map.get(key_name.lower())
+            if vk is not None:
+                return bool(ctypes.windll.user32.GetAsyncKeyState(vk) & 0x8000)
+        except Exception:
+            pass
+        return keyboard.is_pressed(key_name)
+
     def _execute_selection(self, key_target):
         self._during_simulation = True
         try:
-            alt_was_down = keyboard.is_pressed('alt') or keyboard.is_pressed('left alt') or keyboard.is_pressed('right alt')
-            left_alt_was_down = keyboard.is_pressed('left alt')
-            right_alt_was_down = keyboard.is_pressed('right alt')
+            alt_was_down = self._is_physical_key_down('alt')
+            left_alt_was_down = self._is_physical_key_down('left alt')
+            right_alt_was_down = self._is_physical_key_down('right alt')
             
             if left_alt_was_down:
                 pyautogui.keyUp('left alt')
@@ -145,11 +178,12 @@ class HotkeyEngine:
                 
             pyautogui.hotkey('ctrl', 'shift', key_target)
             
-            if left_alt_was_down:
+            # Re-check physical states to avoid race conditions
+            if left_alt_was_down and self._is_physical_key_down('left alt'):
                 pyautogui.keyDown('left alt')
-            if right_alt_was_down:
+            if right_alt_was_down and self._is_physical_key_down('right alt'):
                 pyautogui.keyDown('right alt')
-            if alt_was_down and not (left_alt_was_down or right_alt_was_down):
+            if alt_was_down and not (left_alt_was_down or right_alt_was_down) and self._is_physical_key_down('alt'):
                 pyautogui.keyDown('alt')
                 
             self.updateData()
@@ -177,9 +211,9 @@ class HotkeyEngine:
     def _execute_word_action(self, key_target):
         self._during_simulation = True
         try:
-            alt_was_down = keyboard.is_pressed('alt') or keyboard.is_pressed('left alt') or keyboard.is_pressed('right alt')
-            left_alt_was_down = keyboard.is_pressed('left alt')
-            right_alt_was_down = keyboard.is_pressed('right alt')
+            alt_was_down = self._is_physical_key_down('alt')
+            left_alt_was_down = self._is_physical_key_down('left alt')
+            right_alt_was_down = self._is_physical_key_down('right alt')
             
             if left_alt_was_down:
                 pyautogui.keyUp('left alt')
@@ -190,11 +224,12 @@ class HotkeyEngine:
                 
             pyautogui.hotkey('ctrl', key_target)
             
-            if left_alt_was_down:
+            # Re-check physical states to avoid race conditions
+            if left_alt_was_down and self._is_physical_key_down('left alt'):
                 pyautogui.keyDown('left alt')
-            if right_alt_was_down:
+            if right_alt_was_down and self._is_physical_key_down('right alt'):
                 pyautogui.keyDown('right alt')
-            if alt_was_down and not (left_alt_was_down or right_alt_was_down):
+            if alt_was_down and not (left_alt_was_down or right_alt_was_down) and self._is_physical_key_down('alt'):
                 pyautogui.keyDown('alt')
                 
             self.updateData()
