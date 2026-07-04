@@ -266,6 +266,9 @@ Ahmad Hassan (B-Ted)
                 logger.info("System tray exited cleanly")
                 break
                 
+            except KeyboardInterrupt:
+                logger.info("KeyboardInterrupt received — shutting down gracefully")
+                break
             except Exception:
                 logger.exception(
                     "System tray crashed on attempt %d/%d",
