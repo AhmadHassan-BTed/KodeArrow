@@ -72,14 +72,12 @@ class HotkeyEngine:
             self._modifier_variants.update(('windows', 'left windows', 'right windows', 'win', 'left win', 'right win'))
 
         # The selection/word-action hotkeys registered in start() always require
-        # Ctrl+Alt together, regardless of which modifier is configured above.
-        # Both keys therefore need to be watched by the physical-release safety
-        # net below, not just whichever one happens to be `self.modifier` --
-        # otherwise the other one can be left in a stuck/desynced state by the
-        # keyboard library after a suppressed ctrl+alt+... hotkey fires (see
-        # github.com/boppreh/keyboard issues #442 and #666).
+        # Ctrl+Alt together. The Ctrl desync is handled at the action level
+        # (_execute_selection / _execute_word_action avoid injecting synthetic
+        # ctrl press/release when it's already physically held). Only Alt needs
+        # the safety-net release here — watching Ctrl would cause every normal
+        # Ctrl release (e.g. Ctrl+click to select files) to be intercepted.
         self._modifier_variants.update(('alt', 'left alt', 'right alt'))
-        self._modifier_variants.update(('ctrl', 'left ctrl', 'right ctrl', 'control', 'left control', 'right control'))
         
         self.hk_up = prefs.get("up", "i")
         self.hk_down = prefs.get("down", "k")
