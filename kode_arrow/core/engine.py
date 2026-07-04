@@ -48,6 +48,7 @@ class HotkeyEngine:
         self._reload_lock = threading.Lock()
         self._last_hook_activity = time.time()
         self._during_simulation = False
+        self._last_safety_release_time = 0
         
         pyautogui.PAUSE = 0.000001
         
@@ -69,6 +70,16 @@ class HotkeyEngine:
             self._modifier_variants.update(('shift', 'left shift', 'right shift'))
         elif 'win' in mod or 'super' in mod or 'meta' in mod:
             self._modifier_variants.update(('windows', 'left windows', 'right windows', 'win', 'left win', 'right win'))
+
+        # The selection/word-action hotkeys registered in start() always require
+        # Ctrl+Alt together, regardless of which modifier is configured above.
+        # Both keys therefore need to be watched by the physical-release safety
+        # net below, not just whichever one happens to be `self.modifier` --
+        # otherwise the other one can be left in a stuck/desynced state by the
+        # keyboard library after a suppressed ctrl+alt+... hotkey fires (see
+        # github.com/boppreh/keyboard issues #442 and #666).
+        self._modifier_variants.update(('alt', 'left alt', 'right alt'))
+        self._modifier_variants.update(('ctrl', 'left ctrl', 'right ctrl', 'control', 'left control', 'right control'))
         
         self.hk_up = prefs.get("up", "i")
         self.hk_down = prefs.get("down", "k")
@@ -188,7 +199,8 @@ class HotkeyEngine:
             alt_was_down = self._is_physical_key_down('alt')
             left_alt_was_down = self._is_physical_key_down('left alt')
             right_alt_was_down = self._is_physical_key_down('right alt')
-            logger.debug(f"[_execute_selection] Initial states: alt={alt_was_down}, left={left_alt_was_down}, right={right_alt_was_down}")
+            ctrl_is_down = self._is_physical_key_down('ctrl')
+            logger.debug(f"[_execute_selection] Initial states: alt={alt_was_down}, left={left_alt_was_down}, right={right_alt_was_down}, ctrl={ctrl_is_down}")
             
             if left_alt_was_down:
                 logger.debug("[_execute_selection] pyautogui.keyUp('left alt')")
@@ -199,9 +211,23 @@ class HotkeyEngine:
             if alt_was_down and not (left_alt_was_down or right_alt_was_down):
                 logger.debug("[_execute_selection] pyautogui.keyUp('alt')")
                 pyautogui.keyUp('alt')
-                
-            logger.debug(f"[_execute_selection] pyautogui.hotkey('ctrl', 'shift', {key_target!r})")
-            pyautogui.hotkey('ctrl', 'shift', key_target)
+
+            if ctrl_is_down:
+                # Ctrl is already physically held -- every selection hotkey requires
+                # ctrl+alt, so it's guaranteed to be down here. Do NOT press/release it
+                # again through pyautogui: injecting a synthetic ctrl-up while the real
+                # key is still held is exactly what desyncs the keyboard library's
+                # tracking of Ctrl (a known issue with suppress=True hotkeys -- see
+                # github.com/boppreh/keyboard issues #442 and #666). Once that happens
+                # every later ctrl+alt+... hotkey silently stops matching until Ctrl is
+                # physically released and pressed again. Just add Shift on top instead.
+                logger.debug(f"[_execute_selection] ctrl already physically down; sending shift+{key_target!r} only")
+                pyautogui.keyDown('shift')
+                pyautogui.press(key_target)
+                pyautogui.keyUp('shift')
+            else:
+                logger.debug(f"[_execute_selection] ctrl not physically down; pyautogui.hotkey('ctrl', 'shift', {key_target!r})")
+                pyautogui.hotkey('ctrl', 'shift', key_target)
             
             # Re-check physical states to avoid race conditions
             if left_alt_was_down:
@@ -250,7 +276,8 @@ class HotkeyEngine:
             alt_was_down = self._is_physical_key_down('alt')
             left_alt_was_down = self._is_physical_key_down('left alt')
             right_alt_was_down = self._is_physical_key_down('right alt')
-            logger.debug(f"[_execute_word_action] Initial states: alt={alt_was_down}, left={left_alt_was_down}, right={right_alt_was_down}")
+            ctrl_is_down = self._is_physical_key_down('ctrl')
+            logger.debug(f"[_execute_word_action] Initial states: alt={alt_was_down}, left={left_alt_was_down}, right={right_alt_was_down}, ctrl={ctrl_is_down}")
             
             if left_alt_was_down:
                 logger.debug("[_execute_word_action] pyautogui.keyUp('left alt')")
@@ -261,9 +288,17 @@ class HotkeyEngine:
             if alt_was_down and not (left_alt_was_down or right_alt_was_down):
                 logger.debug("[_execute_word_action] pyautogui.keyUp('alt')")
                 pyautogui.keyUp('alt')
-                
-            logger.debug(f"[_execute_word_action] pyautogui.hotkey('ctrl', {key_target!r})")
-            pyautogui.hotkey('ctrl', key_target)
+
+            if ctrl_is_down:
+                # Same reasoning as _execute_selection: Ctrl is already physically
+                # held (word actions also only fire under ctrl+alt), so just send the
+                # bare key instead of pyautogui.hotkey('ctrl', key_target), which would
+                # add a redundant synthetic ctrl press/release on top of the real one.
+                logger.debug(f"[_execute_word_action] ctrl already physically down; sending {key_target!r} only")
+                pyautogui.press(key_target)
+            else:
+                logger.debug(f"[_execute_word_action] ctrl not physically down; pyautogui.hotkey('ctrl', {key_target!r})")
+                pyautogui.hotkey('ctrl', key_target)
             
             # Re-check physical states to avoid race conditions
             if left_alt_was_down:
@@ -344,17 +379,20 @@ class HotkeyEngine:
             # when we are not actively simulating keypresses inside an action
             if not is_simulated and not getattr(self, '_during_simulation', False):
                 if event.name in getattr(self, '_modifier_variants', set()):
-                    self._during_simulation = True
-                    try:
-                        logger.debug(f"Physical release of modifier '{event.name}' detected; clearing virtual states.")
-                        for var in self._modifier_variants:
-                            try:
-                                logger.debug(f"Executing safety release: pyautogui.keyUp({var!r})")
-                                pyautogui.keyUp(var)
-                            except Exception as e:
-                                logger.warning(f"Error during safety release of {var}: {e}")
-                    finally:
-                        self._during_simulation = False
+                    now = time.time()
+                    if now - getattr(self, '_last_safety_release_time', 0) > 0.15:
+                        self._last_safety_release_time = now
+                        self._during_simulation = True
+                        try:
+                            logger.debug(f"Physical release of modifier '{event.name}' detected; clearing virtual states.")
+                            for var in self._modifier_variants:
+                                try:
+                                    logger.debug(f"Executing safety release: pyautogui.keyUp({var!r})")
+                                    pyautogui.keyUp(var)
+                                except Exception as e:
+                                    logger.warning(f"Error during safety release of {var}: {e}")
+                        finally:
+                            self._during_simulation = False
 
     def is_hook_alive(self):
         """Check if the keyboard hook is still functional.
@@ -409,13 +447,16 @@ class HotkeyEngine:
         if self.hk_pagedown: keyboard.add_hotkey(f'{mod}+{self.hk_pagedown}', self.page_down_key, suppress=True)
 
         # Selection hotkeys (Ctrl + Alt + [u, i, o, j, k, l] and permutations)
+        # NOTE: '+' inside a keyboard.add_hotkey() string means "these keys held
+        # together", not "in this order" -- the library's own canonicalize()
+        # treats 'ctrl+alt' and 'alt+ctrl' as the identical key set. Registering
+        # both (and all four orderings of the 3-key variant) used to register the
+        # same physical combo multiple times over, so every selection/word action
+        # fired once per duplicate on a single keypress. Only the distinct key
+        # sets are kept below.
         selection_mods = [
             "ctrl+alt",
-            "alt+ctrl",
             "ctrl+left alt+right alt",
-            "ctrl+right alt+left alt",
-            "left alt+right alt+ctrl",
-            "right alt+left alt+ctrl"
         ]
         self.selection_actions = {
             self.hk_home: self.select_text_home,
@@ -462,7 +503,7 @@ class HotkeyEngine:
                 self._is_hooked = False
                 self.load_prefs()
                 self.start()
-                logger.info("Hotkeys reloaded successfully")
+                logger.info("Hotkeys reloaded successfully")j
             except Exception:
                 logger.exception("Failed to reload hotkeys")
                 raise
