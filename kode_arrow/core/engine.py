@@ -503,7 +503,7 @@ class HotkeyEngine:
                 self._is_hooked = False
                 self.load_prefs()
                 self.start()
-                logger.info("Hotkeys reloaded successfully")j
+                logger.info("Hotkeys reloaded successfully")
             except Exception:
                 logger.exception("Failed to reload hotkeys")
                 raise
