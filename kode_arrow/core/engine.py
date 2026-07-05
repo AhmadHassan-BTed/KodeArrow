@@ -70,14 +70,31 @@ class HotkeyEngine:
             self._modifier_variants.update(('shift', 'left shift', 'right shift'))
         elif 'win' in mod or 'super' in mod or 'meta' in mod:
             self._modifier_variants.update(('windows', 'left windows', 'right windows', 'win', 'left win', 'right win'))
-
-        # The selection/word-action hotkeys registered in start() always require
-        # Ctrl+Alt together. The Ctrl desync is handled at the action level
-        # (_execute_selection / _execute_word_action avoid injecting synthetic
-        # ctrl press/release when it's already physically held). Only Alt needs
-        # the safety-net release here — watching Ctrl would cause every normal
-        # Ctrl release (e.g. Ctrl+click to select files) to be intercepted.
         self._modifier_variants.update(('alt', 'left alt', 'right alt'))
+        
+        # Pre-calculate targeted modifier groups for safety release of stuck keys
+        self._modifier_groups = {
+            'alt': ('alt', 'left alt', 'right alt'),
+            'left alt': ('alt', 'left alt', 'right alt'),
+            'right alt': ('alt', 'left alt', 'right alt'),
+            'ctrl': ('ctrl', 'left ctrl', 'right ctrl', 'control', 'left control', 'right control'),
+            'left ctrl': ('ctrl', 'left ctrl', 'right ctrl', 'control', 'left control', 'right control'),
+            'right ctrl': ('ctrl', 'left ctrl', 'right ctrl', 'control', 'left control', 'right control'),
+            'control': ('ctrl', 'left ctrl', 'right ctrl', 'control', 'left control', 'right control'),
+            'left control': ('ctrl', 'left ctrl', 'right ctrl', 'control', 'left control', 'right control'),
+            'right control': ('ctrl', 'left ctrl', 'right ctrl', 'control', 'left control', 'right control'),
+            'shift': ('shift', 'left shift', 'right shift'),
+            'left shift': ('shift', 'left shift', 'right shift'),
+            'right shift': ('shift', 'left shift', 'right shift'),
+            'win': ('windows', 'left windows', 'right windows', 'win', 'left win', 'right win'),
+            'left win': ('windows', 'left windows', 'right windows', 'win', 'left win', 'right win'),
+            'right win': ('windows', 'left windows', 'right windows', 'win', 'left win', 'right win'),
+            'windows': ('windows', 'left windows', 'right windows', 'win', 'left win', 'right win'),
+            'left windows': ('windows', 'left windows', 'right windows', 'win', 'left win', 'right win'),
+            'right windows': ('windows', 'left windows', 'right windows', 'win', 'left win', 'right win'),
+        }
+        if mod not in self._modifier_groups:
+            self._modifier_groups[mod] = (mod,)
         
         self.hk_up = prefs.get("up", "i")
         self.hk_down = prefs.get("down", "k")
@@ -181,7 +198,10 @@ class HotkeyEngine:
         try:
             vk = vk_map.get(key_name.lower())
             if vk is not None:
-                res = bool(ctypes.windll.user32.GetAsyncKeyState(vk) & 0x8000)
+                user32 = ctypes.windll.user32
+                user32.GetAsyncKeyState.argtypes = [ctypes.c_int]
+                user32.GetAsyncKeyState.restype = ctypes.c_short
+                res = bool(user32.GetAsyncKeyState(vk) & 0x8000)
                 logger.debug(f"[Physical Check] key_name={key_name!r} (vk=0x{vk:02X}) is_down={res}")
                 return res
         except Exception as e:
@@ -190,14 +210,30 @@ class HotkeyEngine:
         logger.debug(f"[Physical Check] (Fallback) key_name={key_name!r} is_down={res}")
         return res
 
+    def _is_logical_key_down(self, key_name):
+        """Checks if a key is down logically (via keyboard library) or physically (via GetAsyncKeyState).
+        
+        This is used for initial state detection when executing a hotkey action.
+        At the start of the action, the keys that triggered the action are guaranteed to be
+        down logically in the keyboard library's hook state, but GetAsyncKeyState might return
+        False due to timing or hook suppression.
+        """
+        try:
+            if keyboard.is_pressed(key_name):
+                logger.debug(f"[Logical Check] key_name={key_name!r} is_down=True (via keyboard)")
+                return True
+        except Exception:
+            pass
+        return self._is_physical_key_down(key_name)
+
     def _execute_selection(self, key_target):
         logger.debug(f"[_execute_selection] START target={key_target!r}")
         self._during_simulation = True
         try:
-            alt_was_down = self._is_physical_key_down('alt')
-            left_alt_was_down = self._is_physical_key_down('left alt')
-            right_alt_was_down = self._is_physical_key_down('right alt')
-            ctrl_is_down = self._is_physical_key_down('ctrl')
+            alt_was_down = self._is_logical_key_down('alt')
+            left_alt_was_down = self._is_logical_key_down('left alt')
+            right_alt_was_down = self._is_logical_key_down('right alt')
+            ctrl_is_down = self._is_logical_key_down('ctrl')
             logger.debug(f"[_execute_selection] Initial states: alt={alt_was_down}, left={left_alt_was_down}, right={right_alt_was_down}, ctrl={ctrl_is_down}")
             
             if left_alt_was_down:
@@ -271,10 +307,10 @@ class HotkeyEngine:
         logger.debug(f"[_execute_word_action] START target={key_target!r}")
         self._during_simulation = True
         try:
-            alt_was_down = self._is_physical_key_down('alt')
-            left_alt_was_down = self._is_physical_key_down('left alt')
-            right_alt_was_down = self._is_physical_key_down('right alt')
-            ctrl_is_down = self._is_physical_key_down('ctrl')
+            alt_was_down = self._is_logical_key_down('alt')
+            left_alt_was_down = self._is_logical_key_down('left alt')
+            right_alt_was_down = self._is_logical_key_down('right alt')
+            ctrl_is_down = self._is_logical_key_down('ctrl')
             logger.debug(f"[_execute_word_action] Initial states: alt={alt_was_down}, left={left_alt_was_down}, right={right_alt_was_down}, ctrl={ctrl_is_down}")
             
             if left_alt_was_down:
@@ -376,14 +412,14 @@ class HotkeyEngine:
             # Check if this is a physical keyUp event for the modifier key (e.g. alt)
             # when we are not actively simulating keypresses inside an action
             if not is_simulated and not getattr(self, '_during_simulation', False):
-                if event.name in getattr(self, '_modifier_variants', set()):
+                if event.name in getattr(self, '_modifier_groups', {}):
                     now = time.time()
                     if now - getattr(self, '_last_safety_release_time', 0) > 0.15:
                         self._last_safety_release_time = now
                         self._during_simulation = True
                         try:
                             logger.debug(f"Physical release of modifier '{event.name}' detected; clearing virtual states.")
-                            for var in self._modifier_variants:
+                            for var in self._modifier_groups[event.name]:
                                 try:
                                     logger.debug(f"Executing safety release: pyautogui.keyUp({var!r})")
                                     pyautogui.keyUp(var)
