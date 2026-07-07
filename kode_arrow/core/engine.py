@@ -115,6 +115,22 @@ class HotkeyEngine:
             self.hk_right: self.right_arrow
         }
 
+        self.selection_actions = {
+            self.hk_home: self.select_text_home,
+            self.hk_up: self.select_text_up,
+            self.hk_end: self.select_text_end,
+            self.hk_left: self.select_word_left,
+            self.hk_down: self.select_text_down,
+            self.hk_right: self.select_word_right
+        }
+        self.selection_keys = [k for k in [self.hk_home, self.hk_up, self.hk_end, self.hk_left, self.hk_down, self.hk_right] if k]
+
+        self.word_actions = {
+            self.hk_backspace: self.backspace_word,
+            self.hk_delete: self.delete_word
+        }
+        self.word_action_keys = [k for k in [self.hk_backspace, self.hk_delete] if k]
+
     def _hehe(self):
         return True
 
@@ -373,8 +389,30 @@ class HotkeyEngine:
                 self.word_actions[key]()
 
     def handle_combination(self, *keys):
-        for key in keys:
-            self.key_actions[key]()
+        is_selection = False
+        if 'ctrl' in self.modifier.lower():
+            is_selection = self._is_logical_key_down('alt')
+        else:
+            is_selection = self._is_logical_key_down('ctrl')
+
+        if is_selection:
+            for key in keys:
+                if key in self.selection_actions:
+                    self.selection_actions[key]()
+                elif key in self.word_actions:
+                    self.word_actions[key]()
+        else:
+            for key in keys:
+                if key in self.key_actions:
+                    self.key_actions[key]()
+                elif key == self.hk_home:
+                    self.home_key()
+                elif key == self.hk_end:
+                    self.end_key()
+                elif key == self.hk_delete:
+                    self.delete_key()
+                elif key == self.hk_backspace:
+                    self.backspace_key()
 
     def calculate_user_data(self):
         self.total_keyStrokes += 1
@@ -464,64 +502,45 @@ class HotkeyEngine:
     def start(self):
         keys = [self.hk_up, self.hk_left, self.hk_down, self.hk_right]
         mod = self.modifier
+
+        # Collect all unique combinations to register under the modifier
+        combos = set()
+        
+        # 1. Single keys
         for key in keys:
-            if key: keyboard.add_hotkey(f'{mod}+{key}', self.handle_combination, args=(key,), suppress=True)
-        for combo in itertools.permutations(keys, 2):
-            if all(combo): keyboard.add_hotkey(f'{mod}+{combo[0]}+{combo[1]}', self.handle_combination, args=combo, suppress=True)
-        for combo in itertools.permutations(keys, 3):
-            if all(combo): keyboard.add_hotkey(f'{mod}+{combo[0]}+{combo[1]}+{combo[2]}', self.handle_combination, args=combo, suppress=True)
-        for combo in itertools.permutations(keys, 4):
-            if all(combo): keyboard.add_hotkey(f'{mod}+{combo[0]}+{combo[1]}+{combo[2]}+{combo[3]}', self.handle_combination, args=combo, suppress=True)
+            if key:
+                combos.add((key,))
+        for key in [self.hk_home, self.hk_end, self.hk_delete, self.hk_backspace]:
+            if key:
+                combos.add((key,))
+                
+        # 2. Navigation combinations
+        for r in (2, 3, 4):
+            for combo in itertools.permutations(keys, r):
+                if all(combo):
+                    combos.add(combo)
+                    
+        # 3. Selection combinations
+        for r in (2, 3):
+            for combo in itertools.permutations(self.selection_keys, r):
+                if all(combo):
+                    combos.add(combo)
+                    
+        # 4. Word action combinations
+        for combo in itertools.permutations(self.word_action_keys, 2):
+            if all(combo):
+                combos.add(combo)
 
-        if self.hk_home: keyboard.add_hotkey(f'{mod}+{self.hk_home}', self.home_key, suppress=True)
-        if self.hk_end: keyboard.add_hotkey(f'{mod}+{self.hk_end}', self.end_key, suppress=True)
-        if self.hk_delete: keyboard.add_hotkey(f'{mod}+{self.hk_delete}', self.delete_key, suppress=True)
-        if self.hk_backspace: keyboard.add_hotkey(f'{mod}+{self.hk_backspace}', self.backspace_key, suppress=True)
-        if self.hk_pageup: keyboard.add_hotkey(f'{mod}+{self.hk_pageup}', self.page_up_key, suppress=True)
-        if self.hk_pagedown: keyboard.add_hotkey(f'{mod}+{self.hk_pagedown}', self.page_down_key, suppress=True)
+        # Register all generated combinations
+        for combo in combos:
+            hotkey_str = f"{mod}+" + "+".join(combo)
+            keyboard.add_hotkey(hotkey_str, self.handle_combination, args=combo, suppress=True)
 
-        # Selection hotkeys (Ctrl + Alt + [u, i, o, j, k, l] and permutations)
-        # NOTE: '+' inside a keyboard.add_hotkey() string means "these keys held
-        # together", not "in this order" -- the library's own canonicalize()
-        # treats 'ctrl+alt' and 'alt+ctrl' as the identical key set. Registering
-        # both (and all four orderings of the 3-key variant) used to register the
-        # same physical combo multiple times over, so every selection/word action
-        # fired once per duplicate on a single keypress. Only the distinct key
-        # sets are kept below.
-        selection_mods = [
-            "ctrl+alt",
-            "ctrl+left alt+right alt",
-        ]
-        self.selection_actions = {
-            self.hk_home: self.select_text_home,
-            self.hk_up: self.select_text_up,
-            self.hk_end: self.select_text_end,
-            self.hk_left: self.select_word_left,
-            self.hk_down: self.select_text_down,
-            self.hk_right: self.select_word_right
-        }
-        self.selection_keys = [k for k in [self.hk_home, self.hk_up, self.hk_end, self.hk_left, self.hk_down, self.hk_right] if k]
-
-        for mod_prefix in selection_mods:
-            for key in self.selection_keys:
-                keyboard.add_hotkey(f'{mod_prefix}+{key}', self.handle_selection_combination, args=(key,), suppress=True)
-            for combo in itertools.permutations(self.selection_keys, 2):
-                keyboard.add_hotkey(f'{mod_prefix}+{combo[0]}+{combo[1]}', self.handle_selection_combination, args=combo, suppress=True)
-            for combo in itertools.permutations(self.selection_keys, 3):
-                keyboard.add_hotkey(f'{mod_prefix}+{combo[0]}+{combo[1]}+{combo[2]}', self.handle_selection_combination, args=combo, suppress=True)
-
-        # Word actions (Ctrl + Alt + [;, p] and permutations)
-        self.word_actions = {
-            self.hk_backspace: self.backspace_word,
-            self.hk_delete: self.delete_word
-        }
-        self.word_action_keys = [k for k in [self.hk_backspace, self.hk_delete] if k]
-
-        for mod_prefix in selection_mods:
-            for key in self.word_action_keys:
-                keyboard.add_hotkey(f'{mod_prefix}+{key}', self.handle_word_combination, args=(key,), suppress=True)
-            for combo in itertools.permutations(self.word_action_keys, 2):
-                keyboard.add_hotkey(f'{mod_prefix}+{combo[0]}+{combo[1]}', self.handle_word_combination, args=combo, suppress=True)
+        # Page Up and Page Down do not participate in selection/word combos, register separately
+        if self.hk_pageup:
+            keyboard.add_hotkey(f"{mod}+{self.hk_pageup}", self.page_up_key, suppress=True)
+        if self.hk_pagedown:
+            keyboard.add_hotkey(f"{mod}+{self.hk_pagedown}", self.page_down_key, suppress=True)
 
         if not self._is_hooked:
             keyboard.hook(self.increment_total_keyStrokes)

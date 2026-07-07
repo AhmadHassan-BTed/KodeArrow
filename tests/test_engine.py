@@ -68,3 +68,29 @@ def test_safety_release_modifier_groups():
         assert "alt" not in released_keys
         assert "shift" not in released_keys
 
+
+def test_handle_combination():
+    engine = HotkeyEngine(is_premium_fn=lambda: True, telemetry_service=MagicMock())
+    engine.modifier = "alt"
+    
+    # Set up actions and mock them
+    engine.key_actions = {"j": MagicMock()}
+    engine.selection_actions = {"j": MagicMock()}
+    
+    # Scenario 1: Ctrl is not pressed -> should run normal key action
+    with patch.object(engine, "_is_logical_key_down", return_value=False) as mock_logical_down:
+        engine.handle_combination("j")
+        mock_logical_down.assert_called_with("ctrl")
+        engine.key_actions["j"].assert_called_once()
+        engine.selection_actions["j"].assert_not_called()
+        
+    engine.key_actions["j"].reset_mock()
+    engine.selection_actions["j"].reset_mock()
+    
+    # Scenario 2: Ctrl is pressed -> should run selection action
+    with patch.object(engine, "_is_logical_key_down", return_value=True) as mock_logical_down:
+        engine.handle_combination("j")
+        mock_logical_down.assert_called_with("ctrl")
+        engine.key_actions["j"].assert_not_called()
+        engine.selection_actions["j"].assert_called_once()
+
