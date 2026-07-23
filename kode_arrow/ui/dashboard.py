@@ -22,15 +22,37 @@ from kode_arrow.config.user_prefs import UserPrefs
 
 
 
+def _get_emoji_font(size):
+    font_paths = [
+        'C:\\Windows\\Fonts\\seguiemj.ttf',
+        '/usr/share/fonts/noto/NotoColorEmoji.ttf',
+        '/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf',
+        '/usr/share/fonts/TTF/DejaVuSans.ttf',
+        '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',
+    ]
+    for path in font_paths:
+        if os.path.exists(path):
+            try:
+                return ImageFont.truetype(path, size + 2)
+            except Exception:
+                continue
+    try:
+        return ImageFont.load_default()
+    except Exception:
+        return None
+
+
 def _load_emoji_icon(emoji_char, size=16):
     img = Image.new('RGBA', (size * 2, size * 2), (0, 0, 0, 0))
     try:
-        font = ImageFont.truetype('C:\\Windows\\Fonts\\seguiemj.ttf', size + 2)
-        draw = ImageDraw.Draw(img)
-        draw.text((size // 2, size // 2), emoji_char, font=font, embedded_color=True)
+        font = _get_emoji_font(size)
+        if font:
+            draw = ImageDraw.Draw(img)
+            draw.text((size // 2, size // 2), emoji_char, font=font, embedded_color=True)
     except Exception:
         pass
     return CTkImage(light_image=img, dark_image=img, size=(size, size))
+
 
 class DashboardWindow:
     @staticmethod

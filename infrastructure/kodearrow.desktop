@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=KodeArrow
+GenericName=Productivity & Keyboard Navigation Tool
+Comment=Navigate text editors and applications seamlessly with Alt+I/J/K/L hotkeys
+Exec=python3 /usr/share/kodearrow/main.py --version r_edition
+Icon=kodearrow
+Terminal=false
+Categories=Utility;Development;TextEditor;
+Keywords=productivity;hotkey;keyboard;navigation;shortcuts;
+StartupNotify=true
+X-KDE-autostart-after=panel

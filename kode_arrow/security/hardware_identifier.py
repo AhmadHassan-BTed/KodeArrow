@@ -1,5 +1,6 @@
 import platform
 import subprocess
+import uuid
 
 def get_hardware_id():
     system = platform.system()
@@ -21,8 +22,36 @@ def get_hardware_id():
         serial_number = result.stdout.split('=')[-1].strip().strip('"')
         return serial_number
     elif system == "Linux":
-        command = "cat /sys/class/dmi/id/product_uuid"
-        result = subprocess.run(command, shell=True, capture_output=True, text=True)
-        return result.stdout.strip()
+        # Strategy 1: /sys/class/dmi/id/product_uuid (if readable)
+        try:
+            with open("/sys/class/dmi/id/product_uuid", "r") as f:
+                product_uuid = f.read().strip()
+                if product_uuid:
+                    return product_uuid
+        except Exception:
+            pass
+
+        # Strategy 2: /etc/machine-id (standard systemd/Arch Linux ID)
+        try:
+            with open("/etc/machine-id", "r") as f:
+                machine_id = f.read().strip()
+                if machine_id:
+                    return machine_id
+        except Exception:
+            pass
+
+        # Strategy 3: /var/lib/dbus/machine-id
+        try:
+            with open("/var/lib/dbus/machine-id", "r") as f:
+                dbus_id = f.read().strip()
+                if dbus_id:
+                    return dbus_id
+        except Exception:
+            pass
+
+        # Strategy 4: Fallback to MAC address node hash
+        mac_node = hex(uuid.getnode())[2:]
+        return f"LINUX-MAC-{mac_node}"
     else:
         raise NotImplementedError(f"Unsupported platform: {system}")
+

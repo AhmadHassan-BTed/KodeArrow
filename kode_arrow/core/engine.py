@@ -208,12 +208,16 @@ class HotkeyEngine:
 
     def _is_physical_key_down(self, key_name):
         if sys.platform != 'win32':
-            res = keyboard.is_pressed(key_name)
-            logger.debug(f"[Physical Check] Non-Win32 key_name={key_name!r} is_down={res}")
-            return res
+            try:
+                res = keyboard.is_pressed(key_name)
+                logger.debug(f"[Physical Check] Non-Win32 key_name={key_name!r} is_down={res}")
+                return res
+            except Exception as e:
+                logger.debug(f"[Physical Check] Non-Win32 fallback failed for {key_name}: {e}")
+                return False
         try:
             vk = vk_map.get(key_name.lower())
-            if vk is not None:
+            if vk is not None and hasattr(ctypes, 'windll'):
                 user32 = ctypes.windll.user32
                 user32.GetAsyncKeyState.argtypes = [ctypes.c_int]
                 user32.GetAsyncKeyState.restype = ctypes.c_short
@@ -222,9 +226,13 @@ class HotkeyEngine:
                 return res
         except Exception as e:
             logger.warning(f"Error checking physical key state for {key_name}: {e}")
-        res = keyboard.is_pressed(key_name)
+        try:
+            res = keyboard.is_pressed(key_name)
+        except Exception:
+            res = False
         logger.debug(f"[Physical Check] (Fallback) key_name={key_name!r} is_down={res}")
         return res
+
 
     def _is_logical_key_down(self, key_name):
         """Checks if a key is down logically (via keyboard library) or physically (via GetAsyncKeyState).
@@ -543,9 +551,15 @@ class HotkeyEngine:
             keyboard.add_hotkey(f"{mod}+{self.hk_pagedown}", self.page_down_key, suppress=True)
 
         if not self._is_hooked:
-            keyboard.hook(self.increment_total_keyStrokes)
-            self._is_hooked = True
-            logger.info("Keyboard hook installed")
+            try:
+                keyboard.hook(self.increment_total_keyStrokes)
+                self._is_hooked = True
+                logger.info("Keyboard hook installed successfully")
+            except Exception as e:
+                logger.error("Failed to install keyboard hook: %s", e)
+                if sys.platform.startswith("linux"):
+                    logger.warning("Linux input permission error detected. Please run 'bash scripts/setup_linux_permissions.sh' to grant /dev/input access.")
+
 
     def reload_hotkeys(self):
         """Re-register all keyboard hooks. Thread-safe via lock."""

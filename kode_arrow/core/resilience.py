@@ -14,11 +14,13 @@ import sys
 import os
 import time
 import ctypes
-import ctypes.wintypes
+if sys.platform == "win32":
+    import ctypes.wintypes
 import threading
 import logging
 
 logger = logging.getLogger("KodeArrow.Resilience")
+
 
 
 # ---------------------------------------------------------------------------
@@ -170,16 +172,16 @@ class WatchdogThread(threading.Thread):
                 logger.exception("Error during watchdog hook health check")
 
             # Prevent Windows idle classification by resetting the thread's
-            # execution timer. This uses SetThreadExecutionState to tell
-            # Windows the app is still actively doing work.
-            try:
-                ES_SYSTEM_REQUIRED = 0x00000001
-                ES_CONTINUOUS = 0x80000000
-                ctypes.windll.kernel32.SetThreadExecutionState(
-                    ES_CONTINUOUS | ES_SYSTEM_REQUIRED
-                )
-            except Exception:
-                pass  # Non-critical, best-effort
+            # execution timer. This uses SetThreadExecutionState on Windows.
+            if sys.platform == "win32":
+                try:
+                    ES_SYSTEM_REQUIRED = 0x00000001
+                    ES_CONTINUOUS = 0x80000000
+                    ctypes.windll.kernel32.SetThreadExecutionState(
+                        ES_CONTINUOUS | ES_SYSTEM_REQUIRED
+                    )
+                except Exception:
+                    pass  # Non-critical, best-effort
 
         logger.info("Watchdog stopped")
 
@@ -201,14 +203,14 @@ class WatchdogThread(threading.Thread):
 
 
 # ---------------------------------------------------------------------------
-# 4. Power Event Listener (Win32)
+# 4. Power Event Listener (Win32 & Linux D-Bus)
 # ---------------------------------------------------------------------------
 
 class PowerEventListener(threading.Thread):
-    """Listens for Windows power events (sleep/wake) using a hidden window.
+    """Listens for power events (sleep/wake).
     
-    Uses Win32 RegisterPowerSettingNotification via a message-only window
-    to detect PBT_APMRESUMEAUTOMATIC / PBT_APMRESUMESUSPEND events.
+    On Windows: uses Win32 RegisterPowerSettingNotification / WM_POWERBROADCAST.
+    On Linux: listens to systemd logind PrepareForSleep D-Bus signal.
     """
 
     # Win32 constants
@@ -226,7 +228,7 @@ class PowerEventListener(threading.Thread):
     def stop(self):
         """Signal the power listener to stop."""
         self._stop_event.set()
-        if self._hwnd:
+        if sys.platform == "win32" and self._hwnd:
             try:
                 user32 = ctypes.windll.user32
                 WM_CLOSE = 0x0010
@@ -235,13 +237,44 @@ class PowerEventListener(threading.Thread):
                 pass
 
     def run(self):
-        """Create a hidden message-only window and pump power broadcast messages."""
-        try:
-            self._run_message_loop()
-        except Exception:
-            pass  # Non-critical feature — silently ignore
+        if sys.platform == "win32":
+            try:
+                self._run_win32_message_loop()
+            except Exception:
+                pass
+        elif sys.platform.startswith("linux"):
+            try:
+                self._run_linux_dbus_listener()
+            except Exception:
+                pass
 
-    def _run_message_loop(self):
+    def _run_linux_dbus_listener(self):
+        """Listens for systemd PrepareForSleep signal over D-Bus on Linux."""
+        import subprocess
+        try:
+            # Monitor systemd logind PrepareForSleep signals via dbus-monitor
+            proc = subprocess.Popen(
+                ["dbus-monitor", "--system", "type='signal',interface='org.freedesktop.login1.Manager',member='PrepareForSleep'"],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.DEVNULL,
+                text=True
+            )
+            while not self._stop_event.is_set():
+                line = proc.stdout.readline()
+                if not line:
+                    break
+                if "boolean false" in line:  # Resuming from sleep
+                    logger.info("Linux D-Bus power event: RESUME detected")
+                    threading.Thread(
+                        target=self._safe_resume_callback,
+                        name="KodeArrow-PowerResume",
+                        daemon=True
+                    ).start()
+        except Exception as e:
+            logger.debug("Linux D-Bus power listener inactive: %s", e)
+
+    def _run_win32_message_loop(self):
+
         """Win32 message loop for power events."""
         from ctypes import wintypes
 

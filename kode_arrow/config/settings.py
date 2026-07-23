@@ -1,14 +1,12 @@
 import os
 import logging
-from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv
+    env_path = get_resource_path("config/.env")
+    load_dotenv(dotenv_path=env_path)
+except ImportError:
+    pass
 
-from kode_arrow.utils.resource import get_resource_path
-
-logger = logging.getLogger("KodeArrow.Config")
-
-# Load environment variables from config/.env file
-env_path = get_resource_path("config/.env")
-load_dotenv(dotenv_path=env_path)
 class Config:
     """Application configuration management."""
     APP_NAME = os.getenv("APP_NAME", "KodeArrow")
