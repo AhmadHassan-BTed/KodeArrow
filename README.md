@@ -206,8 +206,8 @@ graph LR
     S[Source Code] --> B[infrastructure/build/build.py]
     B --> A[Asset & Config Bundling]
     A --> P[PyInstaller Engine]
-    P --> WIN[dist/Standard/KodeArrow_Standard.exe (Windows)]
-    P --> LIN[dist/Standard/KodeArrow_Standard (Linux ELF Binary)]
+    P --> WIN["dist/Standard/KodeArrow_Standard.exe (Windows)"]
+    P --> LIN["dist/Standard/KodeArrow_Standard (Linux ELF Binary)"]
     style WIN fill:#3B82F6,stroke:#333,stroke-width:2px,color:#fff
     style LIN fill:#10B981,stroke:#333,stroke-width:2px,color:#fff
 ```
@@ -260,9 +260,9 @@ How a single hotkey press travels through the layers of KodeArrow.
 ```mermaid
 sequenceDiagram
     participant U as User
-    participant H as Low-Level Event Hook (Win32 / evdev)
+    participant H as "Low-Level Event Hook (Win32 / evdev)"
     participant V as Validation Layer
-    participant E as Execution Engine (PyAutoGUI / uinput)
+    participant E as "Execution Engine (PyAutoGUI / uinput)"
     participant C as Cloud Telemetry
 
     U->>H: Press Alt + Hotkey Suite (e.g., Alt+I)
