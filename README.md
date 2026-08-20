@@ -10,24 +10,24 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
-[![OS: Windows | Arch Linux (KDE Plasma)](https://img.shields.io/badge/OS-Windows%20%7C%20Linux%20(KDE%20Plasma)-red.svg)](#-getting-started)
+[![OS: Windows | Arch Linux (KDE Plasma)](https://img.shields.io/badge/OS-Windows%20%7C%20Linux%20(KDE%20Plasma)-red.svg)](#getting-started)
 [![Architecture: Tiered Mono-Repo](https://img.shields.io/badge/Architecture-Mono--Repo-green.svg)](#architecture-overview)
-[![Build: Production Binary](https://img.shields.io/badge/Build-Production_Binary-blue.svg)](#-production-binary-compilation)
+[![Build: Production Binary](https://img.shields.io/badge/Build-Production_Binary-blue.svg)](#production-binary-compilation)
 <br><br>
-[ Official Website](https://ahmadhassan-bted.github.io/KodeArrow/) • [ Key Features](#-key-features) • [ Windows Guide](#-windows-setup--production-guide) • [ Linux Guide](#-arch-linux--kde-plasma-guide)
+[Official Website](https://ahmadhassan-bted.github.io/KodeArrow/) • [Key Features](#key-features) • [Windows Guide](#windows-setup--production-guide) • [Linux Guide](#arch-linux--kde-plasma-guide)
 
 ---
 
 **KodeArrow** is a production-grade productivity suite designed to revolutionize keyboard ergonomics.
 It bridges the gap between hardware input and fluid navigation, enabling a seamless "Home Row" experience for power users across **Windows** and **Linux (Arch Linux / KDE Plasma X11 & Wayland)**.
 
-[Architecture](#-architecture-overview) • [Full Suite](#-the-ergonomic-suite) • [Research](#-scientific-validation) • [Windows & Linux Setup](#-getting-started)
+[Architecture](#architecture-overview) • [Full Suite](#the-ergonomic-suite) • [Research](#scientific-validation) • [Windows & Linux Setup](#getting-started)
 
 </div>
 
 ---
 
-## 🌟 The Vision & Philosophy
+## The Vision & Philosophy
 
 > "Navigation should be an extension of thought, not a physical strain."
 > — **Ahmad Hassan (B-Ted)**
@@ -36,17 +36,17 @@ Navigation inefficiency is often ignored until it causes physical fatigue. KodeA
 
 ---
 
-## ⌨ The Ergonomic Suite
+## The Ergonomic Suite
 
 KodeArrow provides a complete document control system without leaving the home row.
 
 <div align="center">
 
-### 🎯 Navigation & Editing
+### Navigation & Editing
 
 | Key                          | Mapping                                        | Action                          |
 | :--------------------------- | :--------------------------------------------- | :------------------------------ |
-| **Alt + I/J/K/L**            | ⬆ ⬅ ⬇ ➡                                     | **Core Directional Navigation** |
+| **Alt + I/J/K/L**            | Up Left Down Right                             | **Core Directional Navigation** |
 | **Alt + U / O**              | **Home / End**                                 | **Line Boundaries**             |
 | **Alt + P / ;**              | **Del / Backspace**                            | **Instant Text Deletion**       |
 | **Alt + [ / '**              | **PgUp / PgDn**                                | **Document Paging**             |
@@ -55,7 +55,7 @@ KodeArrow provides a complete document control system without leaving the home r
 
 </div>
 
-### 🎨 Visual Mapping Overview
+### Visual Mapping Overview
 
 <div align="center">
 
@@ -70,7 +70,7 @@ KodeArrow provides a complete document control system without leaving the home r
 
 ---
 
-## 📊 Edition Comparison
+## Edition Comparison
 
 Choose the edition that fits your professional workflow.
 
@@ -84,35 +84,35 @@ Choose the edition that fits your professional workflow.
 
 ---
 
-## 🚀 Universal Community License
+## Universal Community License
 
 > [!TIP]
 >
-> ### 🎁 Join the Ergonomic Revolution
+> ### Join the Ergonomic Revolution
 >
-> To support developers, students, and ergonomic enthusiasts worldwide, we have created an open **Universal Activation Email** that unlocks the complete premium suite of **KodeArrow** forever!
+> To support developers, students, and ergonomic enthusiasts worldwide, an open **Universal Activation Email** has been created that unlocks the complete premium suite of **KodeArrow** forever!
 
 <div align="center">
 
 |  Community Key                    | `freeforever@kodearrow.dev`                  |
 | :---------------------------------- | :------------------------------------------- |
 | **Status**                          | 🟢 **Active & Lifetime**                     |
-| **Allowed Devices**                 | ♾️ **Unlimited Connections**                 |
-| **Ergonomic Research Contribution** | 🔬 **Active (Anonymous Telemetry Tracking)** |
+| **Allowed Devices**                 | **Unlimited Connections**                    |
+| **Ergonomic Research Contribution** | **Active (Anonymous Telemetry Tracking)**    |
 
 </div>
 
-### 🔓 Why Use the Community Key?
+### Why Use the Community Key?
 
 - **Zero Limits**: Bypasses the standard 4-device hardware restriction entirely. Use it across all of your personal and work machines.
-- **Contribute to Science**: By using this license, your app automatically registers device stats and anonymous telemetry to our database. You are directly contributing data to our ergonomic research and helping shape the future of human-computer interaction!
+- **Contribute to Science**: By using this license, your app automatically registers device stats and anonymous telemetry to the research database, directly shaping the future of human-computer interaction.
 - **Lifetime Freedom**: Never expires. Managed centrally and kept active permanently through the cloud control console.
 
-> **To Unlock**: Simply enter `freeforever@kodearrow.dev` when prompted during the initial startup activation, and enjoy the ultimate home-row experience.
+> **To Unlock**: Simply enter `freeforever@kodearrow.dev` when prompted during initial startup activation, and enjoy the ultimate home-row experience.
 
 ---
 
-## 💻 Operating System & Architecture Support
+## Operating System & Architecture Support
 
 KodeArrow runs natively on both **Windows** and **Linux (Arch Linux / KDE Plasma)**.
 
@@ -123,9 +123,9 @@ KodeArrow runs natively on both **Windows** and **Linux (Arch Linux / KDE Plasma
 
 ---
 
-## 🛠️ Getting Started & Production Guides
+## Getting Started & Production Guides
 
-### 🪟 Windows Setup & Production Guide
+### Windows Setup & Production Guide
 
 1. **Clone the Repository**:
    ```bash
@@ -148,7 +148,7 @@ KodeArrow runs natively on both **Windows** and **Linux (Arch Linux / KDE Plasma
 
 ---
 
-### 🐧 Arch Linux & KDE Plasma Guide
+### Arch Linux & KDE Plasma Guide
 
 KodeArrow uses `keyd` (kernel-level `evdev` $\rightarrow$ `uinput` remapping) for zero-latency, clean key suppression under **KDE Plasma 6 / 5** (both Wayland and X11 sessions).
 
@@ -189,7 +189,7 @@ cp infrastructure/kodearrow.desktop ~/.config/autostart/
 
 ---
 
-## ⚙ Production Binary Compilation (`PyInstaller`)
+## Production Binary Compilation (`PyInstaller`)
 
 KodeArrow uses a cross-platform build pipeline (`infrastructure/build/build.py`).
 
@@ -211,9 +211,9 @@ graph LR
 
 ---
 
-## 🔬 Scientific Validation
+## Scientific Validation
 
-KodeArrow is a scientifically validated ergonomic pattern. Our research lab uses real-time metrics to optimize the navigation workflow.
+KodeArrow is a scientifically validated ergonomic pattern. Real-time metrics are used to optimize the navigation workflow.
 
 <div align="center">
 <img src="docs/research/outputs/visualizations/Accuracy Rate_3D_plot.png" width="550" alt="Accuracy Rate Research Plot">
@@ -223,7 +223,7 @@ KodeArrow is a scientifically validated ergonomic pattern. Our research lab uses
 
 ---
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
 The system follows a **Tiered Mono-Repo** structure, ensuring zero coupling between the product core and research utilities.
 
@@ -246,7 +246,7 @@ graph TD
 
 ---
 
-## 🔄 Request Lifecycle
+## Request Lifecycle
 
 How a single hotkey press travels through the layers of KodeArrow.
 
@@ -280,4 +280,3 @@ _Redefining Human-Computer Interaction_
 [Official Website](https://ahmadhassan-bted.github.io/KodeArrow/) • [GitHub](https://github.com/AhmadHassan-BTed) • [Portfolio](https://ahmadhassan-bted.github.io/KodeArrow/) • [LinkedIn](https://www.linkedin.com/in/ahmad-hassan-52ab4225b/)
 
 </div>
-
