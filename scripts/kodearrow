@@ -1,0 +1,149 @@
+#!/usr/bin/env bash
+# =============================================================================
+# KodeArrow — Home-Row Navigation Hotkeys for Arch Linux / KDE Plasma (keyd)
+# =============================================================================
+# Installs keyd (from Arch's official 'extra' repository) and configures:
+#
+#   Alt + i/j/k/l           -> Up / Left / Down / Right
+#   Alt + u/o               -> Home / End
+#   Alt + p/;               -> Delete / Backspace
+#   Alt + [/'               -> Page Up / Page Down
+#   Ctrl+Alt + u/i/o/j/k/l  -> Ctrl+Shift+Home/Up/End/Left/Down/Right (select)
+#   Ctrl+Alt + p/;          -> Ctrl+Delete / Ctrl+Backspace (delete word)
+#
+# Usage:
+#   sudo ./scripts/kodearrow            install / (re)apply the mapping
+#   sudo ./scripts/kodearrow --remove   remove the mapping and reload keyd
+# =============================================================================
+
+set -euo pipefail
+
+CONF_PATH="/etc/keyd/kodearrow.conf"
+
+require_root() {
+  if [[ $EUID -ne 0 ]]; then
+    echo "Run this with sudo: sudo $0 ${*:-}" >&2
+    exit 1
+  fi
+}
+
+write_conf() {
+  mkdir -p /etc/keyd
+  cat > "$CONF_PATH" << 'EOF'
+[ids]
+*
+
+# --- Alt layer: bare navigation --------------------------------------
+[alt]
+
+# Core directional navigation
+i = up
+j = left
+k = down
+l = right
+
+# Line boundaries
+u = home
+o = end
+
+# Instant text deletion
+p         = delete
+semicolon = backspace
+
+# Document paging
+leftbrace  = pageup
+apostrophe = pagedown
+
+# --- Ctrl+Alt layer: word/line selection & word deletion -------------
+[control+alt]
+
+u = C-S-home
+i = C-S-up
+o = C-S-end
+j = C-S-left
+k = C-S-down
+l = C-S-right
+
+p         = C-delete
+semicolon = C-backspace
+EOF
+}
+
+case "${1:-install}" in
+  --remove|--uninstall)
+    require_root "--remove"
+    if [[ -f "$CONF_PATH" ]]; then
+      rm -f "$CONF_PATH"
+      echo "==> Removed $CONF_PATH"
+      if command -v keyd >/dev/null 2>&1 && systemctl is-active --quiet keyd; then
+        keyd reload
+        echo "==> keyd reloaded — KodeArrow bindings are gone."
+      fi
+    else
+      echo "Nothing to remove ($CONF_PATH doesn't exist)."
+    fi
+    echo "(keyd itself is left installed. Remove it too with: sudo pacman -Rns keyd)"
+    exit 0
+    ;;
+  install|"")
+    ;;
+  *)
+    echo "Usage: $0 [--remove]" >&2
+    exit 1
+    ;;
+esac
+
+require_root
+
+# 1. Install keyd — official Arch 'extra' package
+if ! command -v keyd >/dev/null 2>&1; then
+  echo "==> Installing keyd..."
+  pacman -S --needed keyd
+else
+  echo "==> keyd already installed: $(keyd -v)"
+fi
+
+# 2. Don't clobber a config we didn't create
+mkdir -p /etc/keyd
+mapfile -t others < <(find /etc/keyd -maxdepth 1 -name '*.conf' ! -name 'kodearrow.conf' 2>/dev/null)
+if [[ ${#others[@]} -gt 0 && ! -f "$CONF_PATH" ]]; then
+  echo "Found existing keyd config file(s) that may also claim '[ids] *':"
+  printf '  %s\n' "${others[@]}"
+  echo "A device id can only be listed in one config file. Check those first,"
+  echo "then re-run this script."
+  exit 1
+fi
+
+# 3. Write config and validate
+write_conf
+if ! keyd check "$CONF_PATH"; then
+  echo "keyd rejected the generated config — please open an issue, this shouldn't happen." >&2
+  exit 1
+fi
+
+# 4. Enable service and reload
+systemctl enable --now keyd
+keyd reload
+
+cat << 'MSG'
+
+==> KodeArrow is live.
+
+Test it in any text field:
+  Alt + i / j / k / l     cursor up / left / down / right
+  Alt + u / o             start / end of line
+  Alt + p / ;             delete / backspace
+  Alt + [ / '              page up / page down
+  Ctrl+Alt + i/j/k/l/u/o  extend selection that direction
+  Ctrl+Alt + p / ;        delete word forward / backward
+
+This works the same in both X11 and Wayland KDE Plasma sessions.
+
+Debugging:
+  sudo keyd monitor         shows live, post-remap key events
+  sudo journalctl -eu keyd  service log / config errors
+
+Undo:
+  sudo ./scripts/kodearrow --remove
+
+MSG

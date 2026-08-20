@@ -11,7 +11,7 @@ from customtkinter import (
     CTkImage, BOTH, LEFT, RIGHT, TOP, BOTTOM, X, Y, StringVar,
     set_appearance_mode, CTkComboBox, END
 )
-from kode_arrow.utils.resource import get_resource_path
+from kode_arrow.utils.resource import get_resource_path, set_window_icon
 from kode_arrow.utils.system import enable_autostart, disable_autostart, is_autostart_enabled
 from kode_arrow.config.user_prefs import UserPrefs
 
@@ -59,7 +59,7 @@ class DashboardWindow:
     def open(is_premium_fn, on_open_website, on_exit, on_reload_engine, on_unlock):
         app = CTk()
         app.title("KodeArrow")
-        app.iconbitmap(get_resource_path(os.path.join("assets", "branding", "icon.ico")))
+        set_window_icon(app)
 
         ws = app.winfo_screenwidth()
         hs = app.winfo_screenheight()

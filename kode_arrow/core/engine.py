@@ -539,26 +539,33 @@ class HotkeyEngine:
             if all(combo):
                 combos.add(combo)
 
+        if sys.platform.startswith("linux"):
+            from kode_arrow.input.keyd_manager import is_keyd_active
+            if is_keyd_active():
+                self._is_hooked = True
+                logger.info("Linux keyd kernel-level mapping active (evdev -> uinput)")
+                return
+
         # Register all generated combinations
-        for combo in combos:
-            hotkey_str = f"{mod}+" + "+".join(combo)
-            keyboard.add_hotkey(hotkey_str, self.handle_combination, args=combo, suppress=True)
+        try:
+            for combo in combos:
+                hotkey_str = f"{mod}+" + "+".join(combo)
+                keyboard.add_hotkey(hotkey_str, self.handle_combination, args=combo, suppress=True)
 
-        # Page Up and Page Down do not participate in selection/word combos, register separately
-        if self.hk_pageup:
-            keyboard.add_hotkey(f"{mod}+{self.hk_pageup}", self.page_up_key, suppress=True)
-        if self.hk_pagedown:
-            keyboard.add_hotkey(f"{mod}+{self.hk_pagedown}", self.page_down_key, suppress=True)
+            # Page Up and Page Down do not participate in selection/word combos, register separately
+            if self.hk_pageup:
+                keyboard.add_hotkey(f"{mod}+{self.hk_pageup}", self.page_up_key, suppress=True)
+            if self.hk_pagedown:
+                keyboard.add_hotkey(f"{mod}+{self.hk_pagedown}", self.page_down_key, suppress=True)
 
-        if not self._is_hooked:
-            try:
+            if not self._is_hooked:
                 keyboard.hook(self.increment_total_keyStrokes)
                 self._is_hooked = True
                 logger.info("Keyboard hook installed successfully")
-            except Exception as e:
-                logger.error("Failed to install keyboard hook: %s", e)
-                if sys.platform.startswith("linux"):
-                    logger.warning("Linux input permission error detected. Please run 'bash scripts/setup_linux_permissions.sh' to grant /dev/input access.")
+        except Exception as e:
+            logger.error("Failed to install keyboard hook: %s", e)
+            if sys.platform.startswith("linux"):
+                logger.warning("Linux input notice: %s. Run 'sudo ./scripts/kodearrow' to activate keyd mapping.", e)
 
 
     def reload_hotkeys(self):

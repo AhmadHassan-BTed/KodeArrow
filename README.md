@@ -150,46 +150,39 @@ KodeArrow runs natively on both **Windows** and **Linux (Arch Linux / KDE Plasma
 
 ### 🐧 Arch Linux & KDE Plasma Guide
 
-KodeArrow features native hardware event grabbing (`evdev` / `uinput`) for zero-latency shortcut suppression under **KDE Plasma 6 / 5** (both Wayland and X11 sessions).
+KodeArrow uses `keyd` (kernel-level `evdev` $\rightarrow$ `uinput` remapping) for zero-latency, clean key suppression under **KDE Plasma 6 / 5** (both Wayland and X11 sessions).
 
-#### Step 1: One-Time Permission Setup
-On Linux, global low-level hardware event listening and key injection require permission to access `/dev/input/` and `/dev/uinput`. Run our automated permission setup script:
+#### Step 1: One-Time Keyd Setup
+Run the automated installation script to install `keyd` from Arch's official `extra` repository, generate `/etc/keyd/kodearrow.conf`, and activate the service:
 
 ```bash
-bash scripts/setup_linux_permissions.sh
+sudo ./scripts/kodearrow
 ```
-*This installs `/etc/udev/rules.d/99-kodearrow-input.rules` and adds your user to the `input` & `uinput` groups, allowing KodeArrow to run as a standard non-root user without `sudo`.*
+*This activates Alt + IJKL (arrows), Alt + U/O (home/end), Alt + P/; (delete/backspace), Alt + [/ ' (pageup/pagedown), Ctrl+Alt + U/I/O/J/K/L (select), and Ctrl+Alt + P/; (word delete) cleanly across all applications.*
 
 #### Step 2: Install Linux Dependencies
 ```bash
 pip install -r requirements-linux.txt
 ```
 
-#### Step 3: Run KodeArrow
+#### Step 3: Run KodeArrow GUI & Tray Application
 ```bash
 python3 main.py --version r_edition
 ```
 
-#### Step 4: Compile Native Standalone Linux Binary
-Just like Windows builds an `.exe`, PyInstaller on Arch Linux compiles Python source code and all C-libraries into a **single standalone Linux binary executable**:
-
+#### Step 4: Undo / Remove Keyd Mapping (Optional)
+To remove the `keyd` configuration anytime:
 ```bash
-python3 infrastructure/build/build.py
-```
-*The compiled native Linux binary will be generated at `dist/Standard/KodeArrow_Standard`.*
-
-To launch the compiled Linux binary directly:
-```bash
-./dist/Standard/KodeArrow_Standard --version r_edition
+sudo ./scripts/kodearrow --remove
 ```
 
 #### Step 5: KDE Plasma System Integration & Autostart
-To add KodeArrow to your KDE Plasma Application Menu and system tray:
+To add KodeArrow to your KDE Plasma Application Menu:
 ```bash
 cp infrastructure/kodearrow.desktop ~/.local/share/applications/
 ```
 
-To enable autostart on KDE boot, toggle the **"Launch on System Startup"** switch in the KodeArrow Dashboard GUI, or copy the desktop launcher:
+To enable autostart on KDE boot, toggle **"Launch on System Startup"** in the KodeArrow Dashboard GUI or copy the desktop launcher:
 ```bash
 cp infrastructure/kodearrow.desktop ~/.config/autostart/
 ```

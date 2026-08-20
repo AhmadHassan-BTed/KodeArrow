@@ -1,5 +1,6 @@
 import os
 import logging
+from kode_arrow.utils.resource import get_resource_path
 try:
     from dotenv import load_dotenv
     env_path = get_resource_path("config/.env")

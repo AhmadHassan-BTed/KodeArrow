@@ -5,7 +5,7 @@ import customtkinter as ctk
 import os
 from kode_arrow.security.encryption import encrypt_hardware_id
 from kode_arrow.security.hardware_identifier import get_hardware_id
-from kode_arrow.utils.resource import get_resource_path
+from kode_arrow.utils.resource import get_resource_path, set_window_icon
 from plyer import notification
 
 class UIWindowManager:
@@ -25,7 +25,7 @@ class UIWindowManager:
     def showMessage_subscriptionEnded(message):
         app = CTk()
         app.title("KodeArrow")
-        app.iconbitmap(get_resource_path(os.path.join('assets', 'branding', 'icon.ico')))
+        set_window_icon(app)
         ws = app.winfo_screenwidth()
         hs = app.winfo_screenheight()
         ctk.set_appearance_mode("Light")
@@ -55,7 +55,7 @@ class UIWindowManager:
     def showMessage_versionEnded(message):
         app = CTk()
         app.title("KodeArrow")
-        app.iconbitmap(get_resource_path(os.path.join('assets', 'branding', 'icon.ico')))
+        set_window_icon(app)
         ws = app.winfo_screenwidth()
         hs = app.winfo_screenheight()
         ctk.set_appearance_mode("Light")
@@ -85,7 +85,7 @@ class UIWindowManager:
     def show_instructions(is_premium):
         app = CTk()
         app.title("KodeArrow")
-        app.iconbitmap(get_resource_path(os.path.join('assets', 'branding', 'icon.ico')))
+        set_window_icon(app)
         UIWindowManager.windows.append(app)
         ws = app.winfo_screenwidth()
         hs = app.winfo_screenheight()
@@ -171,7 +171,7 @@ class UIWindowManager:
     def showMessage_success(title_text, message):
         app = CTk()
         app.title("KodeArrow")
-        app.iconbitmap(get_resource_path(os.path.join('assets', 'branding', 'icon.ico')))
+        set_window_icon(app)
         ws = app.winfo_screenwidth()
         hs = app.winfo_screenheight()
         ctk.set_appearance_mode("Light")
@@ -195,7 +195,7 @@ class UIWindowManager:
     def unlock_functionality(on_submit):
         app = CTk()
         app.title("KodeArrow")
-        app.iconbitmap(get_resource_path(os.path.join('assets', 'branding', 'icon.ico')))
+        set_window_icon(app)
         ws = app.winfo_screenwidth()
         hs = app.winfo_screenheight()
 
