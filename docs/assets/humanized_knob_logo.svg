@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <radialGradient id="sqBg" cx="50%" cy="36%" r="75%">
+      <stop offset="0%" stop-color="#161B26" />
+      <stop offset="60%" stop-color="#0B0E14" />
+      <stop offset="100%" stop-color="#05070A" />
+    </radialGradient>
+
+    <linearGradient id="sqBezel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#333E52" />
+      <stop offset="50%" stop-color="#121620" />
+      <stop offset="100%" stop-color="#242C3D" />
+    </linearGradient>
+
+    <radialGradient id="sqCap" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#1F2637" />
+      <stop offset="70%" stop-color="#0F131D" />
+      <stop offset="100%" stop-color="#090B10" />
+    </radialGradient>
+
+    <linearGradient id="sqNeedle" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF9900" />
+      <stop offset="100%" stop-color="#FF7A00" />
+    </linearGradient>
+
+    <filter id="sqGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="sqShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#000000" flood-opacity="0.8" />
+    </filter>
+  </defs>
+
+  <rect width="512" height="512" rx="115" fill="url(#sqBg)" stroke="#1B2230" stroke-width="2" />
+
+  <g id="sqGauge">
+    <line x1="169.7" y1="291.3" x2="157.0" y2="304.0" stroke="#00F2FE" stroke-width="3.6" stroke-linecap="round" opacity="0.50" />
+      <line x1="154.6" y1="272.8" x2="145.4" y2="278.9" stroke="#00F2FE" stroke-width="2.4" stroke-linecap="round" opacity="0.52" />
+      <line x1="143.3" y1="251.7" x2="133.1" y2="255.9" stroke="#00F2FE" stroke-width="2.4" stroke-linecap="round" opacity="0.54" />
+      <line x1="136.3" y1="228.8" x2="125.6" y2="230.9" stroke="#00F2FE" stroke-width="2.4" stroke-linecap="round" opacity="0.56" />
+      <line x1="134.0" y1="205.0" x2="123.0" y2="205.0" stroke="#00F2FE" stroke-width="2.4" stroke-linecap="round" opacity="0.58" />
+      <line x1="136.3" y1="181.2" x2="125.6" y2="179.1" stroke="#00F2FE" stroke-width="2.4" stroke-linecap="round" opacity="0.60" />
+      <line x1="143.3" y1="158.3" x2="126.7" y2="151.4" stroke="#00F2FE" stroke-width="3.6" stroke-linecap="round" opacity="0.62" />
+      <line x1="154.6" y1="137.2" x2="145.4" y2="131.1" stroke="#00F2FE" stroke-width="2.4" stroke-linecap="round" opacity="0.65" />
+      <line x1="169.7" y1="118.7" x2="162.0" y2="111.0" stroke="#A855F7" stroke-width="2.4" stroke-linecap="round" opacity="0.85" />
+      <line x1="188.2" y1="103.6" x2="182.1" y2="94.4" stroke="#A855F7" stroke-width="2.4" stroke-linecap="round" opacity="0.85" />
+      <line x1="209.3" y1="92.3" x2="205.1" y2="82.1" stroke="#A855F7" stroke-width="2.4" stroke-linecap="round" opacity="0.85" />
+      <line x1="232.2" y1="85.3" x2="230.1" y2="74.6" stroke="#A855F7" stroke-width="2.4" stroke-linecap="round" opacity="0.85" />
+      <line x1="256.0" y1="83.0" x2="256.0" y2="65.0" stroke="#A855F7" stroke-width="3.6" stroke-linecap="round" opacity="0.85" />
+      <line x1="279.8" y1="85.3" x2="281.9" y2="74.6" stroke="#A855F7" stroke-width="2.4" stroke-linecap="round" opacity="0.85" />
+      <line x1="302.7" y1="92.3" x2="306.9" y2="82.1" stroke="#A855F7" stroke-width="2.4" stroke-linecap="round" opacity="0.85" />
+      <line x1="323.8" y1="103.6" x2="329.9" y2="94.4" stroke="#A855F7" stroke-width="2.4" stroke-linecap="round" opacity="0.85" />
+      <line x1="342.3" y1="118.7" x2="350.0" y2="111.0" stroke="#A855F7" stroke-width="2.4" stroke-linecap="round" opacity="0.85" />
+      <line x1="357.4" y1="137.2" x2="366.6" y2="131.1" stroke="#FF7A00" stroke-width="2.4" stroke-linecap="round" opacity="1.00" />
+      <line x1="368.7" y1="158.3" x2="385.3" y2="151.4" stroke="#FF7A00" stroke-width="3.6" stroke-linecap="round" opacity="1.00" />
+      <line x1="375.7" y1="181.2" x2="386.4" y2="179.1" stroke="#FF7A00" stroke-width="2.4" stroke-linecap="round" opacity="1.00" />
+      <line x1="378.0" y1="205.0" x2="389.0" y2="205.0" stroke="#FF7A00" stroke-width="2.4" stroke-linecap="round" opacity="1.00" />
+      <line x1="375.7" y1="228.8" x2="386.4" y2="230.9" stroke="#FF7A00" stroke-width="2.4" stroke-linecap="round" opacity="1.00" />
+      <line x1="368.7" y1="251.7" x2="378.9" y2="255.9" stroke="#FF7A00" stroke-width="2.4" stroke-linecap="round" opacity="1.00" />
+      <line x1="357.4" y1="272.8" x2="366.6" y2="278.9" stroke="#FF7A00" stroke-width="2.4" stroke-linecap="round" opacity="1.00" />
+      <line x1="342.3" y1="291.3" x2="355.0" y2="304.0" stroke="#FF7A00" stroke-width="3.6" stroke-linecap="round" opacity="1.00" />
+    <text x="122" y="328" font-family="'Segoe UI', Roboto, 'Inter', sans-serif" font-size="16" font-weight="900" letter-spacing="2" fill="#00F2FE" filter="url(#sqGlow)">
+      AI
+    </text>
+    <text x="325" y="328" font-family="'Segoe UI', Roboto, 'Inter', sans-serif" font-size="16" font-weight="900" letter-spacing="2" fill="#FF7A00" filter="url(#sqGlow)">
+      HUMAN
+    </text>
+  </g>
+
+  <g id="sqKnob" filter="url(#sqShadow)">
+    <circle cx="256" cy="205" r="88" fill="url(#sqBezel)" stroke="#38455C" stroke-width="2" />
+    <circle cx="256" cy="205" r="84" fill="none" stroke="#07090E" stroke-width="3" stroke-dasharray="2 4" opacity="0.65" />
+    <circle cx="256" cy="205" r="78" fill="url(#sqCap)" stroke="#1E2638" stroke-width="1.5" />
+    <circle cx="256" cy="205" r="13" fill="#0E121A" stroke="#283244" stroke-width="1.5" />
+
+    <line x1="276.4" y1="196.8" x2="330.2" y2="175.0" stroke="url(#sqNeedle)" stroke-width="6.5" stroke-linecap="round" filter="url(#sqGlow)" />
+    <circle cx="330.2" cy="175.0" r="4" fill="#FFFFFF" filter="url(#sqGlow)" />
+  </g>
+
+  <!-- Typography: AI is Blue, Human is Orange -->
+  <text x="256" y="410" text-anchor="middle" font-family="'Segoe UI', Roboto, 'Inter', -apple-system, sans-serif" font-size="30" font-weight="900" letter-spacing="6" fill="#FFFFFF">
+    HUMANIZER
+  </text>
+  <text x="256" y="442" text-anchor="middle" font-family="'Segoe UI', Roboto, 'Inter', -apple-system, sans-serif" font-size="13" font-weight="800" letter-spacing="3.5">
+    <tspan fill="#64748B">DIAL FROM </tspan>
+    <tspan fill="#00F2FE" filter="url(#sqGlow)">AI</tspan>
+    <tspan fill="#64748B"> TO </tspan>
+    <tspan fill="#FF7A00" filter="url(#sqGlow)">HUMAN</tspan>
+  </text>
+</svg>

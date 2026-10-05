@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: GitHub Discussions
+    url: https://github.com/geeknik/NaSuno/discussions
+    about: Ask questions, share audio samples, and discuss ideas.
+  - name: Security Vulnerability Disclosure
+    url: https://github.com/geeknik/NaSuno/security/policy
+    about: Report security-sensitive issues privately.

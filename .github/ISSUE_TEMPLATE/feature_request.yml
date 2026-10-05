@@ -1,0 +1,39 @@
+name: Feature Request
+description: Propose a new feature, algorithm, or enhancement for NaSuno.
+title: "[FEAT]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We welcome proposals for new DSP filters, neural detection methods, performance optimizations, and integrations.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: Is your feature request related to a specific limitation or use case?
+      placeholder: "When processing multi-track stems, current algorithms..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed Solution
+      description: Detailed explanation of the proposed behavior, architecture, or algorithm.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Approaches Considered
+      description: Any alternative designs or workarounds you've explored.
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Implementation
+      options:
+        - label: "I am willing to submit a Pull Request to implement this feature."

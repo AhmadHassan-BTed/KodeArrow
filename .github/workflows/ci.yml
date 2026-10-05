@@ -1,0 +1,34 @@
+﻿name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Documentation & Registry Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Validate Knob Registry JSON
+        run: |
+          python3 -c "import json; json.load(open('docs/knob-registry.json'))"
+          echo "Knob registry JSON valid!"
+
+      - name: Verify Documentation & Public Assets
+        run: |
+          test -f docs/index.html
+          test -f docs/sitemap.xml
+          test -f docs/architecture.md
+          test -f docs/research/forensic-taxonomy.md
+          test -f docs/research/psychoacoustics-reference.md
+          echo "All architecture and research specifications verified!"

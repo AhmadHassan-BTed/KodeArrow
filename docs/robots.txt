@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://AhmadHassan-BTed.github.io/NaSuno/sitemap.xml

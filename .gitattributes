@@ -1,0 +1,35 @@
+# Auto detect text files and perform LF normalization
+* text=auto eol=lf
+
+# Python files
+*.py text diff=python eol=lf
+*.pyi text diff=python eol=lf
+
+# Documentation & Config
+*.md text eol=lf
+*.rst text eol=lf
+*.txt text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Shell & Windows scripts
+*.sh text eol=lf
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary audio files
+*.wav binary
+*.mp3 binary
+*.flac binary
+*.ogg binary
+*.m4a binary
+*.aac binary
+
+# Binary archives & compiled
+*.tar.gz binary
+*.zip binary
+*.whl binary
+*.pyc binary

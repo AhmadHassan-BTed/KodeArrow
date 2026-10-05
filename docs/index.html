@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NaSuno — AI Audio Footprint Evasion & Forensic Analyzer Rack</title>
+  <meta name="description" content="Defensive audio engineering toolkit designed to defeat AI detection pipelines, neural watermarks, and acoustic fingerprinting with zero audible degradation. Dual-mode evasion knobs and full raw parameter matrix.">
+  <meta name="keywords" content="AI audio footprint evasion, bypass Suno detection, Udio watermark remover, defeat audio fingerprinting, AcoustID bypass, audio forensics, FL Studio VST plugin, psychoacoustic firewall, cepstral echo strip">
+  <meta name="author" content="Ahmad Hassan (B-Ted)">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="theme-color" content="#16191f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="canonical" href="https://AhmadHassan-BTed.github.io/NaSuno/">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/humanized_knob_logo.svg">
+
+  <!-- Open Graph / Facebook / Discord -->
+  <meta property="og:type" content="website">
+
+  <!-- Instant Pre-Auth Session Recovery Guard & URL Protection -->
+  <script>
+    (function() {
+      try {
+        // Active URL Protection: Strip insecure auth query parameters from address bar
+        if (window.location && window.location.search) {
+          var badKeys = ['key', 'usr', 'user', 'unlock', 'unlocked', 'auth', 'token', 'code', 'admin', 'secret', 'bypass', 'access'];
+          var url = new URL(window.location.href);
+          var changed = false;
+          for (var i = 0; i < badKeys.length; i++) {
+            if (url.searchParams.has(badKeys[i])) {
+              url.searchParams.delete(badKeys[i]);
+              changed = true;
+            }
+          }
+          if (changed) {
+            var clean = url.pathname + (url.searchParams.toString() ? '?' + url.searchParams.toString() : '') + url.hash;
+            window.history.replaceState({}, document.title, clean);
+          }
+        }
+
+        // Check localStorage and cookie state
+        var uVal = localStorage.getItem('nasuno_unlocked');
+        var isUnlocked = uVal === 'true' || uVal === '1';
+        if (!isUnlocked && document.cookie) {
+          var m = document.cookie.match(/(?:^|; )nasuno_unlocked=([^;]*)/);
+          if (m) {
+            var cVal = decodeURIComponent(m[1]).trim().toLowerCase();
+            isUnlocked = (cVal === 'true' || cVal === '1');
+          }
+        }
+        if (isUnlocked) {
+          document.documentElement.classList.add('nasuno-unlocked');
+        } else {
+          document.documentElement.classList.remove('nasuno-unlocked');
+        }
+      } catch(e) {}
+    })();
+  </script>
+  <meta property="og:site_name" content="HUMANIZER Audio Studio">
+  <meta property="og:url" content="https://AhmadHassan-BTed.github.io/NaSuno/">
+  <meta property="og:title" content="HUMANIZER — Dial from AI to Human">
+  <meta property="og:description" content="Clean your tracks. Remove Suno & AI watermarks. Phase-neutral mathematical DSP retaining 100% audio quality.">
+  <meta property="og:image" content="https://raw.githubusercontent.com/AhmadHassan-BTed/NaSuno/main/docs/assets/humanized_knob_banner_large.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta property="og:image:alt" content="HUMANIZER — Dial from AI to Human Banner">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://AhmadHassan-BTed.github.io/NaSuno/">
+  <meta name="twitter:title" content="HUMANIZER — Dial from AI to Human">
+  <meta name="twitter:description" content="Clean your tracks. Remove Suno & AI watermarks. Phase-neutral mathematical DSP retaining 100% audio quality.">
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/AhmadHassan-BTed/NaSuno/main/docs/assets/humanized_knob_banner_large.png">
+
+  <!-- JSON-LD Structured Data for Google Rich Snippets -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "NaSuno",
+    "operatingSystem": "Cross-platform (Linux, Windows, macOS, Web Audio)",
+    "applicationCategory": "MultimediaApplication",
+    "softwareRequirements": "Modern Web Browser or Python 3.9+",
+    "offers": {
+      "@type": "Offer",
+      "price": "0.00",
+      "priceCurrency": "USD"
+    },
+    "description": "Defensive audio engineering toolkit designed to defeat AI audio detection pipelines, ultrasonic carrier marks, cepstral echo hiding, and acoustic fingerprinting.",
+    "author": {
+      "@type": "Person",
+      "name": "Ahmad Hassan (B-Ted)",
+      "url": "https://github.com/AhmadHassan-BTed"
+    }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background DAW Grid & Ambient Glow -->
+  <div class="daw-background"></div>
+  <div class="ambient-glow"></div>
+
+  <!-- Main Rack Chassis -->
+  <main class="rack-wrapper">
+
+    <!-- Top Rack Bar -->
+    <header class="rack-top-bar">
+      <div class="brand-cluster">
+        <div class="brand-logo-fl" style="overflow: hidden; padding: 0; background: transparent;">
+          <img src="assets/humanized_knob_logo.svg" alt="Humanizer Logo" width="22" height="22" style="border-radius: 4px; display: block;">
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-title">HUMANIZER <span>v2.5</span></h1>
+          <span class="brand-subtitle">DIAL FROM <span style="color: #00F2FE; font-weight: 800;">AI</span> TO <span style="color: #FF7A00; font-weight: 800;">HUMAN</span></span>
+        </div>
+      </div>
+
+      <!-- Preset Selector -->
+      <div class="preset-chassis">
+        <div class="preset-label">PROFILE</div>
+        <div class="preset-selector-box" id="presetSelectorBtn" title="Choose Evasion Profile">
+          <span class="preset-current-name" id="currentPresetName">Standard Evasion</span>
+          <svg class="preset-arrow-svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="preset-dropdown" id="presetDropdown">
+          <button class="preset-opt" data-preset="off">Off (Original Audio / Direct)</button>
+          <button class="preset-opt" data-preset="lowProfile">Low Profile (Pristine Fidelity)</button>
+          <button class="preset-opt active" data-preset="standardEvasion">Standard Evasion (Balanced)</button>
+          <button class="preset-opt" data-preset="deepClean">Deep Clean (Multi-Vector)</button>
+          <button class="preset-opt" data-preset="fullScrub">Full Scrub (Max Destruction)</button>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="top-actions">
+        <div class="verified-pill" id="verifiedPill" style="display: none;">
+          <span class="verified-dot"></span>
+          <span class="verified-user" id="verifiedUserLabel">@User</span>
+          <button class="verified-lock-btn" id="verifiedLockBtn" title="Lock Engine / Switch Account" aria-label="Lock Engine">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </button>
+        </div>
+        <div class="bypass-cluster">
+          <button class="btn-pill" id="bypassBtn" title="Toggle DSP Bypass (Audition Raw vs Processed)">
+            <span class="led-dot active" id="bypassLed"></span>
+            <span class="btn-text" id="bypassText">DSP ACTIVE</span>
+          </button>
+          <button class="bypass-info-btn" id="dspInfoBtn" title="DSP Active / Bypass Information" aria-label="DSP Information">
+            <svg class="svg-icon-info" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          </button>
+        </div>
+        <a href="https://github.com/AhmadHassan-BTed/NaSuno" target="_blank" rel="noopener noreferrer" class="btn-icon" title="View Source on GitHub">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+        </a>
+      </div>
+    </header>
+
+    <!-- Spectrum & Forensic Detection Section -->
+    <section class="screen-chassis">
+      <div class="screen-header">
+        <div class="scope-titles">
+          <span class="panel-tag">REAL-TIME FFT SPECTRUM ANALYZER</span>
+          <span class="scope-mode" id="scopeModeLabel">2048-POINT FFT • DUAL-TRACE OVERLAY (ORANGE GHOST: ORIGINAL • CYAN: LIVE EVASION)</span>
+        </div>
+        <div class="audio-controls">
+          <button class="audio-btn" id="playBtn" title="Play / Pause Audio Demo">
+            <span id="playIcon" class="icon-wrap">
+              <svg class="svg-play" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+            </span>
+            <span id="playLabel">PLAY DEMO</span>
+          </button>
+          <div class="track-select-pills">
+            <button class="track-pill active" id="trackCleanBtn">PROCESSED DEMO</button>
+            <button class="track-pill" id="trackRawBtn">ORIGINAL DEMO</button>
+          </div>
+          <label class="upload-pill" title="Upload your own audio file to test">
+            <input type="file" id="userAudioUpload" accept="audio/*">
+            <span>UPLOAD AUDIO</span>
+          </label>
+          <button class="btn-reset-demo" id="resetDemoBtn" style="display: none;" title="Unload custom audio and return to demo track">
+            RESET TO DEMO
+          </button>
+        </div>
+      </div>
+
+      <!-- DAW Audio Playback Seeker / Scrubber Bar -->
+      <div class="playback-seeker-chassis" aria-label="Audio Playback Timeline Scrubber">
+        <span class="time-readout" id="playbackTimeCurrent">00:00</span>
+        <div class="seeker-track-wrapper" id="seekerTrackWrapper" title="Click or drag to scrub playback position">
+          <div class="seeker-track-bg"></div>
+          <div class="seeker-progress-fill" id="seekerProgressFill"></div>
+          <input type="range" class="seeker-slider" id="audioSeeker" min="0" max="100" value="0" step="0.05" aria-label="Audio Playback Timeline Scrubber">
+        </div>
+        <span class="time-readout total" id="playbackTimeTotal">00:00</span>
+      </div>
+
+      <!-- Logarithmic Spectrum Canvas -->
+      <div class="scope-display-container">
+        <canvas id="scopeCanvas" width="1080" height="180"></canvas>
+      </div>
+
+      <!-- Real Forensic Detection Readout Panel -->
+      <div class="forensic-panel" id="forensicPanel">
+        <div class="forensic-panel-header">
+          <span class="forensic-panel-title">
+            <span class="forensic-indicator"></span>
+            FORENSIC TELEMETRY READOUT
+          </span>
+          <span class="forensic-status-line" id="forensicStatus">Awaiting audio signal...</span>
+        </div>
+
+        <div class="forensic-metrics-grid">
+          <!-- Carrier 1 -->
+          <div class="metric-card">
+            <span class="metric-title">CARRIER 1 (15–16 kHz)</span>
+            <span class="metric-val" id="carrier1Freq">15.5 kHz</span>
+            <span class="metric-sub" id="carrier1Prom">0.00 dB</span>
+            <div class="metric-meter-bar">
+              <div class="meter-fill" id="carrier1Bar" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <!-- Carrier 2 -->
+          <div class="metric-card">
+            <span class="metric-title">CARRIER 2 (17–18 kHz)</span>
+            <span class="metric-val" id="carrier2Freq">17.5 kHz</span>
+            <span class="metric-sub" id="carrier2Prom">0.00 dB</span>
+            <div class="metric-meter-bar">
+              <div class="meter-fill" id="carrier2Bar" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <!-- Carrier 3 -->
+          <div class="metric-card">
+            <span class="metric-title">CARRIER 3 (19–20 kHz)</span>
+            <span class="metric-val" id="carrier3Freq">19.5 kHz</span>
+            <span class="metric-sub" id="carrier3Prom">0.00 dB</span>
+            <div class="metric-meter-bar">
+              <div class="meter-fill" id="carrier3Bar" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <!-- Cepstral Echo -->
+          <div class="metric-card">
+            <span class="metric-title">CEPSTRAL ECHO</span>
+            <span class="metric-val" id="echoDelay">None</span>
+            <span class="metric-sub" id="echoScore">MAD 0.00</span>
+            <div class="metric-meter-bar">
+              <div class="meter-fill" id="echoBar" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <!-- Spectral Flatness -->
+          <div class="metric-card">
+            <span class="metric-title">SPECTRAL FLATNESS</span>
+            <span class="metric-val" id="valFlatness">0.0000</span>
+            <span class="metric-sub" id="valCrest">Crest 0.0 dB</span>
+          </div>
+
+          <!-- Dynamics -->
+          <div class="metric-card">
+            <span class="metric-title">DYNAMIC RANGE</span>
+            <span class="metric-val" id="valPeak">-∞ dBFS</span>
+            <span class="metric-sub" id="valRms">RMS -∞ dBFS</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dual-Mode Panel Tabs Navigation -->
+    <nav class="panel-tabs-bar" aria-label="Mode Tabs">
+      <button class="panel-tab active" data-panel="evasion">
+        <svg class="tab-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><circle cx="4" cy="12" r="2"/><circle cx="12" cy="10" r="2"/><circle cx="20" cy="14" r="2"/></svg>
+        <span>EVASION MODE (14 VECTORS)</span>
+      </button>
+      <button class="panel-tab" data-panel="advanced">
+        <svg class="tab-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>ADVANCED MODE (91 PARAMS)</span>
+      </button>
+      <button class="panel-tab" data-panel="config">
+        <svg class="tab-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span>CONFIG I/O</span>
+      </button>
+    </nav>
+
+    <!-- Panel View Containers (Dynamically populated by registry.js) -->
+    <section class="rack-panel-view active" id="evasionPanel" data-panel-view="evasion"></section>
+    <section class="rack-panel-view" id="advancedPanel" data-panel-view="advanced"></section>
+    <section class="rack-panel-view" id="configPanel" data-panel-view="config"></section>
+
+    <!-- Action & Export Bar -->
+    <footer class="action-export-bar">
+      <div class="export-cluster">
+        <button class="btn-export" id="exportWavBtn" title="Export processed audio as 16-bit PCM WAV">
+          <svg class="btn-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span>EXPORT CLEANED WAV</span>
+        </button>
+        <button class="btn-export btn-secondary" id="quickExportConfigBtn" title="Export current engine config as engine_knobs.json">
+          <svg class="btn-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          <span>EXPORT CONFIG</span>
+        </button>
+        <span class="export-status" id="exportStatus">Ready</span>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- Info Popover Modal & Backdrop -->
+  <div class="popover-backdrop" id="popoverBackdrop"></div>
+  <div class="info-popover" id="infoPopover" role="dialog" aria-modal="true">
+    <div class="popover-header">
+      <div class="popover-title-row">
+        <span class="popover-title" id="popoverTitle">Vector Information</span>
+        <span class="popover-badge" id="popoverBadge">MODULE</span>
+      </div>
+      <button class="popover-close" id="popoverCloseBtn" aria-label="Close">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="popover-body" id="popoverBody"></div>
+  </div>
+
+  <!-- Community Verification & Access Lock Modal -->
+  <div class="auth-gate-overlay" id="nasunoAuthGate" role="dialog" aria-modal="true" aria-labelledby="authGateTitle">
+    <div class="auth-gate-card">
+      <div class="auth-card-header">
+        <div class="auth-badge">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>VERIFICATION LOCK</span>
+        </div>
+        <h2 class="auth-card-title" id="authGateTitle">FORENSIC ENGINE LOCKED</h2>
+        <p class="auth-card-desc">Support open-source audio forensics. Star the core repositories and follow the creator on GitHub to unlock full DSP evasion, real-time FFT spectrum, and lossless WAV export.</p>
+      </div>
+
+      <div class="auth-steps-panel">
+        <div class="auth-step-row" id="stepFollowUser">
+          <span class="step-indicator" id="stepFollowUserIcon">1</span>
+          <div class="step-info">
+            <span class="step-title">Follow Creator</span>
+            <span class="step-target"><a href="https://github.com/AhmadHassan-BTed" target="_blank" rel="noopener noreferrer">@AhmadHassan-BTed ↗</a></span>
+          </div>
+          <span class="step-status" id="stepFollowUserStatus">Required</span>
+        </div>
+
+        <div class="auth-step-row" id="stepFollowOrg">
+          <span class="step-indicator" id="stepFollowOrgIcon">2</span>
+          <div class="step-info">
+            <span class="step-title">Follow Organization</span>
+            <span class="step-target"><a href="https://github.com/Fractal-Compute-Orchestrations" target="_blank" rel="noopener noreferrer">@Fractal-Compute-Orchestrations ↗</a></span>
+          </div>
+          <span class="step-status" id="stepFollowOrgStatus">Required</span>
+        </div>
+
+        <div class="auth-step-row" id="stepStars">
+          <span class="step-indicator" id="stepStarsIcon">3</span>
+          <div class="step-info">
+            <span class="step-title">Star Core Repositories</span>
+            <span class="step-target" id="stepStarsTarget">Star all active developer repositories below</span>
+          </div>
+          <span class="step-status" id="stepStarsStatus">Required</span>
+        </div>
+      </div>
+
+      <!-- GitHub OAuth 1-Click Action -->
+      <div class="auth-oauth-action">
+        <a href="https://github.com/login/oauth/authorize?client_id=Ov23liT2GgHx7axGVy8L&amp;redirect_uri=https://AhmadHassan-BTed.github.io/NaSuno/&amp;scope=read:user" class="btn-oauth-github" id="githubOAuthBtn" title="Authorize via registered GitHub OAuth App">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span>1-Click Authorize with GitHub</span>
+        </a>
+        <div class="auth-divider"><span>OR ENTER USERNAME MANUALLY</span></div>
+      </div>
+
+      <!-- Input Form -->
+      <form class="auth-form" id="authGateForm" onsubmit="return false;">
+        <div class="auth-input-group">
+          <span class="auth-input-prefix">@</span>
+          <input type="text" id="authUsernameInput" class="auth-input" placeholder="GitHub username or bypass key (e.g. btdev)" autocomplete="off" spellcheck="false" required>
+          <button type="submit" id="authVerifyBtn" class="btn-auth-verify">
+            <span class="verify-btn-text" id="verifyBtnText">VERIFY & UNLOCK</span>
+            <div class="verify-spinner" id="verifySpinner"></div>
+          </button>
+        </div>
+        <div class="auth-status-banner" id="authStatusMsg" style="display: none;"></div>
+      </form>
+
+      <!-- Remaining / Required Repositories to Star -->
+      <div class="unstarred-section" id="unstarredSection">
+        <div class="unstarred-header">
+          <span class="unstarred-title" id="unstarredTitle">Required Repositories</span>
+          <span class="unstarred-badge" id="unstarredBadge">3 Repos</span>
+        </div>
+        <p class="unstarred-note">Click each repository below to star it on GitHub before verifying:</p>
+        <div class="unstarred-list" id="unstarredList">
+          <!-- Populated dynamically by auth logic -->
+        </div>
+      </div>
+
+      <div class="auth-footer-bar">
+        <span class="auth-footnote">Dev / Offline bypass key: <code>btdev</code></span>
+        <a href="https://github.com/AhmadHassan-BTed/NaSuno" target="_blank" rel="noopener noreferrer" class="auth-footer-link">NaSuno Source ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Entry Point (ES Module) -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>

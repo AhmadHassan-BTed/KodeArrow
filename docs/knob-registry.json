@@ -1,0 +1,2808 @@
+{
+  "version": "2.4",
+  "description": "NaSuno Single Source of Truth Knob & Parameter Registry",
+  "totalEngineParams": 222,
+  "compositeKnobs": [
+    {
+      "id": "carrierErase",
+      "label": "CARRIER ERASE",
+      "module": "watermarkErase",
+      "moduleTitle": "WATERMARK ERASE",
+      "moduleSubtitle": "Direct removal of embedded AI marks",
+      "ring": "cyan",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 50,
+      "unit": "%",
+      "liveDSP": true,
+      "info": {
+        "title": "Carrier Erase",
+        "defeats": "Ultrasonic carrier tone detection (15\u201320 kHz)",
+        "description": "Suno and Udio embed inaudible tonal carriers at 15.5, 17.5, and 19.5 kHz. This knob controls the Q-factor of notch filters that surgically suppress these carriers.",
+        "howItWorks": "Three cascaded IIR notch filters at known carrier frequencies. Higher = sharper notch = deeper suppression. Q scales from 4.0 (wide) to 30.0 (surgical).",
+        "tradeoff": "Very high values may create narrow spectral holes. Quality Gate prevents audible damage."
+      },
+      "curves": [
+        {
+          "target": "classical.carrier_notch_q",
+          "lo": 10.0,
+          "hi": 60.0
+        },
+        {
+          "target": "classical.spectral_peak_threshold_factor",
+          "lo": 4.5,
+          "hi": 2.5
+        },
+        {
+          "target": "classical.harmonic_filterbank_q",
+          "lo": 20.0,
+          "hi": 65.0
+        },
+        {
+          "target": "__dsp__.notch1Q",
+          "lo": 4.0,
+          "hi": 30.0
+        },
+        {
+          "target": "__dsp__.notch2Q",
+          "lo": 3.4,
+          "hi": 25.5
+        },
+        {
+          "target": "__dsp__.notch3Q",
+          "lo": 2.8,
+          "hi": 21.0
+        }
+      ]
+    },
+    {
+      "id": "strideRemove",
+      "label": "STRIDE REMOVE",
+      "module": "watermarkErase",
+      "moduleTitle": "WATERMARK ERASE",
+      "moduleSubtitle": "Direct removal of embedded AI marks",
+      "ring": "cyan",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 35,
+      "unit": "%",
+      "liveDSP": true,
+      "info": {
+        "title": "Stride Remove",
+        "defeats": "Upsampler periodic comb artifacts (172.3 Hz)",
+        "description": "Neural neural upsamplers leave periodic frame-rate artifacts. This knob controls the comb filter depth and notch attenuation targeting the 172.3 Hz fundamental stride.",
+        "howItWorks": "Harmonic comb filtering and median detrending carve out periodic spikes at neural frame boundaries without affecting surrounding music.",
+        "tradeoff": "Higher values remove more comb energy but could slightly thin low-mid bass if unconstrained."
+      },
+      "curves": [
+        {
+          "target": "upsampler.comb_depth",
+          "lo": 0.01,
+          "hi": 0.15
+        },
+        {
+          "target": "upsampler.max_cut_db",
+          "lo": 3.0,
+          "hi": 12.0
+        },
+        {
+          "target": "upsampler.peak_threshold_db",
+          "lo": 3.5,
+          "hi": 1.0
+        }
+      ]
+    },
+    {
+      "id": "stegoStrip",
+      "label": "STEGO STRIP",
+      "module": "watermarkErase",
+      "moduleTitle": "WATERMARK ERASE",
+      "moduleSubtitle": "Direct removal of embedded AI marks",
+      "ring": "cyan",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 45,
+      "unit": "%",
+      "liveDSP": true,
+      "info": {
+        "title": "Stego Strip",
+        "defeats": "Cepstral echo & spread-spectrum hiding",
+        "description": "Detects and disrupts micro-echoes (0.5\u201315 ms) and Quantized Index Modulation (QIM) lattices used to covertly embed metadata.",
+        "howItWorks": "Cepstral inverse filtering removes sub-threshold delays while pseudo-random lattice dither knocks out QIM bit recovery.",
+        "tradeoff": "Moderate values preserve vocal transients; extreme values may introduce micro-dither noise."
+      },
+      "curves": [
+        {
+          "target": "classical.max_echo_cut_db",
+          "lo": 4.0,
+          "hi": 18.0
+        },
+        {
+          "target": "classical.echo_mad_multiplier",
+          "lo": 5.0,
+          "hi": 3.0
+        },
+        {
+          "target": "classical.echo_alpha_max",
+          "lo": 0.08,
+          "hi": 0.25
+        },
+        {
+          "target": "classical.spread_spectrum_threshold_mult",
+          "lo": 4.0,
+          "hi": 2.5
+        },
+        {
+          "target": "classical.qim_dither_base_scale",
+          "lo": 1e-05,
+          "hi": 5e-05
+        },
+        {
+          "target": "classical.qim_lattice_dither_max",
+          "lo": 0.0002,
+          "hi": 0.001
+        }
+      ]
+    },
+    {
+      "id": "neuralScrub",
+      "label": "NEURAL SCRUB",
+      "module": "watermarkErase",
+      "moduleTitle": "WATERMARK ERASE",
+      "moduleSubtitle": "Direct removal of embedded AI marks",
+      "ring": "cyan",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 45,
+      "unit": "%",
+      "liveDSP": true,
+      "info": {
+        "title": "Neural Scrub",
+        "defeats": "Neural codec spectral residuals & diffusion floor",
+        "description": "Diffusion decoders and neural vocoders leave characteristic high-frequency residual hiss and Wiener floor patterns.",
+        "howItWorks": "Multi-band spectral subtraction and Wiener filtering strip the synthetic noise floor down to natural acoustic baseline.",
+        "tradeoff": "Aggressive settings can cause faint musical noise; controlled by the Wiener spectral floor."
+      },
+      "curves": [
+        {
+          "target": "neural_residual.tier",
+          "lo": 1,
+          "hi": 4,
+          "type": "stepped"
+        },
+        {
+          "target": "neural_residual.target_snr_db",
+          "lo": 45.0,
+          "hi": 30.0
+        },
+        {
+          "target": "neural_residual.ss_alpha",
+          "lo": 1.0,
+          "hi": 2.2
+        },
+        {
+          "target": "neural_residual.ss_beta",
+          "lo": 0.04,
+          "hi": 0.15
+        },
+        {
+          "target": "neural_residual.wiener_spectral_floor",
+          "lo": 0.12,
+          "hi": 0.03
+        },
+        {
+          "target": "neural_residual.micro_gain_deviation",
+          "lo": 0.001,
+          "hi": 0.005
+        },
+        {
+          "target": "noise_level",
+          "lo": 1e-05,
+          "hi": 0.0005
+        }
+      ]
+    },
+    {
+      "id": "spectralBlend",
+      "label": "SPECTRAL BLEND",
+      "module": "fingerprintScatter",
+      "moduleTitle": "FINGERPRINT SCATTER",
+      "moduleSubtitle": "Spectral shape & phase coherence disruption",
+      "ring": "cyan",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 40,
+      "unit": "%",
+      "liveDSP": true,
+      "info": {
+        "title": "Spectral Blend",
+        "defeats": "Mel-frequency shape fingerprinting",
+        "description": "Audio classifiers analyze energy across Mel filterbanks to fingerprint synthetic audio. This knob blends adjacent Mel bins smoothly.",
+        "howItWorks": "Adaptive median smoothing across 128 Mel bands flattens unnatural energy peaks that trigger classification models.",
+        "tradeoff": "Higher values broaden harmonic peaks slightly; kept transparent by min linear gain limits."
+      },
+      "curves": [
+        {
+          "target": "mel_domain.mad_threshold",
+          "lo": 5.0,
+          "hi": 2.0
+        },
+        {
+          "target": "mel_domain.blend_ratio_max",
+          "lo": 0.1,
+          "hi": 0.5
+        },
+        {
+          "target": "mel_domain.min_linear_gain",
+          "lo": 0.2,
+          "hi": 0.05
+        }
+      ]
+    },
+    {
+      "id": "phaseScatter",
+      "label": "PHASE SCATTER",
+      "module": "fingerprintScatter",
+      "moduleTitle": "FINGERPRINT SCATTER",
+      "moduleSubtitle": "Spectral shape & phase coherence disruption",
+      "ring": "cyan",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 40,
+      "unit": "%",
+      "liveDSP": true,
+      "info": {
+        "title": "Phase Scatter",
+        "defeats": "Phase coherence & correlation analysis",
+        "description": "AI models generate unnaturally coherent phase relationships across frequency bins. Phase Scatter introduces micro-dispersion.",
+        "howItWorks": "Applies transient-safe phase jitter to steady-state bins while strictly preserving attack transients to keep punch crisp.",
+        "tradeoff": "Keeps stereo imaging wide and natural without introducing smearing."
+      },
+      "curves": [
+        {
+          "target": "phase_decorrelate.inter_frame_variance_threshold",
+          "lo": 0.4,
+          "hi": 0.15
+        },
+        {
+          "target": "phase_decorrelate.transient_group_shift_max",
+          "lo": 0.02,
+          "hi": 0.1
+        },
+        {
+          "target": "phase_decorrelate.steady_state_dispersion_max",
+          "lo": 0.03,
+          "hi": 0.25
+        },
+        {
+          "target": "resynthesis.max_phase_dispersion",
+          "lo": 0.03,
+          "hi": 0.25
+        },
+        {
+          "target": "resynthesis.transient_shift_max",
+          "lo": 0.02,
+          "hi": 0.1
+        },
+        {
+          "target": "phase_variance",
+          "lo": 0.002,
+          "hi": 0.015
+        }
+      ]
+    },
+    {
+      "id": "statNormalize",
+      "label": "STAT NORMALIZE",
+      "module": "fingerprintScatter",
+      "moduleTitle": "FINGERPRINT SCATTER",
+      "moduleSubtitle": "Spectral shape & phase coherence disruption",
+      "ring": "cyan",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 40,
+      "unit": "%",
+      "liveDSP": true,
+      "info": {
+        "title": "Stat Normalize",
+        "defeats": "Benford's Law, entropy & quantization anomalies",
+        "description": "Synthetic audio exhibits unnatural sample-value distributions and low entropy that forensic statistical tests detect immediately.",
+        "howItWorks": "Injects shaped micro-dither and adjusts first-digit mantissa distributions to conform to Benford's Law and organic entropy curves.",
+        "tradeoff": "Completely transparent to human ears while turning statistical detectors into coin flips."
+      },
+      "curves": [
+        {
+          "target": "statistical.target_min_variance",
+          "lo": 0.08,
+          "hi": 0.18
+        },
+        {
+          "target": "statistical.spectral_flatness_floor",
+          "lo": 0.08,
+          "hi": 0.18
+        },
+        {
+          "target": "statistical.dither_floor_amp",
+          "lo": 5e-05,
+          "hi": 0.0003
+        },
+        {
+          "target": "statistical.benford_kl_threshold",
+          "lo": 0.08,
+          "hi": 0.03
+        },
+        {
+          "target": "statistical.benford_dither_strength",
+          "lo": 5e-05,
+          "hi": 0.0002
+        },
+        {
+          "target": "quantization.dither_amplitude",
+          "lo": 5e-05,
+          "hi": 0.0005
+        },
+        {
+          "target": "quantization.max_dither_clip",
+          "lo": 0.0002,
+          "hi": 0.001
+        },
+        {
+          "target": "quantization.mode_spacing_fraction",
+          "lo": 0.2,
+          "hi": 0.45
+        },
+        {
+          "target": "distribution_noise_level",
+          "lo": 1e-05,
+          "hi": 0.0005
+        }
+      ]
+    },
+    {
+      "id": "hashBreak",
+      "label": "HASH BREAK",
+      "module": "fingerprintScatter",
+      "moduleTitle": "FINGERPRINT SCATTER",
+      "moduleSubtitle": "Spectral shape & phase coherence disruption",
+      "ring": "cyan",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 30,
+      "unit": "%",
+      "liveDSP": true,
+      "info": {
+        "title": "Hash Break",
+        "defeats": "AcoustID & Chromaprint acoustic fingerprint matching",
+        "description": "Audio identification databases (Shazam, YouTube ContentID) rely on exact peak-time constellation graphs.",
+        "howItWorks": "Applies sub-perceptual tape wow (cents pitch modulation) and micro-time grid jitter, desynchronizing hash matching.",
+        "tradeoff": "Subtle pitch modulation (< 3 cents) mimics vintage analog tape wow without detuning instruments."
+      },
+      "curves": [
+        {
+          "target": "hash_disrupt.base_cents",
+          "lo": 0.5,
+          "hi": 6.0
+        },
+        {
+          "target": "hash_disrupt.wow_depth_cents",
+          "lo": 0.17,
+          "hi": 2.0
+        },
+        {
+          "target": "hash_disrupt.phase_jitter_amount",
+          "lo": 0.0001,
+          "hi": 0.0015
+        },
+        {
+          "target": "hash_disrupt.stutter_interval_sec",
+          "lo": 12.0,
+          "hi": 4.0
+        },
+        {
+          "target": "sync_disrupt.drift_depth",
+          "lo": 0.001,
+          "hi": 0.01
+        },
+        {
+          "target": "sync_disrupt.crop_min_samples",
+          "lo": 5,
+          "hi": 20,
+          "type": "int"
+        },
+        {
+          "target": "sync_disrupt.crop_max_samples",
+          "lo": 32,
+          "hi": 128,
+          "type": "int"
+        },
+        {
+          "target": "pipeline.frame_grid_jitter_max_samples",
+          "lo": 32,
+          "hi": 128,
+          "type": "int"
+        },
+        {
+          "target": "timing_stretch_range",
+          "lo": 0.001,
+          "hi": 0.01
+        },
+        {
+          "target": "timing_variation_range",
+          "lo": 0.001,
+          "hi": 0.008
+        }
+      ]
+    },
+    {
+      "id": "roomInject",
+      "label": "ROOM INJECT",
+      "module": "naturalization",
+      "moduleTitle": "NATURALIZATION",
+      "moduleSubtitle": "Acoustic realism & room signature restoration",
+      "ring": "green",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 35,
+      "unit": "%",
+      "liveDSP": true,
+      "info": {
+        "title": "Room Inject",
+        "defeats": "Sterile anechoic synthetic environment detection",
+        "description": "Real music recordings possess physical room impulse responses (RIR) and electrical grid (ENF) hum that AI audio lacks.",
+        "howItWorks": "Simulates subtle acoustic room reflections (RT60 50\u2013300 ms), Brownian electrical grid jitter, and micro vocal timing fluctuations.",
+        "tradeoff": "Adds depth and realism. Higher wet mixes sound like live studio rooms."
+      },
+      "curves": [
+        {
+          "target": "environment.wet_mix",
+          "lo": 0.01,
+          "hi": 0.1
+        },
+        {
+          "target": "environment.rt60_sec",
+          "lo": 0.05,
+          "hi": 0.3
+        },
+        {
+          "target": "environment.enf_drift_sigma",
+          "lo": 0.002,
+          "hi": 0.01
+        },
+        {
+          "target": "environment.vocal_micro_jitter_percent",
+          "lo": 0.001,
+          "hi": 0.005
+        }
+      ]
+    },
+    {
+      "id": "textureInject",
+      "label": "TEXTURE INJECT",
+      "module": "naturalization",
+      "moduleTitle": "NATURALIZATION",
+      "moduleSubtitle": "Acoustic realism & room signature restoration",
+      "ring": "green",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 35,
+      "unit": "%",
+      "liveDSP": true,
+      "info": {
+        "title": "Texture Inject",
+        "defeats": "Missing organic texture & harmonic sterility",
+        "description": "Physical musical instruments and real vocal cords produce non-linear saturation, micro-breath textures, and bispectral harmonics.",
+        "howItWorks": "LPC residual speech modeling injects micro-textures while bispectral polynomial distortion restores analog tube/tape warm harmonics.",
+        "tradeoff": "Enhances presence and warmth. Excessive levels add vintage drive coloration."
+      },
+      "curves": [
+        {
+          "target": "bispectral.cubic_coeff",
+          "lo": 0.005,
+          "hi": 0.04
+        },
+        {
+          "target": "bispectral.quintic_coeff",
+          "lo": 0.001,
+          "hi": 0.012
+        },
+        {
+          "target": "lpc_residual.pred_gain_threshold_db",
+          "lo": 5.0,
+          "hi": 2.0
+        },
+        {
+          "target": "lpc_residual.kurtosis_threshold",
+          "lo": 7.0,
+          "hi": 3.5
+        },
+        {
+          "target": "lpc_residual.micro_texture_rel_amp",
+          "lo": 0.004,
+          "hi": 0.02
+        },
+        {
+          "target": "disclosure.morse_corr_threshold",
+          "lo": 0.55,
+          "hi": 0.35
+        },
+        {
+          "target": "harmonic_distortion_amount",
+          "lo": 0.002,
+          "hi": 0.02
+        },
+        {
+          "target": "micro_dynamics_amount",
+          "lo": 0.0005,
+          "hi": 0.004
+        }
+      ]
+    },
+    {
+      "id": "bandwidthHeal",
+      "label": "BANDWIDTH HEAL",
+      "module": "naturalization",
+      "moduleTitle": "NATURALIZATION",
+      "moduleSubtitle": "Acoustic realism & room signature restoration",
+      "ring": "green",
+      "min": -6.0,
+      "max": 6.0,
+      "step": 0.25,
+      "default": 0.25,
+      "unit": "dB",
+      "liveDSP": true,
+      "info": {
+        "title": "Bandwidth Heal",
+        "defeats": "Brickwall bandwidth cutoff & missing air frequencies",
+        "description": "AI models often cut off sharply at 16 kHz or 18 kHz. This knob boosts high-frequency air bands and blends comfort noise above cutoff.",
+        "howItWorks": "High-shelf filter at 12 kHz restores high-frequency sheen; comfort noise rolloff gently softens the steep brickwall edge.",
+        "tradeoff": "Restores openness and clarity lost during watermark notch filtering."
+      },
+      "curves": [
+        {
+          "target": "__dsp__.shelfGain",
+          "lo": -6.0,
+          "hi": 6.0
+        },
+        {
+          "target": "mastering.air_gain_db_min",
+          "lo": 0.0,
+          "hi": 0.6
+        },
+        {
+          "target": "mastering.air_gain_db_max",
+          "lo": 0.05,
+          "hi": 0.85
+        },
+        {
+          "target": "bandwidth.comfort_noise_offset_db",
+          "lo": 24.0,
+          "hi": 16.0
+        },
+        {
+          "target": "bandwidth.rolloff_db_per_octave",
+          "lo": -18.0,
+          "hi": -6.0
+        }
+      ]
+    },
+    {
+      "id": "dynamicsNatural",
+      "label": "DYNAMICS",
+      "module": "masteringQuality",
+      "moduleTitle": "MASTERING & QUALITY",
+      "moduleSubtitle": "Dynamic density & perceptual firewall gates",
+      "ring": "orange",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 40,
+      "unit": "%",
+      "liveDSP": true,
+      "info": {
+        "title": "Dynamics",
+        "defeats": "Synthetic dynamic range & loudness profiling",
+        "description": "AI music often has over-compressed or unnaturally static dynamic profiles. This knob calibrates gentle content-seeded master compression.",
+        "howItWorks": "Multi-stage compression ratio (1.02:1 to 1.35:1) with content-seeded attack and release profiles, true peak ceiling, and dither.",
+        "tradeoff": "Ties the track together into a polished commercial master without squashing transients."
+      },
+      "curves": [
+        {
+          "target": "mastering.comp_ratio_min",
+          "lo": 1.02,
+          "hi": 1.15
+        },
+        {
+          "target": "mastering.comp_ratio_max",
+          "lo": 1.08,
+          "hi": 1.35
+        },
+        {
+          "target": "mastering.attack_ms_min",
+          "lo": 25.0,
+          "hi": 10.0
+        },
+        {
+          "target": "mastering.attack_ms_max",
+          "lo": 50.0,
+          "hi": 20.0
+        },
+        {
+          "target": "mastering.release_ms_min",
+          "lo": 120.0,
+          "hi": 60.0
+        },
+        {
+          "target": "mastering.release_ms_max",
+          "lo": 280.0,
+          "hi": 150.0
+        },
+        {
+          "target": "mastering.true_peak_ceiling_db_min",
+          "lo": -0.3,
+          "hi": -0.5
+        },
+        {
+          "target": "mastering.true_peak_ceiling_db_max",
+          "lo": -0.05,
+          "hi": -0.2
+        },
+        {
+          "target": "mastering.final_dither_amplitude",
+          "lo": 1e-05,
+          "hi": 5e-05
+        }
+      ]
+    },
+    {
+      "id": "qualityGate",
+      "label": "QUALITY GATE",
+      "module": "masteringQuality",
+      "moduleTitle": "MASTERING & QUALITY",
+      "moduleSubtitle": "Dynamic density & perceptual firewall gates",
+      "ring": "orange",
+      "min": 1.0,
+      "max": 6.0,
+      "step": 0.1,
+      "default": 3.0,
+      "unit": "dB",
+      "liveDSP": true,
+      "info": {
+        "title": "Quality Gate",
+        "defeats": "Processing artifacts & perceptual degradation",
+        "description": "Sets the maximum allowed deviation from the original input before the Quality Firewall rolls back processing stages.",
+        "howItWorks": "Monitors Bark-band psychoacoustic limits (ISO 226), stereo correlation, and LUFS loudness. If any stage exceeds limits, it attenuates.",
+        "tradeoff": "Lower dB = strict audiophile preservation; Higher dB = deeper evasion headroom."
+      },
+      "curves": [
+        {
+          "target": "firewall.composite_bark_floor_db",
+          "lo": 1.0,
+          "hi": 6.0
+        },
+        {
+          "target": "firewall.structural_bark_floor_db",
+          "lo": 1.8,
+          "hi": 10.8
+        },
+        {
+          "target": "firewall.sparse_min_corr",
+          "lo": 0.985,
+          "hi": 0.88
+        },
+        {
+          "target": "firewall.sparse_max_rms_delta",
+          "lo": 0.015,
+          "hi": 0.07
+        },
+        {
+          "target": "firewall.sparse_max_lufs_delta",
+          "lo": 0.35,
+          "hi": 1.8
+        },
+        {
+          "target": "firewall.moderate_min_corr",
+          "lo": 0.965,
+          "hi": 0.86
+        },
+        {
+          "target": "firewall.moderate_max_rms_delta",
+          "lo": 0.025,
+          "hi": 0.08
+        },
+        {
+          "target": "firewall.moderate_max_lufs_delta",
+          "lo": 0.5,
+          "hi": 1.5
+        },
+        {
+          "target": "firewall.dense_min_corr",
+          "lo": 0.94,
+          "hi": 0.84
+        },
+        {
+          "target": "firewall.dense_max_rms_delta",
+          "lo": 0.03,
+          "hi": 0.12
+        },
+        {
+          "target": "firewall.dense_max_lufs_delta",
+          "lo": 0.6,
+          "hi": 2.0
+        },
+        {
+          "target": "firewall.composite_max_rms_delta",
+          "lo": 0.06,
+          "hi": 0.2
+        },
+        {
+          "target": "firewall.composite_max_lufs_delta",
+          "lo": 0.8,
+          "hi": 2.5
+        },
+        {
+          "target": "firewall.min_stereo_corr_sparse_moderate",
+          "lo": 0.98,
+          "hi": 0.9
+        },
+        {
+          "target": "firewall.min_stereo_corr_dense",
+          "lo": 0.96,
+          "hi": 0.88
+        },
+        {
+          "target": "firewall.max_phase_mag_delta_db",
+          "lo": 0.1,
+          "hi": 0.4
+        },
+        {
+          "target": "firewall.spectral_hole_margin_db",
+          "lo": 0.5,
+          "hi": 2.0
+        },
+        {
+          "target": "perceptual.alpha",
+          "lo": 0.15,
+          "hi": 0.6
+        },
+        {
+          "target": "pipeline.max_refinement_depth",
+          "lo": 3,
+          "hi": 1,
+          "type": "int"
+        }
+      ]
+    },
+    {
+      "id": "outputGain",
+      "label": "OUTPUT",
+      "module": "masteringQuality",
+      "moduleTitle": "MASTERING & QUALITY",
+      "moduleSubtitle": "Dynamic density & perceptual firewall gates",
+      "ring": "orange",
+      "min": -12.0,
+      "max": 6.0,
+      "step": 0.5,
+      "default": 0.0,
+      "unit": "dB",
+      "liveDSP": true,
+      "info": {
+        "title": "Master Output",
+        "defeats": "Inter-sample clipping & gain mismatches",
+        "description": "Controls the master Web Audio output gain and export ceiling.",
+        "howItWorks": "Precision decibel-to-linear gain node scaling with soft saturation protection.",
+        "tradeoff": "Use to balance monitoring volume or match pre-processing loudness."
+      },
+      "curves": [
+        {
+          "target": "__dsp__.outGain",
+          "lo": -12.0,
+          "hi": 6.0
+        }
+      ]
+    }
+  ],
+  "rawParams": [
+    {
+      "key": "noise_level",
+      "label": "Noise Floor Level",
+      "subsystem": "top",
+      "subsystemTitle": "CORE & TOP-LEVEL",
+      "parentComposite": "neuralScrub",
+      "min": 1e-06,
+      "max": 0.001,
+      "step": 1e-05,
+      "default": 5e-05,
+      "unit": "amp",
+      "info": "Base amplitude of added white/pink noise floor."
+    },
+    {
+      "key": "timing_stretch_range",
+      "label": "Timing Stretch Range",
+      "subsystem": "top",
+      "subsystemTitle": "CORE & TOP-LEVEL",
+      "parentComposite": "hashBreak",
+      "min": 0.0005,
+      "max": 0.02,
+      "step": 0.0005,
+      "default": 0.003,
+      "unit": "ratio",
+      "info": "Fractional micro-timing stretch for hash disruption."
+    },
+    {
+      "key": "distribution_noise_level",
+      "label": "Distribution Noise Level",
+      "subsystem": "top",
+      "subsystemTitle": "CORE & TOP-LEVEL",
+      "parentComposite": "statNormalize",
+      "min": 1e-06,
+      "max": 0.001,
+      "step": 1e-05,
+      "default": 0.0005,
+      "unit": "amp",
+      "info": "Additive noise for sample distribution normalization."
+    },
+    {
+      "key": "harmonic_distortion_amount",
+      "label": "Harmonic Distortion Amount",
+      "subsystem": "top",
+      "subsystemTitle": "CORE & TOP-LEVEL",
+      "parentComposite": "textureInject",
+      "min": 0.0005,
+      "max": 0.05,
+      "step": 0.0005,
+      "default": 0.005,
+      "unit": "ratio",
+      "info": "Subtle non-linear analog harmonic warmth."
+    },
+    {
+      "key": "phase_variance",
+      "label": "Global Phase Variance",
+      "subsystem": "top",
+      "subsystemTitle": "CORE & TOP-LEVEL",
+      "parentComposite": "phaseScatter",
+      "min": 0.0005,
+      "max": 0.03,
+      "step": 0.0005,
+      "default": 0.005,
+      "unit": "rad",
+      "info": "Global phase randomization variance."
+    },
+    {
+      "key": "micro_dynamics_amount",
+      "label": "Micro-Dynamics Amount",
+      "subsystem": "top",
+      "subsystemTitle": "CORE & TOP-LEVEL",
+      "parentComposite": "textureInject",
+      "min": 0.0001,
+      "max": 0.01,
+      "step": 0.0002,
+      "default": 0.001,
+      "unit": "ratio",
+      "info": "Micro-scale dynamic expansion depth."
+    },
+    {
+      "key": "timing_variation_range",
+      "label": "Timing Variation Range",
+      "subsystem": "top",
+      "subsystemTitle": "CORE & TOP-LEVEL",
+      "parentComposite": "hashBreak",
+      "min": 0.0005,
+      "max": 0.015,
+      "step": 0.0005,
+      "default": 0.002,
+      "unit": "ratio",
+      "info": "Sync-frame timing jitter range."
+    },
+    {
+      "key": "firewall.composite_bark_floor_db",
+      "label": "Composite Bark Floor",
+      "subsystem": "firewall",
+      "subsystemTitle": "QUALITY FIREWALL",
+      "parentComposite": "qualityGate",
+      "min": 0.5,
+      "max": 8.0,
+      "step": 0.1,
+      "default": 2.5,
+      "unit": "dB",
+      "info": "Max spectral deviation per Bark band across all stages."
+    },
+    {
+      "key": "firewall.structural_bark_floor_db",
+      "label": "Structural Bark Floor",
+      "subsystem": "firewall",
+      "subsystemTitle": "QUALITY FIREWALL",
+      "parentComposite": "qualityGate",
+      "min": 1.0,
+      "max": 15.0,
+      "step": 0.2,
+      "default": 5.0,
+      "unit": "dB",
+      "info": "Max deviation for core structural frequency bands."
+    },
+    {
+      "key": "firewall.sparse_min_corr",
+      "label": "Sparse Min Correlation",
+      "subsystem": "firewall",
+      "subsystemTitle": "QUALITY FIREWALL",
+      "parentComposite": "qualityGate",
+      "min": 0.8,
+      "max": 0.999,
+      "step": 0.005,
+      "default": 0.97,
+      "unit": "corr",
+      "info": "Min cross-correlation threshold for sparse content."
+    },
+    {
+      "key": "firewall.sparse_max_rms_delta",
+      "label": "Sparse Max RMS Delta",
+      "subsystem": "firewall",
+      "subsystemTitle": "QUALITY FIREWALL",
+      "parentComposite": "qualityGate",
+      "min": 0.005,
+      "max": 0.15,
+      "step": 0.005,
+      "default": 0.02,
+      "unit": "rms",
+      "info": "Max RMS amplitude shift for sparse passages."
+    },
+    {
+      "key": "firewall.sparse_max_lufs_delta",
+      "label": "Sparse Max LUFS Delta",
+      "subsystem": "firewall",
+      "subsystemTitle": "QUALITY FIREWALL",
+      "parentComposite": "qualityGate",
+      "min": 0.1,
+      "max": 3.0,
+      "step": 0.05,
+      "default": 0.5,
+      "unit": "LUFS",
+      "info": "Max integrated loudness delta in sparse sections."
+    },
+    {
+      "key": "firewall.moderate_min_corr",
+      "label": "Moderate Min Correlation",
+      "subsystem": "firewall",
+      "subsystemTitle": "QUALITY FIREWALL",
+      "parentComposite": "qualityGate",
+      "min": 0.8,
+      "max": 0.999,
+      "step": 0.005,
+      "default": 0.94,
+      "unit": "corr",
+      "info": "Min cross-correlation threshold for balanced audio."
+    },
+    {
+      "key": "firewall.moderate_max_rms_delta",
+      "label": "Moderate Max RMS Delta",
+      "subsystem": "firewall",
+      "subsystemTitle": "QUALITY FIREWALL",
+      "parentComposite": "qualityGate",
+      "min": 0.01,
+      "max": 0.15,
+      "step": 0.005,
+      "default": 0.035,
+      "unit": "rms",
+      "info": "Max RMS amplitude shift for balanced audio."
+    },
+    {
+      "key": "firewall.moderate_max_lufs_delta",
+      "label": "Moderate Max LUFS Delta",
+      "subsystem": "firewall",
+      "subsystemTitle": "QUALITY FIREWALL",
+      "parentComposite": "qualityGate",
+      "min": 0.2,
+      "max": 3.0,
+      "step": 0.05,
+      "default": 0.8,
+      "unit": "LUFS",
+      "info": "Max integrated loudness shift for balanced audio."
+    },
+    {
+      "key": "firewall.dense_min_corr",
+      "label": "Dense Min Correlation",
+      "subsystem": "firewall",
+      "subsystemTitle": "QUALITY FIREWALL",
+      "parentComposite": "qualityGate",
+      "min": 0.75,
+      "max": 0.99,
+      "step": 0.005,
+      "default": 0.9,
+      "unit": "corr",
+      "info": "Min cross-correlation threshold for dense wall-of-sound."
+    },
+    {
+      "key": "firewall.dense_max_rms_delta",
+      "label": "Dense Max RMS Delta",
+      "subsystem": "firewall",
+      "subsystemTitle": "QUALITY FIREWALL",
+      "parentComposite": "qualityGate",
+      "min": 0.01,
+      "max": 0.2,
+      "step": 0.005,
+      "default": 0.05,
+      "unit": "rms",
+      "info": "Max RMS amplitude shift for dense audio."
+    },
+    {
+      "key": "firewall.dense_max_lufs_delta",
+      "label": "Dense Max LUFS Delta",
+      "subsystem": "firewall",
+      "subsystemTitle": "QUALITY FIREWALL",
+      "parentComposite": "qualityGate",
+      "min": 0.2,
+      "max": 3.5,
+      "step": 0.05,
+      "default": 1.0,
+      "unit": "LUFS",
+      "info": "Max integrated loudness shift for dense audio."
+    },
+    {
+      "key": "firewall.composite_max_rms_delta",
+      "label": "Composite Max RMS Delta",
+      "subsystem": "firewall",
+      "subsystemTitle": "QUALITY FIREWALL",
+      "parentComposite": "qualityGate",
+      "min": 0.02,
+      "max": 0.3,
+      "step": 0.01,
+      "default": 0.1,
+      "unit": "rms",
+      "info": "Global cumulative RMS change tolerance across all stages."
+    },
+    {
+      "key": "firewall.composite_max_lufs_delta",
+      "label": "Composite Max LUFS Delta",
+      "subsystem": "firewall",
+      "subsystemTitle": "QUALITY FIREWALL",
+      "parentComposite": "qualityGate",
+      "min": 0.4,
+      "max": 4.0,
+      "step": 0.1,
+      "default": 1.5,
+      "unit": "LUFS",
+      "info": "Global cumulative LUFS change tolerance across all stages."
+    },
+    {
+      "key": "firewall.min_stereo_corr_sparse_moderate",
+      "label": "Min Stereo Corr (Sparse/Mod)",
+      "subsystem": "firewall",
+      "subsystemTitle": "QUALITY FIREWALL",
+      "parentComposite": "qualityGate",
+      "min": 0.8,
+      "max": 0.999,
+      "step": 0.005,
+      "default": 0.96,
+      "unit": "corr",
+      "info": "Minimum L/R phase correlation to prevent stereo collapse."
+    },
+    {
+      "key": "firewall.min_stereo_corr_dense",
+      "label": "Min Stereo Corr (Dense)",
+      "subsystem": "firewall",
+      "subsystemTitle": "QUALITY FIREWALL",
+      "parentComposite": "qualityGate",
+      "min": 0.75,
+      "max": 0.99,
+      "step": 0.005,
+      "default": 0.94,
+      "unit": "corr",
+      "info": "Minimum L/R phase correlation for dense passages."
+    },
+    {
+      "key": "firewall.max_phase_mag_delta_db",
+      "label": "Max Phase Mag Delta",
+      "subsystem": "firewall",
+      "subsystemTitle": "QUALITY FIREWALL",
+      "parentComposite": "qualityGate",
+      "min": 0.05,
+      "max": 1.0,
+      "step": 0.05,
+      "default": 0.2,
+      "unit": "dB",
+      "info": "Max phase magnitude alteration before gate trigger."
+    },
+    {
+      "key": "firewall.spectral_hole_margin_db",
+      "label": "Spectral Hole Margin",
+      "subsystem": "firewall",
+      "subsystemTitle": "QUALITY FIREWALL",
+      "parentComposite": "qualityGate",
+      "min": 0.2,
+      "max": 4.0,
+      "step": 0.1,
+      "default": 1.0,
+      "unit": "dB",
+      "info": "Allowed notch depth before triggering anti-comb warning."
+    },
+    {
+      "key": "perceptual.alpha",
+      "label": "Masking Alpha",
+      "subsystem": "perceptual",
+      "subsystemTitle": "PSYCHOACOUSTIC MODEL",
+      "parentComposite": "qualityGate",
+      "min": 0.1,
+      "max": 0.9,
+      "step": 0.02,
+      "default": 0.3,
+      "unit": "exp",
+      "info": "ISO 11172-3 Model 2 power-law masking budget exponent."
+    },
+    {
+      "key": "mel_domain.mad_threshold",
+      "label": "Mel MAD Threshold",
+      "subsystem": "mel_domain",
+      "subsystemTitle": "MEL ENERGY SMOOTHER",
+      "parentComposite": "spectralBlend",
+      "min": 1.0,
+      "max": 7.0,
+      "step": 0.1,
+      "default": 3.5,
+      "unit": "MAD",
+      "info": "Median Absolute Deviation threshold for Mel band smoothing."
+    },
+    {
+      "key": "mel_domain.blend_ratio_max",
+      "label": "Mel Blend Ratio Max",
+      "subsystem": "mel_domain",
+      "subsystemTitle": "MEL ENERGY SMOOTHER",
+      "parentComposite": "spectralBlend",
+      "min": 0.05,
+      "max": 0.7,
+      "step": 0.05,
+      "default": 0.3,
+      "unit": "ratio",
+      "info": "Max blending ratio between original and smoothed Mel bins."
+    },
+    {
+      "key": "mel_domain.min_linear_gain",
+      "label": "Mel Min Linear Gain",
+      "subsystem": "mel_domain",
+      "subsystemTitle": "MEL ENERGY SMOOTHER",
+      "parentComposite": "spectralBlend",
+      "min": 0.01,
+      "max": 0.5,
+      "step": 0.01,
+      "default": 0.1,
+      "unit": "gain",
+      "info": "Lowest gain reduction applied to any Mel filterbank."
+    },
+    {
+      "key": "neural_residual.tier",
+      "label": "Residual Denoiser Tier",
+      "subsystem": "neural_residual",
+      "subsystemTitle": "NEURAL RESIDUAL DENOISER",
+      "parentComposite": "neuralScrub",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 3,
+      "unit": "tier",
+      "info": "Denoiser intensity level (1: gentle, 4: surgical)."
+    },
+    {
+      "key": "neural_residual.target_snr_db",
+      "label": "Residual Target SNR",
+      "subsystem": "neural_residual",
+      "subsystemTitle": "NEURAL RESIDUAL DENOISER",
+      "parentComposite": "neuralScrub",
+      "min": 25.0,
+      "max": 50.0,
+      "step": 0.5,
+      "default": 38.0,
+      "unit": "dB",
+      "info": "Target signal-to-noise ratio for spectral subtraction."
+    },
+    {
+      "key": "neural_residual.ss_alpha",
+      "label": "Spectral Subtraction Alpha",
+      "subsystem": "neural_residual",
+      "subsystemTitle": "NEURAL RESIDUAL DENOISER",
+      "parentComposite": "neuralScrub",
+      "min": 0.8,
+      "max": 3.0,
+      "step": 0.1,
+      "default": 1.5,
+      "unit": "mult",
+      "info": "Over-subtraction factor in neural noise removal."
+    },
+    {
+      "key": "neural_residual.ss_beta",
+      "label": "Spectral Subtraction Beta",
+      "subsystem": "neural_residual",
+      "subsystemTitle": "NEURAL RESIDUAL DENOISER",
+      "parentComposite": "neuralScrub",
+      "min": 0.01,
+      "max": 0.25,
+      "step": 0.01,
+      "default": 0.08,
+      "unit": "floor",
+      "info": "Spectral floor parameter to avoid musical noise."
+    },
+    {
+      "key": "neural_residual.wiener_spectral_floor",
+      "label": "Wiener Spectral Floor",
+      "subsystem": "neural_residual",
+      "subsystemTitle": "NEURAL RESIDUAL DENOISER",
+      "parentComposite": "neuralScrub",
+      "min": 0.01,
+      "max": 0.2,
+      "step": 0.01,
+      "default": 0.08,
+      "unit": "ratio",
+      "info": "Lower limit on Wiener gain attenuation."
+    },
+    {
+      "key": "neural_residual.micro_gain_deviation",
+      "label": "Micro Gain Deviation",
+      "subsystem": "neural_residual",
+      "subsystemTitle": "NEURAL RESIDUAL DENOISER",
+      "parentComposite": "neuralScrub",
+      "min": 0.0005,
+      "max": 0.01,
+      "step": 0.0005,
+      "default": 0.002,
+      "unit": "dev",
+      "info": "Dynamic micro-gain perturbation to disrupt residual detectors."
+    },
+    {
+      "key": "sync_disrupt.drift_depth",
+      "label": "Sync Drift Depth",
+      "subsystem": "sync_disrupt",
+      "subsystemTitle": "SYNC DESYNCHRONIZER",
+      "parentComposite": "hashBreak",
+      "min": 0.0005,
+      "max": 0.02,
+      "step": 0.0005,
+      "default": 0.003,
+      "unit": "depth",
+      "info": "Continuous sync-frame sample drift depth."
+    },
+    {
+      "key": "sync_disrupt.crop_min_samples",
+      "label": "Sync Crop Min Samples",
+      "subsystem": "sync_disrupt",
+      "subsystemTitle": "SYNC DESYNCHRONIZER",
+      "parentComposite": "hashBreak",
+      "min": 1,
+      "max": 50,
+      "step": 1,
+      "default": 10,
+      "unit": "samples",
+      "info": "Minimum random boundary sample crop."
+    },
+    {
+      "key": "sync_disrupt.crop_max_samples",
+      "label": "Sync Crop Max Samples",
+      "subsystem": "sync_disrupt",
+      "subsystemTitle": "SYNC DESYNCHRONIZER",
+      "parentComposite": "hashBreak",
+      "min": 20,
+      "max": 256,
+      "step": 2,
+      "default": 64,
+      "unit": "samples",
+      "info": "Maximum random boundary sample crop."
+    },
+    {
+      "key": "upsampler.comb_depth",
+      "label": "Comb Filter Depth",
+      "subsystem": "upsampler",
+      "subsystemTitle": "UPSAMPLER STRIDE COMB",
+      "parentComposite": "strideRemove",
+      "min": 0.005,
+      "max": 0.3,
+      "step": 0.005,
+      "default": 0.05,
+      "unit": "depth",
+      "info": "Periodic notch depth targeting 172.3 Hz upsampler harmonic comb."
+    },
+    {
+      "key": "upsampler.max_cut_db",
+      "label": "Comb Max Cut",
+      "subsystem": "upsampler",
+      "subsystemTitle": "UPSAMPLER STRIDE COMB",
+      "parentComposite": "strideRemove",
+      "min": 1.0,
+      "max": 18.0,
+      "step": 0.5,
+      "default": 6.0,
+      "unit": "dB",
+      "info": "Maximum attenuation at periodic upsampling stride peaks."
+    },
+    {
+      "key": "upsampler.peak_threshold_db",
+      "label": "Stride Peak Threshold",
+      "subsystem": "upsampler",
+      "subsystemTitle": "UPSAMPLER STRIDE COMB",
+      "parentComposite": "strideRemove",
+      "min": 0.5,
+      "max": 5.0,
+      "step": 0.1,
+      "default": 2.5,
+      "unit": "dB",
+      "info": "Threshold above LTAS baseline to trigger stride notch."
+    },
+    {
+      "key": "classical.carrier_notch_q",
+      "label": "Carrier Notch Q",
+      "subsystem": "classical",
+      "subsystemTitle": "CARRIER & STEGANOGRAPHY STRIP",
+      "parentComposite": "carrierErase",
+      "min": 5.0,
+      "max": 80.0,
+      "step": 1.0,
+      "default": 35.0,
+      "unit": "Q",
+      "info": "Q-factor of ultrasonic carrier suppression notch filters."
+    },
+    {
+      "key": "classical.spectral_peak_threshold_factor",
+      "label": "Spectral Peak Threshold",
+      "subsystem": "classical",
+      "subsystemTitle": "CARRIER & STEGANOGRAPHY STRIP",
+      "parentComposite": "carrierErase",
+      "min": 1.5,
+      "max": 6.0,
+      "step": 0.1,
+      "default": 3.5,
+      "unit": "factor",
+      "info": "Prominence multiplier over local median to detect tones."
+    },
+    {
+      "key": "classical.harmonic_filterbank_q",
+      "label": "Harmonic Filterbank Q",
+      "subsystem": "classical",
+      "subsystemTitle": "CARRIER & STEGANOGRAPHY STRIP",
+      "parentComposite": "carrierErase",
+      "min": 10.0,
+      "max": 80.0,
+      "step": 1.0,
+      "default": 40.0,
+      "unit": "Q",
+      "info": "Sharpness of harmonic sub-carrier suppression bank."
+    },
+    {
+      "key": "classical.max_echo_cut_db",
+      "label": "Max Echo Cut",
+      "subsystem": "classical",
+      "subsystemTitle": "CARRIER & STEGANOGRAPHY STRIP",
+      "parentComposite": "stegoStrip",
+      "min": 2.0,
+      "max": 24.0,
+      "step": 0.5,
+      "default": 12.0,
+      "unit": "dB",
+      "info": "Maximum attenuation for detected cepstral hiding echoes."
+    },
+    {
+      "key": "classical.echo_mad_multiplier",
+      "label": "Echo MAD Multiplier",
+      "subsystem": "classical",
+      "subsystemTitle": "CARRIER & STEGANOGRAPHY STRIP",
+      "parentComposite": "stegoStrip",
+      "min": 2.0,
+      "max": 6.0,
+      "step": 0.1,
+      "default": 4.0,
+      "unit": "MAD",
+      "info": "Cepstral quefrency peak threshold for echo detection."
+    },
+    {
+      "key": "classical.echo_alpha_max",
+      "label": "Echo Alpha Max",
+      "subsystem": "classical",
+      "subsystemTitle": "CARRIER & STEGANOGRAPHY STRIP",
+      "parentComposite": "stegoStrip",
+      "min": 0.05,
+      "max": 0.4,
+      "step": 0.01,
+      "default": 0.15,
+      "unit": "ratio",
+      "info": "Upper bound on cepstral echo de-convolution strength."
+    },
+    {
+      "key": "classical.spread_spectrum_threshold_mult",
+      "label": "Spread Spectrum Threshold",
+      "subsystem": "classical",
+      "subsystemTitle": "CARRIER & STEGANOGRAPHY STRIP",
+      "parentComposite": "stegoStrip",
+      "min": 1.5,
+      "max": 5.0,
+      "step": 0.1,
+      "default": 3.162,
+      "unit": "mult",
+      "info": "Subspace projection energy ratio for DSSS disruption."
+    },
+    {
+      "key": "classical.qim_dither_base_scale",
+      "label": "QIM Base Dither Scale",
+      "subsystem": "classical",
+      "subsystemTitle": "CARRIER & STEGANOGRAPHY STRIP",
+      "parentComposite": "stegoStrip",
+      "min": 5e-06,
+      "max": 0.0001,
+      "step": 5e-06,
+      "default": 2e-05,
+      "unit": "scale",
+      "info": "Baseline pseudo-random dither for QIM lattice disruption."
+    },
+    {
+      "key": "classical.qim_lattice_dither_max",
+      "label": "QIM Max Lattice Dither",
+      "subsystem": "classical",
+      "subsystemTitle": "CARRIER & STEGANOGRAPHY STRIP",
+      "parentComposite": "stegoStrip",
+      "min": 5e-05,
+      "max": 0.002,
+      "step": 5e-05,
+      "default": 0.0005,
+      "unit": "scale",
+      "info": "Maximum lattice jitter to disrupt quantizer bins."
+    },
+    {
+      "key": "phase_decorrelate.inter_frame_variance_threshold",
+      "label": "Phase Frame Variance Thresh",
+      "subsystem": "phase_decorrelate",
+      "subsystemTitle": "PHASE DECORRELATOR",
+      "parentComposite": "phaseScatter",
+      "min": 0.05,
+      "max": 0.6,
+      "step": 0.01,
+      "default": 0.25,
+      "unit": "var",
+      "info": "Variance threshold to separate transients from steady-state."
+    },
+    {
+      "key": "phase_decorrelate.transient_group_shift_max",
+      "label": "Transient Group Shift Max",
+      "subsystem": "phase_decorrelate",
+      "subsystemTitle": "PHASE DECORRELATOR",
+      "parentComposite": "phaseScatter",
+      "min": 0.01,
+      "max": 0.15,
+      "step": 0.01,
+      "default": 0.05,
+      "unit": "rad",
+      "info": "Maximum phase rotation on transient attack frames."
+    },
+    {
+      "key": "phase_decorrelate.steady_state_dispersion_max",
+      "label": "Steady-State Dispersion Max",
+      "subsystem": "phase_decorrelate",
+      "subsystemTitle": "PHASE DECORRELATOR",
+      "parentComposite": "phaseScatter",
+      "min": 0.02,
+      "max": 0.35,
+      "step": 0.01,
+      "default": 0.12,
+      "unit": "rad",
+      "info": "Maximum phase rotation on steady harmonic tones."
+    },
+    {
+      "key": "resynthesis.max_phase_dispersion",
+      "label": "Resynthesis Phase Dispersion",
+      "subsystem": "resynthesis",
+      "subsystemTitle": "SPECTRAL RESYNTHESIS",
+      "parentComposite": "phaseScatter",
+      "min": 0.02,
+      "max": 0.35,
+      "step": 0.01,
+      "default": 0.12,
+      "unit": "rad",
+      "info": "Phase dispersion in magnitude-locked resynthesis."
+    },
+    {
+      "key": "resynthesis.transient_shift_max",
+      "label": "Resynthesis Transient Shift",
+      "subsystem": "resynthesis",
+      "subsystemTitle": "SPECTRAL RESYNTHESIS",
+      "parentComposite": "phaseScatter",
+      "min": 0.01,
+      "max": 0.15,
+      "step": 0.01,
+      "default": 0.05,
+      "unit": "rad",
+      "info": "Transient safety margin during spectral resynthesis."
+    },
+    {
+      "key": "statistical.target_min_variance",
+      "label": "Target Min Variance",
+      "subsystem": "statistical",
+      "subsystemTitle": "STATISTICAL & BENFORD NORMALIZER",
+      "parentComposite": "statNormalize",
+      "min": 0.04,
+      "max": 0.3,
+      "step": 0.01,
+      "default": 0.12,
+      "unit": "var",
+      "info": "Target minimum variance for Benford distribution."
+    },
+    {
+      "key": "statistical.spectral_flatness_floor",
+      "label": "Spectral Flatness Floor",
+      "subsystem": "statistical",
+      "subsystemTitle": "STATISTICAL & BENFORD NORMALIZER",
+      "parentComposite": "statNormalize",
+      "min": 0.05,
+      "max": 0.3,
+      "step": 0.005,
+      "default": 0.115,
+      "unit": "SFM",
+      "info": "Minimum spectral flatness to ensure natural entropy."
+    },
+    {
+      "key": "statistical.dither_floor_amp",
+      "label": "Statistical Dither Floor",
+      "subsystem": "statistical",
+      "subsystemTitle": "STATISTICAL & BENFORD NORMALIZER",
+      "parentComposite": "statNormalize",
+      "min": 2e-05,
+      "max": 0.0005,
+      "step": 1e-05,
+      "default": 0.00015,
+      "unit": "amp",
+      "info": "Shaped dither floor amplitude to break entropy tests."
+    },
+    {
+      "key": "statistical.benford_kl_threshold",
+      "label": "Benford KL Threshold",
+      "subsystem": "statistical",
+      "subsystemTitle": "STATISTICAL & BENFORD NORMALIZER",
+      "parentComposite": "statNormalize",
+      "min": 0.01,
+      "max": 0.12,
+      "step": 0.005,
+      "default": 0.05,
+      "unit": "KL",
+      "info": "Kullback-Leibler divergence target vs natural Benford curve."
+    },
+    {
+      "key": "statistical.benford_dither_strength",
+      "label": "Benford Dither Strength",
+      "subsystem": "statistical",
+      "subsystemTitle": "STATISTICAL & BENFORD NORMALIZER",
+      "parentComposite": "statNormalize",
+      "min": 2e-05,
+      "max": 0.0004,
+      "step": 1e-05,
+      "default": 0.0001,
+      "unit": "amp",
+      "info": "Dither amplitude specifically targeted at first-digit distribution."
+    },
+    {
+      "key": "quantization.dither_amplitude",
+      "label": "Quantization Dither Amp",
+      "subsystem": "quantization",
+      "subsystemTitle": "CODEC QUANTIZATION DISRUPTOR",
+      "parentComposite": "statNormalize",
+      "min": 1e-05,
+      "max": 0.001,
+      "step": 2e-05,
+      "default": 0.0001,
+      "unit": "amp",
+      "info": "TPDF dither to disperse neural codec codebook modes."
+    },
+    {
+      "key": "quantization.max_dither_clip",
+      "label": "Max Dither Clip",
+      "subsystem": "quantization",
+      "subsystemTitle": "CODEC QUANTIZATION DISRUPTOR",
+      "parentComposite": "statNormalize",
+      "min": 5e-05,
+      "max": 0.002,
+      "step": 5e-05,
+      "default": 0.0005,
+      "unit": "amp",
+      "info": "Upper clamp on quantization dither amplitude."
+    },
+    {
+      "key": "quantization.mode_spacing_fraction",
+      "label": "Mode Spacing Fraction",
+      "subsystem": "quantization",
+      "subsystemTitle": "CODEC QUANTIZATION DISRUPTOR",
+      "parentComposite": "statNormalize",
+      "min": 0.1,
+      "max": 0.6,
+      "step": 0.02,
+      "default": 0.3,
+      "unit": "frac",
+      "info": "Fraction of codec quantization step used for dither width."
+    },
+    {
+      "key": "bandwidth.comfort_noise_offset_db",
+      "label": "Comfort Noise Offset",
+      "subsystem": "bandwidth",
+      "subsystemTitle": "BANDWIDTH EXTENSION & AIR",
+      "parentComposite": "bandwidthHeal",
+      "min": 10.0,
+      "max": 35.0,
+      "step": 0.5,
+      "default": 20.0,
+      "unit": "dB",
+      "info": "Attenuation of comfort noise below high-frequency signal level."
+    },
+    {
+      "key": "bandwidth.rolloff_db_per_octave",
+      "label": "Rolloff dB/Octave",
+      "subsystem": "bandwidth",
+      "subsystemTitle": "BANDWIDTH EXTENSION & AIR",
+      "parentComposite": "bandwidthHeal",
+      "min": -24.0,
+      "max": -3.0,
+      "step": 0.5,
+      "default": -12.0,
+      "unit": "dB/oct",
+      "info": "Slope of high-frequency rolloff to replace brickwall cut."
+    },
+    {
+      "key": "environment.wet_mix",
+      "label": "Reverb Wet Mix",
+      "subsystem": "environment",
+      "subsystemTitle": "ROOM IMPULSE & ENF SIMULATOR",
+      "parentComposite": "roomInject",
+      "min": 0.005,
+      "max": 0.2,
+      "step": 0.005,
+      "default": 0.04,
+      "unit": "ratio",
+      "info": "Simulated physical room impulse response wet blend."
+    },
+    {
+      "key": "environment.rt60_sec",
+      "label": "Room RT60 Decay",
+      "subsystem": "environment",
+      "subsystemTitle": "ROOM IMPULSE & ENF SIMULATOR",
+      "parentComposite": "roomInject",
+      "min": 0.02,
+      "max": 0.6,
+      "step": 0.01,
+      "default": 0.15,
+      "unit": "sec",
+      "info": "Reverberation time to 60 dB attenuation."
+    },
+    {
+      "key": "environment.enf_drift_sigma",
+      "label": "ENF Drift Sigma",
+      "subsystem": "environment",
+      "subsystemTitle": "ROOM IMPULSE & ENF SIMULATOR",
+      "parentComposite": "roomInject",
+      "min": 0.001,
+      "max": 0.02,
+      "step": 0.001,
+      "default": 0.005,
+      "unit": "sigma",
+      "info": "Drift deviation for simulated 50/60 Hz electrical grid hum."
+    },
+    {
+      "key": "environment.vocal_micro_jitter_percent",
+      "label": "Vocal Micro Jitter",
+      "subsystem": "environment",
+      "subsystemTitle": "ROOM IMPULSE & ENF SIMULATOR",
+      "parentComposite": "roomInject",
+      "min": 0.0005,
+      "max": 0.01,
+      "step": 0.0005,
+      "default": 0.002,
+      "unit": "%",
+      "info": "Subtle timing jitter applied to vocal formant regions."
+    },
+    {
+      "key": "bispectral.cubic_coeff",
+      "label": "Cubic Saturation Coeff",
+      "subsystem": "bispectral",
+      "subsystemTitle": "BISPECTRAL POLYNOMIAL SATURATION",
+      "parentComposite": "textureInject",
+      "min": 0.001,
+      "max": 0.08,
+      "step": 0.002,
+      "default": 0.02,
+      "unit": "coeff",
+      "info": "3rd-order polynomial analog saturation amount."
+    },
+    {
+      "key": "bispectral.quintic_coeff",
+      "label": "Quintic Saturation Coeff",
+      "subsystem": "bispectral",
+      "subsystemTitle": "BISPECTRAL POLYNOMIAL SATURATION",
+      "parentComposite": "textureInject",
+      "min": 0.0005,
+      "max": 0.03,
+      "step": 0.001,
+      "default": 0.005,
+      "unit": "coeff",
+      "info": "5th-order polynomial analog saturation amount."
+    },
+    {
+      "key": "lpc_residual.pred_gain_threshold_db",
+      "label": "LPC Pred Gain Thresh",
+      "subsystem": "lpc_residual",
+      "subsystemTitle": "LPC SPEECH RESIDUAL TEXTURE",
+      "parentComposite": "textureInject",
+      "min": 1.0,
+      "max": 8.0,
+      "step": 0.2,
+      "default": 3.0,
+      "unit": "dB",
+      "info": "Prediction gain threshold to detect voiced speech."
+    },
+    {
+      "key": "lpc_residual.kurtosis_threshold",
+      "label": "LPC Kurtosis Thresh",
+      "subsystem": "lpc_residual",
+      "subsystemTitle": "LPC SPEECH RESIDUAL TEXTURE",
+      "parentComposite": "textureInject",
+      "min": 2.0,
+      "max": 10.0,
+      "step": 0.2,
+      "default": 5.0,
+      "unit": "kurt",
+      "info": "Excess kurtosis cutoff for unvoiced excitation texture."
+    },
+    {
+      "key": "lpc_residual.micro_texture_rel_amp",
+      "label": "LPC Micro-Texture Amp",
+      "subsystem": "lpc_residual",
+      "subsystemTitle": "LPC SPEECH RESIDUAL TEXTURE",
+      "parentComposite": "textureInject",
+      "min": 0.001,
+      "max": 0.05,
+      "step": 0.002,
+      "default": 0.01,
+      "unit": "amp",
+      "info": "Relative amplitude of injected acoustic micro-texture."
+    },
+    {
+      "key": "disclosure.morse_corr_threshold",
+      "label": "Morse Correlation Thresh",
+      "subsystem": "disclosure",
+      "subsystemTitle": "DISCLOSURE TRUNCATOR",
+      "parentComposite": "textureInject",
+      "min": 0.2,
+      "max": 0.7,
+      "step": 0.02,
+      "default": 0.45,
+      "unit": "corr",
+      "info": "Cross-correlation threshold for embedded disclosure pulses."
+    },
+    {
+      "key": "hash_disrupt.base_cents",
+      "label": "Pitch Wow Base",
+      "subsystem": "hash_disrupt",
+      "subsystemTitle": "ACOUSTIC HASH DISRUPTOR",
+      "parentComposite": "hashBreak",
+      "min": 0.1,
+      "max": 10.0,
+      "step": 0.1,
+      "default": 3.0,
+      "unit": "cents",
+      "info": "Sub-perceptual tape wow pitch variation to defeat AcoustID."
+    },
+    {
+      "key": "hash_disrupt.wow_depth_cents",
+      "label": "Pitch Wow Depth",
+      "subsystem": "hash_disrupt",
+      "subsystemTitle": "ACOUSTIC HASH DISRUPTOR",
+      "parentComposite": "hashBreak",
+      "min": 0.05,
+      "max": 4.0,
+      "step": 0.05,
+      "default": 1.0,
+      "unit": "cents",
+      "info": "Depth of sinusoidal pitch modulation."
+    },
+    {
+      "key": "hash_disrupt.phase_jitter_amount",
+      "label": "Hash Phase Jitter",
+      "subsystem": "hash_disrupt",
+      "subsystemTitle": "ACOUSTIC HASH DISRUPTOR",
+      "parentComposite": "hashBreak",
+      "min": 5e-05,
+      "max": 0.003,
+      "step": 5e-05,
+      "default": 0.0005,
+      "unit": "rad",
+      "info": "High-frequency phase jitter to randomize Chromaprint."
+    },
+    {
+      "key": "hash_disrupt.stutter_interval_sec",
+      "label": "Stutter Interval",
+      "subsystem": "hash_disrupt",
+      "subsystemTitle": "ACOUSTIC HASH DISRUPTOR",
+      "parentComposite": "hashBreak",
+      "min": 2.0,
+      "max": 20.0,
+      "step": 0.5,
+      "default": 7.0,
+      "unit": "sec",
+      "info": "Periodic interval for micro-timing shifts."
+    },
+    {
+      "key": "mastering.air_gain_db_min",
+      "label": "Air Band Min Gain",
+      "subsystem": "mastering",
+      "subsystemTitle": "ANALOG MASTERING PROCESSOR",
+      "parentComposite": "bandwidthHeal",
+      "min": 0.0,
+      "max": 2.0,
+      "step": 0.05,
+      "default": 0.1,
+      "unit": "dB",
+      "info": "Minimum shelf EQ gain boost at 12 kHz air band."
+    },
+    {
+      "key": "mastering.air_gain_db_max",
+      "label": "Air Band Max Gain",
+      "subsystem": "mastering",
+      "subsystemTitle": "ANALOG MASTERING PROCESSOR",
+      "parentComposite": "bandwidthHeal",
+      "min": 0.05,
+      "max": 3.0,
+      "step": 0.05,
+      "default": 0.35,
+      "unit": "dB",
+      "info": "Maximum shelf EQ gain boost at 12 kHz air band."
+    },
+    {
+      "key": "mastering.comp_ratio_min",
+      "label": "Comp Ratio Min",
+      "subsystem": "mastering",
+      "subsystemTitle": "ANALOG MASTERING PROCESSOR",
+      "parentComposite": "dynamicsNatural",
+      "min": 1.01,
+      "max": 1.3,
+      "step": 0.01,
+      "default": 1.05,
+      "unit": ":1",
+      "info": "Minimum master compression ratio."
+    },
+    {
+      "key": "mastering.comp_ratio_max",
+      "label": "Comp Ratio Max",
+      "subsystem": "mastering",
+      "subsystemTitle": "ANALOG MASTERING PROCESSOR",
+      "parentComposite": "dynamicsNatural",
+      "min": 1.05,
+      "max": 1.6,
+      "step": 0.01,
+      "default": 1.18,
+      "unit": ":1",
+      "info": "Maximum master compression ratio."
+    },
+    {
+      "key": "mastering.attack_ms_min",
+      "label": "Comp Attack Min",
+      "subsystem": "mastering",
+      "subsystemTitle": "ANALOG MASTERING PROCESSOR",
+      "parentComposite": "dynamicsNatural",
+      "min": 5.0,
+      "max": 40.0,
+      "step": 1.0,
+      "default": 15.0,
+      "unit": "ms",
+      "info": "Fastest compression attack time."
+    },
+    {
+      "key": "mastering.attack_ms_max",
+      "label": "Comp Attack Max",
+      "subsystem": "mastering",
+      "subsystemTitle": "ANALOG MASTERING PROCESSOR",
+      "parentComposite": "dynamicsNatural",
+      "min": 15.0,
+      "max": 75.0,
+      "step": 1.0,
+      "default": 35.0,
+      "unit": "ms",
+      "info": "Slowest compression attack time."
+    },
+    {
+      "key": "mastering.release_ms_min",
+      "label": "Comp Release Min",
+      "subsystem": "mastering",
+      "subsystemTitle": "ANALOG MASTERING PROCESSOR",
+      "parentComposite": "dynamicsNatural",
+      "min": 40.0,
+      "max": 180.0,
+      "step": 5.0,
+      "default": 90.0,
+      "unit": "ms",
+      "info": "Fastest compression release time."
+    },
+    {
+      "key": "mastering.release_ms_max",
+      "label": "Comp Release Max",
+      "subsystem": "mastering",
+      "subsystemTitle": "ANALOG MASTERING PROCESSOR",
+      "parentComposite": "dynamicsNatural",
+      "min": 100.0,
+      "max": 350.0,
+      "step": 5.0,
+      "default": 220.0,
+      "unit": "ms",
+      "info": "Slowest compression release time."
+    },
+    {
+      "key": "mastering.true_peak_ceiling_db_min",
+      "label": "True Peak Ceiling Min",
+      "subsystem": "mastering",
+      "subsystemTitle": "ANALOG MASTERING PROCESSOR",
+      "parentComposite": "dynamicsNatural",
+      "min": -1.0,
+      "max": -0.2,
+      "step": 0.05,
+      "default": -0.4,
+      "unit": "dBFS",
+      "info": "Strict ceiling for inter-sample peak protection."
+    },
+    {
+      "key": "mastering.true_peak_ceiling_db_max",
+      "label": "True Peak Ceiling Max",
+      "subsystem": "mastering",
+      "subsystemTitle": "ANALOG MASTERING PROCESSOR",
+      "parentComposite": "dynamicsNatural",
+      "min": -0.5,
+      "max": 0.0,
+      "step": 0.05,
+      "default": -0.1,
+      "unit": "dBFS",
+      "info": "Relaxed ceiling for transparent transient reproduction."
+    },
+    {
+      "key": "mastering.final_dither_amplitude",
+      "label": "Master Dither Amplitude",
+      "subsystem": "mastering",
+      "subsystemTitle": "ANALOG MASTERING PROCESSOR",
+      "parentComposite": "dynamicsNatural",
+      "min": 5e-06,
+      "max": 0.0001,
+      "step": 5e-06,
+      "default": 2e-05,
+      "unit": "amp",
+      "info": "TPDF dither level for final 16-bit or 24-bit PCM wordlength."
+    },
+    {
+      "key": "pipeline.frame_grid_jitter_max_samples",
+      "label": "Frame Grid Max Jitter",
+      "subsystem": "pipeline",
+      "subsystemTitle": "PIPELINE ORCHESTRATION & REFINEMENT",
+      "parentComposite": "hashBreak",
+      "min": 8,
+      "max": 256,
+      "step": 4,
+      "default": 64,
+      "unit": "samples",
+      "info": "Max random sample shift at processing chunk boundaries."
+    },
+    {
+      "key": "pipeline.max_refinement_depth",
+      "label": "Max Refinement Depth",
+      "subsystem": "pipeline",
+      "subsystemTitle": "PIPELINE ORCHESTRATION & REFINEMENT",
+      "parentComposite": "qualityGate",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2,
+      "unit": "depth",
+      "info": "Max binary search iterations if quality firewall triggers."
+    }
+  ],
+  "presetParams": [
+    {
+      "key": "processing_level",
+      "subsystem": "top",
+      "role": "Master processing profile selector ('gentle', 'moderate', 'aggressive', 'extreme')"
+    },
+    {
+      "key": "filter_order",
+      "subsystem": "top",
+      "role": "IIR filter cascade order (gentle=2, moderate=2, aggressive=3, extreme=4)"
+    },
+    {
+      "key": "filter_width_multiplier",
+      "subsystem": "top",
+      "role": "Bandwidth scaling factor (gentle=0.5, moderate=0.8, aggressive=1.0, extreme=1.5)"
+    },
+    {
+      "key": "skip_low_freq_threshold",
+      "subsystem": "top",
+      "role": "High-pass cutoff for processing (gentle=300, moderate=250, aggressive=200, extreme=150 Hz)"
+    },
+    {
+      "key": "stft_size",
+      "subsystem": "top",
+      "role": "FFT analysis frame size (gentle=1024, moderate=2048, aggressive=2048, extreme=4096)"
+    },
+    {
+      "key": "enable_harmonic_adjustments",
+      "subsystem": "top",
+      "role": "Harmonic alignment toggle (gentle=false, others=true)"
+    },
+    {
+      "key": "classical.enable_carrier_notches",
+      "subsystem": "classical",
+      "role": "Activates primary carrier notch cascade"
+    },
+    {
+      "key": "resynthesis.enable_codec_roundtrip",
+      "subsystem": "resynthesis",
+      "role": "Enables roundtrip codec compression cycle"
+    },
+    {
+      "key": "pipeline.enable_sinc_resampling",
+      "subsystem": "pipeline",
+      "role": "Anti-aliasing sinc resampling toggle"
+    },
+    {
+      "key": "pipeline.enable_binary_refinement",
+      "subsystem": "pipeline",
+      "role": "Automatic quality rollback binary search"
+    },
+    {
+      "key": "pipeline.force_all_stages",
+      "subsystem": "pipeline",
+      "role": "Bypasses density-adaptive gating to enforce all stages"
+    }
+  ],
+  "fixedParams": [
+    {
+      "key": "analyzer.density_dense_crest_db",
+      "value": 9.5,
+      "reason": "Content intelligence analyzer calibration threshold (vocals, density, crest factor)."
+    },
+    {
+      "key": "analyzer.density_dense_threshold",
+      "value": 0.7,
+      "reason": "Content intelligence analyzer calibration threshold (vocals, density, crest factor)."
+    },
+    {
+      "key": "analyzer.density_sparse_crest_db",
+      "value": 15.0,
+      "reason": "Content intelligence analyzer calibration threshold (vocals, density, crest factor)."
+    },
+    {
+      "key": "analyzer.density_sparse_threshold",
+      "value": 0.3,
+      "reason": "Content intelligence analyzer calibration threshold (vocals, density, crest factor)."
+    },
+    {
+      "key": "analyzer.noise_floor_percentile",
+      "value": 10.0,
+      "reason": "Content intelligence analyzer calibration threshold (vocals, density, crest factor)."
+    },
+    {
+      "key": "analyzer.periodicity_prominence_thresh",
+      "value": 3.0,
+      "reason": "Content intelligence analyzer calibration threshold (vocals, density, crest factor)."
+    },
+    {
+      "key": "analyzer.vocal_flatness_threshold",
+      "value": 0.4,
+      "reason": "Content intelligence analyzer calibration threshold (vocals, density, crest factor)."
+    },
+    {
+      "key": "analyzer.vocal_presence_fraction",
+      "value": 0.15,
+      "reason": "Content intelligence analyzer calibration threshold (vocals, density, crest factor)."
+    },
+    {
+      "key": "analyzer.vocal_ratio_threshold",
+      "value": 0.35,
+      "reason": "Content intelligence analyzer calibration threshold (vocals, density, crest factor)."
+    },
+    {
+      "key": "analyzer.vocal_voicing_threshold",
+      "value": 0.35,
+      "reason": "Content intelligence analyzer calibration threshold (vocals, density, crest factor)."
+    },
+    {
+      "key": "analyzer.watermark_scan_flux_corr",
+      "value": 0.35,
+      "reason": "Content intelligence analyzer calibration threshold (vocals, density, crest factor)."
+    },
+    {
+      "key": "analyzer.watermark_scan_ultra_ratio",
+      "value": 5.0,
+      "reason": "Content intelligence analyzer calibration threshold (vocals, density, crest factor)."
+    },
+    {
+      "key": "bandwidth.crossfade_hz",
+      "value": 500.0,
+      "reason": "Crossfade bandwidth (500 Hz) around comfort noise splice."
+    },
+    {
+      "key": "bandwidth.default_cutoff_hz",
+      "value": 16000.0,
+      "reason": "16000 Hz \u2014 baseline brickwall cutoff frequency."
+    },
+    {
+      "key": "bandwidth.force_extension",
+      "value": true,
+      "reason": "Enables bandwidth extension stage."
+    },
+    {
+      "key": "bandwidth.hop_length",
+      "value": 512,
+      "reason": "Hop size for bandwidth roll-off computation."
+    },
+    {
+      "key": "bandwidth.n_fft",
+      "value": 2048,
+      "reason": "FFT size for bandwidth roll-off computation."
+    },
+    {
+      "key": "classical.carrier_notch_frequencies",
+      "value": [
+        19500.0,
+        17500.0,
+        15500.0,
+        12100.0,
+        8150.0
+      ],
+      "reason": "Calibrated carrier frequencies: 19.5k, 17.5k, 15.5k, 12.1k, 8.15k Hz."
+    },
+    {
+      "key": "classical.dct_block_size",
+      "value": 1024,
+      "reason": "1024-sample DCT block size for cepstral echo analysis."
+    },
+    {
+      "key": "classical.echo_max_quefrency_sec",
+      "value": 0.05,
+      "reason": "50.0 ms maximum quefrency \u2014 covers full range of steganographic delays."
+    },
+    {
+      "key": "classical.echo_min_quefrency_sec",
+      "value": 0.0005,
+      "reason": "0.5 ms minimum quefrency \u2014 ignores pitch harmonics while catching echoes."
+    },
+    {
+      "key": "classical.enable_harmonic_filterbank",
+      "value": true,
+      "reason": "Enables sub-harmonic carrier suppression filterbank."
+    },
+    {
+      "key": "classical.enable_spectral_peak_suppression",
+      "value": true,
+      "reason": "Enables adaptive tonal peak suppression."
+    },
+    {
+      "key": "classical.harmonic_base_frequencies",
+      "value": [
+        8150.0
+      ],
+      "reason": "Base frequencies for harmonic filterbank (8150 Hz)."
+    },
+    {
+      "key": "classical.harmonic_filterbank_count",
+      "value": 2,
+      "reason": "Number of harmonics tracked (2)."
+    },
+    {
+      "key": "classical.spread_spectrum_frame_size",
+      "value": 256,
+      "reason": "256 samples \u2014 subspace projection frame size."
+    },
+    {
+      "key": "classical.spread_spectrum_subspace_cutoff",
+      "value": 32,
+      "reason": "32 eigenvectors \u2014 dimension of spread spectrum subspace."
+    },
+    {
+      "key": "disclosure.check_duration_sec",
+      "value": 5.0,
+      "reason": "5.0 seconds \u2014 duration to inspect audio head/tail for spoken watermarks."
+    },
+    {
+      "key": "disclosure.crossfade_ms",
+      "value": 50.0,
+      "reason": "50.0 ms crossfade at disclosure trim boundary."
+    },
+    {
+      "key": "disclosure.speech_flatness_high",
+      "value": 0.3,
+      "reason": "Upper bound of speech flatness indicator."
+    },
+    {
+      "key": "disclosure.speech_flatness_low",
+      "value": 0.02,
+      "reason": "Lower bound of speech flatness indicator."
+    },
+    {
+      "key": "enable_pattern_normalization",
+      "value": true,
+      "reason": "Prerequisite for statistical and Benford distribution normalization."
+    },
+    {
+      "key": "enable_timing_variations",
+      "value": true,
+      "reason": "Enables anti-hash sync desynchronization without altering musical groove."
+    },
+    {
+      "key": "enable_watermark_removal",
+      "value": true,
+      "reason": "Core purpose of NaSuno engine \u2014 permanently enabled."
+    },
+    {
+      "key": "environment.base_enf_hz",
+      "value": 50.0,
+      "reason": "50.0 Hz \u2014 base European/Asian electrical grid frequency (or 60 Hz US)."
+    },
+    {
+      "key": "environment.enf_offset_from_floor_db",
+      "value": -3.0,
+      "reason": "ENF level relative to noise floor (-3 dB)."
+    },
+    {
+      "key": "firewall.bark_tolerances_db",
+      "value": [
+        3.0,
+        2.0,
+        2.0,
+        2.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.8,
+        0.8,
+        0.8,
+        0.8,
+        0.8,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        3.0,
+        3.0,
+        3.0,
+        6.0
+      ],
+      "reason": "ISO 226 calibrated human ear sensitivity limits per Bark critical band."
+    },
+    {
+      "key": "firewall.hop_length",
+      "value": 512,
+      "reason": "Hop size for quality firewall analysis (512 samples = 75% overlap)."
+    },
+    {
+      "key": "firewall.inaudible_band_rms_threshold",
+      "value": 0.00316,
+      "reason": "Threshold (-50 dBFS) below which spectral deviations are imperceptible."
+    },
+    {
+      "key": "firewall.input_stereo_corr_gate",
+      "value": 0.9,
+      "reason": "Gate threshold to detect mono or narrow stereo source files."
+    },
+    {
+      "key": "firewall.n_fft",
+      "value": 2048,
+      "reason": "STFT frame size for quality firewall spectral envelope monitoring (2048 bins = 21.5 Hz resolution)."
+    },
+    {
+      "key": "firewall.sub_threshold_band_rms_delta",
+      "value": 0.001,
+      "reason": "Allowed amplitude perturbation in sub-threshold inaudible bands."
+    },
+    {
+      "key": "hash_disrupt.enable_phase_jitter",
+      "value": true,
+      "reason": "Enables micro phase jitter."
+    },
+    {
+      "key": "hash_disrupt.wow_period_sec",
+      "value": 10.0,
+      "reason": "10.0 seconds \u2014 period of analog tape wow pitch oscillation."
+    },
+    {
+      "key": "lpc_residual.frame_len_ms",
+      "value": 20.0,
+      "reason": "20.0 ms analysis frame \u2014 quasi-stationary window for speech analysis."
+    },
+    {
+      "key": "lpc_residual.lpc_order",
+      "value": 16,
+      "reason": "16th-order Linear Predictive Coding filter \u2014 optimal for vocal tract modeling."
+    },
+    {
+      "key": "mastering.air_freq_max",
+      "value": 14000.0,
+      "reason": "14000 Hz \u2014 highest center frequency for air band restoration."
+    },
+    {
+      "key": "mastering.air_freq_min",
+      "value": 8000.0,
+      "reason": "8000 Hz \u2014 lowest start frequency for air band restoration."
+    },
+    {
+      "key": "mel_domain.force_activate",
+      "value": true,
+      "reason": "Ensures Mel smoothing stage executes unconditionally in processing pipeline."
+    },
+    {
+      "key": "mel_domain.hop_length",
+      "value": 512,
+      "reason": "Hop length for Mel spectrogram computation."
+    },
+    {
+      "key": "mel_domain.max_linear_gain",
+      "value": 1.0,
+      "reason": "Unity gain ceiling \u2014 prevents stage from boosting signal beyond 0 dBFS."
+    },
+    {
+      "key": "mel_domain.n_fft",
+      "value": 2048,
+      "reason": "FFT size for Mel spectrogram computation."
+    },
+    {
+      "key": "mel_domain.n_mels",
+      "value": 128,
+      "reason": "128 Mel filterbanks matching state-of-the-art AI classifier feature extractors."
+    },
+    {
+      "key": "neural_detector.anomaly_score_threshold",
+      "value": 0.1,
+      "reason": "Neural detector calibration constant \u2014 reference threshold for anomaly detection."
+    },
+    {
+      "key": "neural_detector.chroma_ssm_threshold",
+      "value": 0.82,
+      "reason": "Neural detector calibration constant \u2014 reference threshold for anomaly detection."
+    },
+    {
+      "key": "neural_detector.confidence_threshold",
+      "value": 0.7,
+      "reason": "Neural detector calibration constant \u2014 reference threshold for anomaly detection."
+    },
+    {
+      "key": "neural_detector.harmonic_match_tolerance",
+      "value": 0.1,
+      "reason": "Neural detector calibration constant \u2014 reference threshold for anomaly detection."
+    },
+    {
+      "key": "neural_detector.isolation_forest_contamination",
+      "value": 0.1,
+      "reason": "Neural detector calibration constant \u2014 reference threshold for anomaly detection."
+    },
+    {
+      "key": "neural_detector.mel_variance_threshold",
+      "value": 0.05,
+      "reason": "Neural detector calibration constant \u2014 reference threshold for anomaly detection."
+    },
+    {
+      "key": "neural_detector.semantic_anomaly_threshold",
+      "value": 0.6,
+      "reason": "Neural detector calibration constant \u2014 reference threshold for anomaly detection."
+    },
+    {
+      "key": "neural_detector.spectral_peak_window",
+      "value": 5,
+      "reason": "Neural detector calibration constant \u2014 reference threshold for anomaly detection."
+    },
+    {
+      "key": "neural_residual.micro_gain_block_size",
+      "value": 512,
+      "reason": "Block size (512 samples) for micro-gain modulation envelopes."
+    },
+    {
+      "key": "neural_residual.micro_gain_smooth_window",
+      "value": 128,
+      "reason": "Smoothing window (128 samples) to avoid audio clicks in micro-gain."
+    },
+    {
+      "key": "neural_residual.multiband_alphas",
+      "value": [
+        1.2,
+        1.4,
+        1.6,
+        2.0
+      ],
+      "reason": "Band-dependent spectral subtraction weights tailored to neural codec hiss profile."
+    },
+    {
+      "key": "neural_residual.pink_noise_hp_freq",
+      "value": 30.0,
+      "reason": "High-pass cutoff (30 Hz) on injected dither to protect sub-bass headroom."
+    },
+    {
+      "key": "perceptual.critical_band_step",
+      "value": 32,
+      "reason": "Frequency bin resolution for critical band integration."
+    },
+    {
+      "key": "perceptual.hop_length",
+      "value": 512,
+      "reason": "Psychoacoustic model frame step."
+    },
+    {
+      "key": "perceptual.n_fft",
+      "value": 2048,
+      "reason": "Psychoacoustic model FFT resolution."
+    },
+    {
+      "key": "perceptual.spl_playback_db",
+      "value": 70.0,
+      "reason": "Reference sound pressure level (70 dB SPL) for ISO masking threshold calculations."
+    },
+    {
+      "key": "phase_decorrelate.hop_length",
+      "value": 512,
+      "reason": "Hop size for phase analysis."
+    },
+    {
+      "key": "phase_decorrelate.n_fft",
+      "value": 2048,
+      "reason": "FFT size for phase analysis."
+    },
+    {
+      "key": "pipeline.enable_idempotency_gate",
+      "value": true,
+      "reason": "Ensures re-running NaSuno on already cleaned audio causes zero degradation."
+    },
+    {
+      "key": "pipeline.fallback_candidate_strengths",
+      "value": [
+        0.8,
+        0.6,
+        0.4,
+        0.2
+      ],
+      "reason": "Strength multipliers [0.8, 0.6, 0.4, 0.2] for iterative rollback."
+    },
+    {
+      "key": "pipeline.frame_grid_jitter_min_samples",
+      "value": 1,
+      "reason": "1 sample minimum boundary jitter."
+    },
+    {
+      "key": "pipeline.sinc_resampling_target_sr",
+      "value": 48000,
+      "reason": "48000 Hz \u2014 professional broadcast sample rate."
+    },
+    {
+      "key": "quantization.hist_bins",
+      "value": 65536,
+      "reason": "65536 histogram bins \u2014 matches 16-bit PCM integer range for codebook analysis."
+    },
+    {
+      "key": "quantization.min_dither_clip",
+      "value": 1e-06,
+      "reason": "Lower clamp on quantization dither amplitude."
+    },
+    {
+      "key": "resynthesis.hop_length",
+      "value": 1024,
+      "reason": "Hop length (1024) for spectral resynthesis."
+    },
+    {
+      "key": "resynthesis.n_fft",
+      "value": 4096,
+      "reason": "High-resolution FFT (4096) for phase vocoder resynthesis."
+    },
+    {
+      "key": "segment_overlap_ratio",
+      "value": 0.5,
+      "reason": "50% Hann window overlap \u2014 mathematical standard for perfect STFT reconstruction (COLA compliant)."
+    },
+    {
+      "key": "statistical.hop_length",
+      "value": 512,
+      "reason": "Hop length for spectral entropy calculations."
+    },
+    {
+      "key": "statistical.knee_threshold",
+      "value": 0.99,
+      "reason": "Knee parameter for entropy floor compression."
+    },
+    {
+      "key": "statistical.n_fft",
+      "value": 2048,
+      "reason": "FFT size for spectral entropy calculations."
+    },
+    {
+      "key": "steganography_detector.am_modulation_threshold",
+      "value": 0.1,
+      "reason": "Steganography detector calibration constant \u2014 reference threshold for echo/QIM detection."
+    },
+    {
+      "key": "steganography_detector.am_suspicious_freq_max_hz",
+      "value": 1000.0,
+      "reason": "Steganography detector calibration constant \u2014 reference threshold for echo/QIM detection."
+    },
+    {
+      "key": "steganography_detector.am_suspicious_freq_min_hz",
+      "value": 10.0,
+      "reason": "Steganography detector calibration constant \u2014 reference threshold for echo/QIM detection."
+    },
+    {
+      "key": "steganography_detector.am_threshold",
+      "value": 0.6,
+      "reason": "Steganography detector calibration constant \u2014 reference threshold for echo/QIM detection."
+    },
+    {
+      "key": "steganography_detector.cepstral_change_rate",
+      "value": 0.15,
+      "reason": "Steganography detector calibration constant \u2014 reference threshold for echo/QIM detection."
+    },
+    {
+      "key": "steganography_detector.cepstral_hiding_threshold",
+      "value": 0.75,
+      "reason": "Steganography detector calibration constant \u2014 reference threshold for echo/QIM detection."
+    },
+    {
+      "key": "steganography_detector.echo_hiding_threshold",
+      "value": 0.65,
+      "reason": "Steganography detector calibration constant \u2014 reference threshold for echo/QIM detection."
+    },
+    {
+      "key": "steganography_detector.echo_max_delay_sec",
+      "value": 0.015,
+      "reason": "Steganography detector calibration constant \u2014 reference threshold for echo/QIM detection."
+    },
+    {
+      "key": "steganography_detector.echo_min_delay_sec",
+      "value": 0.0005,
+      "reason": "Steganography detector calibration constant \u2014 reference threshold for echo/QIM detection."
+    },
+    {
+      "key": "steganography_detector.echo_prominence",
+      "value": 0.15,
+      "reason": "Steganography detector calibration constant \u2014 reference threshold for echo/QIM detection."
+    },
+    {
+      "key": "steganography_detector.echo_prominence_threshold",
+      "value": 3.5,
+      "reason": "Steganography detector calibration constant \u2014 reference threshold for echo/QIM detection."
+    },
+    {
+      "key": "steganography_detector.echo_quefrency_max_ms",
+      "value": 15.0,
+      "reason": "Steganography detector calibration constant \u2014 reference threshold for echo/QIM detection."
+    },
+    {
+      "key": "steganography_detector.echo_quefrency_min_ms",
+      "value": 0.5,
+      "reason": "Steganography detector calibration constant \u2014 reference threshold for echo/QIM detection."
+    },
+    {
+      "key": "steganography_detector.fh_change_rate_threshold",
+      "value": 0.3,
+      "reason": "Steganography detector calibration constant \u2014 reference threshold for echo/QIM detection."
+    },
+    {
+      "key": "steganography_detector.fh_threshold",
+      "value": 0.8,
+      "reason": "Steganography detector calibration constant \u2014 reference threshold for echo/QIM detection."
+    },
+    {
+      "key": "steganography_detector.lsb_chi_square_p_threshold",
+      "value": 0.01,
+      "reason": "Steganography detector calibration constant \u2014 reference threshold for echo/QIM detection."
+    },
+    {
+      "key": "steganography_detector.lsb_entropy_suspicious",
+      "value": 0.85,
+      "reason": "Steganography detector calibration constant \u2014 reference threshold for echo/QIM detection."
+    },
+    {
+      "key": "steganography_detector.lsb_entropy_threshold",
+      "value": 0.75,
+      "reason": "Steganography detector calibration constant \u2014 reference threshold for echo/QIM detection."
+    },
+    {
+      "key": "steganography_detector.phase_abrupt_change_rate",
+      "value": 0.4,
+      "reason": "Steganography detector calibration constant \u2014 reference threshold for echo/QIM detection."
+    },
+    {
+      "key": "steganography_detector.phase_coding_diff_threshold",
+      "value": 0.85,
+      "reason": "Steganography detector calibration constant \u2014 reference threshold for echo/QIM detection."
+    },
+    {
+      "key": "steganography_detector.phase_coding_threshold",
+      "value": 0.85,
+      "reason": "Steganography detector calibration constant \u2014 reference threshold for echo/QIM detection."
+    },
+    {
+      "key": "steganography_detector.spread_normalized_threshold",
+      "value": 0.4,
+      "reason": "Steganography detector calibration constant \u2014 reference threshold for echo/QIM detection."
+    },
+    {
+      "key": "steganography_detector.spread_spectrum_threshold",
+      "value": 0.7,
+      "reason": "Steganography detector calibration constant \u2014 reference threshold for echo/QIM detection."
+    },
+    {
+      "key": "suno_detector.carrier_scan_snr_threshold_db",
+      "value": 6.0,
+      "reason": "Suno forensic detector calibration constant \u2014 reference threshold for detection engine."
+    },
+    {
+      "key": "suno_detector.entropy_threshold",
+      "value": 0.5,
+      "reason": "Suno forensic detector calibration constant \u2014 reference threshold for detection engine."
+    },
+    {
+      "key": "suno_detector.spectral_flatness_high",
+      "value": 0.85,
+      "reason": "Suno forensic detector calibration constant \u2014 reference threshold for detection engine."
+    },
+    {
+      "key": "suno_detector.spectral_flatness_low",
+      "value": 0.08,
+      "reason": "Suno forensic detector calibration constant \u2014 reference threshold for detection engine."
+    },
+    {
+      "key": "suno_detector.temporal_insertion_threshold",
+      "value": 1.8,
+      "reason": "Suno forensic detector calibration constant \u2014 reference threshold for detection engine."
+    },
+    {
+      "key": "sync_disrupt.fade_len_samples",
+      "value": 32,
+      "reason": "Cosine crossfade length (32 samples) at slice boundaries to eliminate clicks."
+    },
+    {
+      "key": "sync_disrupt.force_activate",
+      "value": true,
+      "reason": "Enforces frame desynchronization."
+    },
+    {
+      "key": "sync_disrupt.sync_period_sec",
+      "value": 1.0,
+      "reason": "1.0 second periodic window for phase alignment disruption."
+    },
+    {
+      "key": "upsampler.baseline_window_half",
+      "value": 30,
+      "reason": "Median filter half-window (30 bins) for LTAS baseline estimation."
+    },
+    {
+      "key": "upsampler.comb_fundamental_hz",
+      "value": 172.3,
+      "reason": "172.3 Hz \u2014 exact frame rate fundamental frequency of Suno/Udio neural upsamplers."
+    },
+    {
+      "key": "upsampler.enable_comb_filter",
+      "value": true,
+      "reason": "Enables comb filter cascade."
+    },
+    {
+      "key": "upsampler.force_activate",
+      "value": true,
+      "reason": "Enforces periodic stride eradication."
+    },
+    {
+      "key": "upsampler.hop_length",
+      "value": 1024,
+      "reason": "Hop length (1024 samples) for upsampler stride analysis."
+    },
+    {
+      "key": "upsampler.n_fft",
+      "value": 4096,
+      "reason": "High-resolution FFT (4096 bins) required to isolate narrow 172.3 Hz periodic stride peaks."
+    }
+  ],
+  "presets": {
+    "off": {
+      "name": "Off (Original Audio)",
+      "description": "Zero evasion processing — pure direct original audio playback",
+      "compositeValues": {
+        "carrierErase": 0,
+        "strideRemove": 0,
+        "stegoStrip": 0,
+        "neuralScrub": 0,
+        "spectralBlend": 0,
+        "phaseScatter": 0,
+        "statNormalize": 0,
+        "hashBreak": 0,
+        "roomInject": 0,
+        "textureInject": 0,
+        "bandwidthHeal": 0.0,
+        "dynamicsNatural": 0,
+        "qualityGate": 1.0,
+        "outputGain": 0.0
+      }
+    },
+    "lowProfile": {
+      "name": "Low Profile",
+      "description": "Light evasion, pristine audiophile fidelity",
+      "cli": "nasuno clean input.wav --level gentle",
+      "compositeValues": {
+        "carrierErase": 20,
+        "strideRemove": 15,
+        "stegoStrip": 20,
+        "neuralScrub": 20,
+        "spectralBlend": 25,
+        "phaseScatter": 15,
+        "statNormalize": 20,
+        "hashBreak": 12,
+        "roomInject": 15,
+        "textureInject": 15,
+        "bandwidthHeal": 0.5,
+        "dynamicsNatural": 20,
+        "qualityGate": 2.0,
+        "outputGain": 0.0
+      }
+    },
+    "standardEvasion": {
+      "name": "Standard Evasion",
+      "description": "Balanced multi-vector evasion for streaming & release",
+      "cli": "nasuno clean input.wav --level moderate",
+      "compositeValues": {
+        "carrierErase": 50,
+        "strideRemove": 35,
+        "stegoStrip": 45,
+        "neuralScrub": 45,
+        "spectralBlend": 40,
+        "phaseScatter": 40,
+        "statNormalize": 40,
+        "hashBreak": 30,
+        "roomInject": 35,
+        "textureInject": 35,
+        "bandwidthHeal": 0.25,
+        "dynamicsNatural": 40,
+        "qualityGate": 3.0,
+        "outputGain": 0.0
+      }
+    },
+    "deepClean": {
+      "name": "Deep Clean",
+      "description": "Strong multi-vector evasion for stubborn watermarks",
+      "cli": "nasuno clean input.wav --level aggressive",
+      "compositeValues": {
+        "carrierErase": 75,
+        "strideRemove": 55,
+        "stegoStrip": 65,
+        "neuralScrub": 65,
+        "spectralBlend": 60,
+        "phaseScatter": 55,
+        "statNormalize": 55,
+        "hashBreak": 60,
+        "roomInject": 55,
+        "textureInject": 50,
+        "bandwidthHeal": 0.0,
+        "dynamicsNatural": 60,
+        "qualityGate": 3.8,
+        "outputGain": 0.0
+      }
+    },
+    "fullScrub": {
+      "name": "Full Scrub",
+      "description": "Maximum footprint destruction for adversarial forensic scanners",
+      "cli": "nasuno clean input.wav --level extreme",
+      "compositeValues": {
+        "carrierErase": 95,
+        "strideRemove": 80,
+        "stegoStrip": 85,
+        "neuralScrub": 80,
+        "spectralBlend": 80,
+        "phaseScatter": 75,
+        "statNormalize": 75,
+        "hashBreak": 85,
+        "roomInject": 75,
+        "textureInject": 70,
+        "bandwidthHeal": -0.5,
+        "dynamicsNatural": 80,
+        "qualityGate": 4.5,
+        "outputGain": 0.0
+      }
+    }
+  }
+}
